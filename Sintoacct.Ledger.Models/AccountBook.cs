@@ -1,0 +1,82 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Sintoacct.Ledger.Models
+{
+    /// <summary>
+    /// 账套
+    /// </summary>
+    [Table("T_Account_Book")]
+    public class AccountBook
+    {
+        /// <summary>
+        /// 账套编号
+        /// </summary>
+        [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid AbId { get; set; }
+
+        /// <summary>
+        /// 币种
+        /// </summary>
+        [MaxLength(10)]
+        public string Currency { get; set; }
+
+        /// <summary>
+        /// 启动时间（年度）
+        /// </summary>
+        public int StartYear { get; set; }
+
+        /// <summary>
+        /// 启动时间（账期）
+        /// </summary>
+        public int StartPeriod { get; set; }
+
+        /// <summary>
+        /// 会计制度
+        /// </summary>
+        public FiscalSystem FiscalSystem { get; set; }
+
+        /// <summary>
+        /// 账套对应的公司
+        /// </summary>
+        [ForeignKey("Company")]
+        public int ComId { get; set; }
+
+        /// <summary>
+        /// 账套对应的公司
+        /// </summary>
+        public Company Company { get; set; }
+
+        /// <summary>
+        /// 账套管理员
+        /// </summary>
+        public virtual ICollection<UserBook> Users { get; set; }
+
+        /// <summary>
+        /// 辅助核算类型
+        /// </summary>
+        public virtual ICollection<AuxiliaryType> AuxiliaryTypes { get; set; }
+
+        /// <summary>
+        /// 辅助核算
+        /// </summary>
+        public virtual ICollection<Auxiliary> Auxiliaries { get; set; }
+    }
+
+    public enum FiscalSystem
+    {
+        /// <summary>
+        /// 小企业会计准则（2013年颁）
+        /// </summary>
+        SmallBiz2013 = 1,
+        /// <summary>
+        /// 新会计准则（2006年颁）
+        /// </summary>
+        Standard2006 = 2
+    }
+}
