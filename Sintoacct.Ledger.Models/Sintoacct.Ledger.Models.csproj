@@ -50,11 +50,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountBook.cs" />
+    <Compile Include="Accounting\Abstract.cs" />
     <Compile Include="Accounting\Account.cs" />
     <Compile Include="Accounting\AccountCategory.cs" />
     <Compile Include="Accounting\AuxiliaryType.cs" />
     <Compile Include="Accounting\Auxiliary.cs" />
     <Compile Include="Accounting\CertificateWord.cs" />
+    <Compile Include="Accounting\Voucher.cs" />
+    <Compile Include="Accounting\VoucherDetail.cs" />
+    <Compile Include="Accounting\VoucherDetailTemplate.cs" />
     <Compile Include="Company.cs" />
     <Compile Include="CompanyUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

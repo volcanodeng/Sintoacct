@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,7 +14,7 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 账套编号
         /// </summary>
-        [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid AbId { get; set; }
 
         /// <summary>
@@ -66,6 +63,16 @@ namespace Sintoacct.Ledger.Models
         /// 辅助核算
         /// </summary>
         public virtual ICollection<Auxiliary> Auxiliaries { get; set; }
+
+        /// <summary>
+        /// 凭证
+        /// </summary>
+        public virtual ICollection<Voucher> Vouchers { get; set; }
+
+        /// <summary>
+        /// 凭证模板
+        /// </summary>
+        public virtual ICollection<VoucherDetailTemplate> VoucherDetailTemplates { get; set; }
     }
 
     public enum FiscalSystem
