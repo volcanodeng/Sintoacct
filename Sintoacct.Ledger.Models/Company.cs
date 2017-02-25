@@ -18,7 +18,7 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 公司名称
         /// </summary>
-        [MaxLength(50)]
+        [MaxLength(50),Required]
         public string ComName { get; set; }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 公司所在地编码
         /// </summary>
-        [ForeignKey("Region")]
+        [ForeignKey("Region"),Required]
         public int RegionCode { get; set; }
         /// <summary>
         /// 公司所在地

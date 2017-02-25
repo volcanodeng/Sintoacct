@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -23,7 +19,7 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 凭证字
         /// </summary>
-        [MaxLength(50)]
+        [MaxLength(50),Required]
         public string CertWord { get; set; }
 
         /// <summary>
@@ -41,7 +37,7 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 账套
         /// </summary>
-        [ForeignKey("AccountBook")]
+        [ForeignKey("AccountBook"),Required]
         public Guid AbId { get; set; }
 
         /// <summary>
