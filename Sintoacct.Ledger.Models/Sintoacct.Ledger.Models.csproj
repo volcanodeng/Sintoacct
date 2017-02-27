@@ -60,7 +60,7 @@
     <Compile Include="Accounting\VoucherDetail.cs" />
     <Compile Include="Accounting\VoucherDetailTemplate.cs" />
     <Compile Include="Company.cs" />
-    <Compile Include="CompanyUser.cs" />
+    <Compile Include="UserBook.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Region.cs" />
   </ItemGroup>
