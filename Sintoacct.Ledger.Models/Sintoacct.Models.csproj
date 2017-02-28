@@ -7,8 +7,8 @@
     <ProjectGuid>{3436245A-99D8-41EC-851A-FDEE246F5292}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sintoacct.Ledger.Models</RootNamespace>
-    <AssemblyName>Sintoacct.Ledger.Models</AssemblyName>
+    <RootNamespace>Sintoacct.Models</RootNamespace>
+    <AssemblyName>Sintoacct.Models</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -49,8 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountBook.cs" />
-    <Compile Include="Accounting\Abstract.cs" />
+    <Compile Include="Accounting\AccountBook.cs" />
+    <Compile Include="Accounting\AbstractTemp.cs" />
     <Compile Include="Accounting\Account.cs" />
     <Compile Include="Accounting\AccountCategory.cs" />
     <Compile Include="Accounting\AuxiliaryType.cs" />
@@ -60,13 +60,24 @@
     <Compile Include="Accounting\VoucherDetail.cs" />
     <Compile Include="Accounting\VoucherDetailTemplate.cs" />
     <Compile Include="Company.cs" />
-    <Compile Include="UserBook.cs" />
+    <Compile Include="Accounting\UserBook.cs" />
+    <Compile Include="LedgerContext.cs" />
+    <Compile Include="Migrations\201702281549359_InitialCreate.cs" />
+    <Compile Include="Migrations\201702281549359_InitialCreate.Designer.cs">
+      <DependentUpon>201702281549359_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Region.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201702281549359_InitialCreate.resx">
+      <DependentUpon>201702281549359_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

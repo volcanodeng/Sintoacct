@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sintoacct.Ledger.Models
+namespace Sintoacct.Models
 {
     /// <summary>
     /// 用户账套。

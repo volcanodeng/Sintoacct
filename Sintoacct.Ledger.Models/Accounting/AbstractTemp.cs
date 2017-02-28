@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sintoacct.Ledger.Models.Accounting
+namespace Sintoacct.Models
 {
     /// <summary>
     /// 凭证摘要库

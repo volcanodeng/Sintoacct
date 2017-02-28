@@ -48,10 +48,6 @@
       <Project>{f4ba31ef-32ae-4a49-9d01-c70c44eda521}</Project>
       <Name>Sintoacct.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Sintoacct.Ledger.Models\Sintoacct.Ledger.Models.csproj">
-      <Project>{3436245a-99d8-41ec-851a-fdee246f5292}</Project>
-      <Name>Sintoacct.Ledger.Models</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sintoacct.Ledger.Models
+namespace Sintoacct.Models
 {
+    [Table("T_Voucher_Detail")]
     public class VoucherDetail
     {
         /// <summary>
@@ -19,7 +20,7 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 凭证主记录
         /// </summary>
-        [ForeignKey("Voucher")]
+        [ForeignKey("Voucher"),Required]
         public long VId { get; set; }
 
         /// <summary>
@@ -33,15 +34,9 @@ namespace Sintoacct.Ledger.Models
         [Required,MaxLength(200)]
         public string Abstract { get; set; }
 
-        /// <summary>
-        /// 会计科目
-        /// </summary>
-        [Required,ForeignKey("Account")]
-        public long AccId { get; set; }
-
-        /// <summary>
-        /// 会计科目
-        /// </summary>
+        ///// <summary>
+        ///// 会计科目
+        ///// </summary>
         public Account Account { get; set; }
 
         /// <summary>

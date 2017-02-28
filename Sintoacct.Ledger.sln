@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sintoacct.Ledger", "Sintoacct.Ledger\Sintoacct.Ledger.csproj", "{0DD049E4-1B03-49EA-BFD4-077404623399}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sintoacct.Ledger.Models", "Sintoacct.Ledger.Models\Sintoacct.Ledger.Models.csproj", "{3436245A-99D8-41EC-851A-FDEE246F5292}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sintoacct.Models", "Sintoacct.Ledger.Models\Sintoacct.Models.csproj", "{3436245A-99D8-41EC-851A-FDEE246F5292}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sintoacct.Common", "Sintoacct.Common\Sintoacct.Common.csproj", "{F4BA31EF-32AE-4A49-9D01-C70C44EDA521}"
 EndProject

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sintoacct.Ledger.Models
+namespace Sintoacct.Models
 {
     /// <summary>
     /// 凭证主表
@@ -16,12 +16,6 @@ namespace Sintoacct.Ledger.Models
         /// </summary>
         [Key]
         public long VId { get; set; }
-
-        /// <summary>
-        /// 凭证字
-        /// </summary>
-        [Required,ForeignKey("CertificateWord")]
-        public int CwId { get; set; }
 
         /// <summary>
         /// 凭证字

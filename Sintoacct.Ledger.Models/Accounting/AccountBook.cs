@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sintoacct.Ledger.Models
+namespace Sintoacct.Models
 {
     /// <summary>
     /// 账套
@@ -73,6 +73,11 @@ namespace Sintoacct.Ledger.Models
         /// 凭证模板
         /// </summary>
         public virtual ICollection<VoucherDetailTemplate> VoucherDetailTemplates { get; set; }
+
+        /// <summary>
+        /// 科目
+        /// </summary>
+        public virtual ICollection<Account> Accounts { get; set; }
     }
 
     public enum FiscalSystem
