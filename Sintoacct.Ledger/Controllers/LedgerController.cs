@@ -12,16 +12,17 @@ namespace Sintoacct.Ledger.Controllers
 {
     public class LedgerController : Controller
     {
+        private readonly IAccountBookHelper _acctBook;
+
+        public LedgerController(IAccountBookHelper acctBook)
+        {
+            _acctBook = acctBook;
+        }
+
+        [Authorize(Roles = "abc@qq.com")]
         public ActionResult Index()
         {
-            ClaimsIdentity ci = User.Identity as ClaimsIdentity;
-
-            LedgerViewModels ledger = new LedgerViewModels() {
-                UserId = ci.GetUserId(),
-                UserName = ci.GetUserName(),
-                IsAuth = ci.IsAuthenticated
-            };
-            return View(ledger);
+            return View(_acctBook.GetLedger());
         }
     }
 }

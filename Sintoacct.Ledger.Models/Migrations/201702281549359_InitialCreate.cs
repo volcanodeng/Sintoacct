@@ -276,5 +276,6 @@ namespace Sintoacct.Ledger.Models.Migrations
             DropTable("dbo.T_Account_Book");
             DropTable("dbo.T_Abstract_Temp");
         }
+
     }
 }

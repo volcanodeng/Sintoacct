@@ -8,6 +8,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Autofac;
 using Autofac.Integration.Mvc;
+using Autofac.Integration.WebApi;
 using System.Reflection;
 using System.IO;
 
@@ -29,18 +30,37 @@ namespace Sintoacct.Ledger
         private void AutofacConfig()
         {
             var builder = new ContainerBuilder();
-            //var assembly = Assembly.GetExecutingAssembly();
+            var assembly = Assembly.GetExecutingAssembly();
 
-            var assemblies = new DirectoryInfo(HttpContext.Current.Server.MapPath("~/bin/")).GetFiles("Sintoacct.*.dll")
-                .Select(r => Assembly.LoadFrom(r.FullName)).ToArray();
+            // MVC - Register your MVC controllers.
+            builder.RegisterControllers(assembly);
 
+            // MVC - OPTIONAL: Register web abstractions like HttpContextBase.
+            builder.RegisterModule<AutofacWebTypesModule>();
 
-            builder.RegisterAssemblyTypes(assemblies)
-                   .Where(t => t.GetInterface("Sintoacct.Common.IDependency") != null)
+            // MVC - OPTIONAL: Enable property injection in view pages.
+            builder.RegisterSource(new ViewRegistrationSource());
+
+            // MVC - OPTIONAL: Enable property injection into action filters.
+            builder.RegisterFilterProvider();
+
+            //注入实现Sintoacct.Ledger.IDependency接口的对象
+            builder.RegisterAssemblyTypes(assembly)
+                   .Where(t => t.GetInterface("Sintoacct.Ledger.IDependency") != null)
                    .AsImplementedInterfaces();
 
+            // WebAPI - Register your Web API controllers
+            builder.RegisterApiControllers(assembly);
+
+            // WebAPI - OPTIONAL: Register the Autofac filter provider.
+            builder.RegisterWebApiFilterProvider(GlobalConfiguration.Configuration);
+
+
             IContainer container = builder.Build();
+            //注入MVC
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+            //注入Web API
+            GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);
         }
     }
 }

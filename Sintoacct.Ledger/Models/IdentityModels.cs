@@ -30,5 +30,6 @@ namespace Sintoacct.Ledger.Models
         {
             return new ApplicationDbContext();
         }
+
     }
 }
