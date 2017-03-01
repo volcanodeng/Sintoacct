@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sintoacct.Models
+namespace Sintoacct.Ledger.Models
 {
     [Table("T_Account_Category")]
     public class AccountCategory

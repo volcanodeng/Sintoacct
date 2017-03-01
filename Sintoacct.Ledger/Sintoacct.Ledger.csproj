@@ -193,6 +193,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LedgerController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -200,8 +201,12 @@
     <Compile Include="IdentityManager\ApplicationIdentityManagerService.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\LedgerViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AccountBookHelper.cs" />
+    <Compile Include="Services\IAccountBookHelper.cs" />
+    <Compile Include="Services\IDependency.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -315,6 +320,7 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Ledger\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -328,9 +334,9 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sintoacct.Services\Sintoacct.Services.csproj">
-      <Project>{048ea0ad-d51c-420c-a343-0658a29a0e09}</Project>
-      <Name>Sintoacct.Services</Name>
+    <ProjectReference Include="..\Sintoacct.Ledger.Models\Sintoacct.Models.csproj">
+      <Project>{3436245a-99d8-41ec-851a-fdee246f5292}</Project>
+      <Name>Sintoacct.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

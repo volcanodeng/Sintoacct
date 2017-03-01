@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sintoacct.Models
+namespace Sintoacct.Ledger.Models
 {
     /// <summary>
     /// 凭证字

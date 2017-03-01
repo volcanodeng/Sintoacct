@@ -1,32 +1,36 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sintoacct.Models
+namespace Sintoacct.Ledger.Models
 {
     /// <summary>
-    /// 辅助核算类型
+    /// 凭证摘要库
     /// </summary>
-    [Table("T_Auxiliary_Type")]
-    public class AuxiliaryType
+    [Table("T_Abstract_Temp")]
+    public class AbstractTemp
     {
         /// <summary>
-        /// 核算类型编号
+        /// 摘要编号
         /// </summary>
         [Key]
-        public int AtId { get; set; }
+        public int AbsId { get; set; }
 
         /// <summary>
-        /// 核算类型名称
+        /// 摘要内容
         /// </summary>
-        [MaxLength(20)]
-        public string AuxType { get; set; }
+        [Required,MaxLength(200)]
+        public string Abstract { get; set; }
 
         /// <summary>
-        /// 所属账套
+        /// 账套
         /// </summary>
         [ForeignKey("AccountBook")]
-        public Nullable<Guid> AbId { get; set; }
+        public Guid AbId { get; set; }
 
         /// <summary>
         /// 账套

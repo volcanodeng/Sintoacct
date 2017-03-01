@@ -1,4 +1,4 @@
-namespace Sintoacct.Models.Migrations
+namespace Sintoacct.Ledger.Models.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;

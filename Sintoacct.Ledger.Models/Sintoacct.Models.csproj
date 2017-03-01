@@ -49,18 +49,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Accounting\AccountBook.cs" />
-    <Compile Include="Accounting\AbstractTemp.cs" />
-    <Compile Include="Accounting\Account.cs" />
-    <Compile Include="Accounting\AccountCategory.cs" />
-    <Compile Include="Accounting\AuxiliaryType.cs" />
-    <Compile Include="Accounting\Auxiliary.cs" />
-    <Compile Include="Accounting\CertificateWord.cs" />
-    <Compile Include="Accounting\Voucher.cs" />
-    <Compile Include="Accounting\VoucherDetail.cs" />
-    <Compile Include="Accounting\VoucherDetailTemplate.cs" />
+    <Compile Include="Ledger\AccountBook.cs" />
+    <Compile Include="Ledger\AbstractTemp.cs" />
+    <Compile Include="Ledger\Account.cs" />
+    <Compile Include="Ledger\AccountCategory.cs" />
+    <Compile Include="Ledger\AuxiliaryType.cs" />
+    <Compile Include="Ledger\Auxiliary.cs" />
+    <Compile Include="Ledger\CertificateWord.cs" />
+    <Compile Include="Ledger\Voucher.cs" />
+    <Compile Include="Ledger\VoucherDetail.cs" />
+    <Compile Include="Ledger\VoucherDetailTemplate.cs" />
     <Compile Include="Company.cs" />
-    <Compile Include="Accounting\UserBook.cs" />
+    <Compile Include="Ledger\UserBook.cs" />
     <Compile Include="LedgerContext.cs" />
     <Compile Include="Migrations\201702281549359_InitialCreate.cs" />
     <Compile Include="Migrations\201702281549359_InitialCreate.Designer.cs">

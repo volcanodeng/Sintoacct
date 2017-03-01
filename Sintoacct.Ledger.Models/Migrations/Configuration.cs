@@ -1,18 +1,18 @@
-namespace Sintoacct.Models.Migrations
+namespace Sintoacct.Ledger.Models.Migrations
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Sintoacct.Models.LedgerContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Sintoacct.Ledger.Models.LedgerContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
         }
 
-        protected override void Seed(Sintoacct.Models.LedgerContext context)
+        protected override void Seed(Sintoacct.Ledger.Models.LedgerContext context)
         {
             //  This method will be called after migrating to the latest version.
 

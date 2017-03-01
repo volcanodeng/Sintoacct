@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 
 namespace Sintoacct.Ledger.Controllers
 {
@@ -10,6 +12,7 @@ namespace Sintoacct.Ledger.Controllers
     {
         public ActionResult Index()
         {
+            
             return View();
         }
 

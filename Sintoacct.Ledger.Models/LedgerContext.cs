@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 
-namespace Sintoacct.Models
+namespace Sintoacct.Ledger.Models
 {
     public class LedgerContext : DbContext
     {

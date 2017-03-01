@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Sintoacct.Common;
 
-namespace Sintoacct.Services
+namespace Sintoacct.Ledger
 {
-    public class Company : IDependency
+    public interface IAccountBookHelper : IDependency
     {
-
     }
 }
