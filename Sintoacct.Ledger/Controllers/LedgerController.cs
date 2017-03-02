@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
-using Sintoacct.Ledger.Models;
-using System.Security.Claims;
+﻿using System.Web.Mvc;
 
 namespace Sintoacct.Ledger.Controllers
 {
@@ -19,7 +11,8 @@ namespace Sintoacct.Ledger.Controllers
             _acctBook = acctBook;
         }
 
-        [Authorize(Roles = "abc@qq.com")]
+        //[Authorize(Roles = "abc@qq.com")]
+        [ClaimsAuthorize("role", "admin","guest1")]
         public ActionResult Index()
         {
             return View(_acctBook.GetLedger());

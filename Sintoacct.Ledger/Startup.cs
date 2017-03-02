@@ -4,7 +4,6 @@ using IdentityManager;
 using IdentityManager.Configuration;
 using Sintoacct.Ledger.IdentityManager;
 using Sintoacct.Ledger.Models;
-using Autofac.Integration.WebApi;
 
 [assembly: OwinStartupAttribute(typeof(Sintoacct.Ledger.Startup))]
 namespace Sintoacct.Ledger
