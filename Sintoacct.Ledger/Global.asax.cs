@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -10,7 +7,7 @@ using Autofac;
 using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using System.Reflection;
-using System.IO;
+using Sintoacct.Ledger.Models;
 
 namespace Sintoacct.Ledger
 {
@@ -48,6 +45,9 @@ namespace Sintoacct.Ledger
             builder.RegisterAssemblyTypes(assembly)
                    .Where(t => t.GetInterface("Sintoacct.Ledger.IDependency") != null)
                    .AsImplementedInterfaces();
+            //注入Ledger上下文
+            var ledger = new LedgerContext();
+            builder.RegisterInstance(ledger).As<LedgerContext>();
 
             // WebAPI - Register your Web API controllers
             builder.RegisterApiControllers(assembly);

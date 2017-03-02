@@ -197,6 +197,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="ClaimsAuthorizeAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Api\AccountBookApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LedgerController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -205,6 +206,7 @@
     </Compile>
     <Compile Include="IdentityManager\ApplicationIdentityManagerService.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\EasyuiViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LedgerViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -325,7 +327,8 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Ledger\Index.cshtml" />
+    <Content Include="Views\Ledger\Test.cshtml" />
+    <Content Include="Views\Ledger\AccountBook.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

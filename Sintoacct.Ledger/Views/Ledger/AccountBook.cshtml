@@ -1,0 +1,39 @@
+﻿
+    <div class="easyui-panel" data-options="fit:true,border:false">
+    <table id="acctBook" class="easyui-datagrid" data-options="fitColumns:true,singleSelect:true">
+        <thead>
+            <tr>
+                <th data-options="field:'code',width:100">Code</th>
+                <th data-options="field:'name',width:100">Name</th>
+                <th data-options="field:'price',width:100,align:'right'">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>001</td>
+                <td>name1</td>
+                <td>2323</td>
+            </tr>
+            <tr>
+                <td>002</td>
+                <td>name2</td>
+                <td>4612</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+@section scripts
+{
+<script type="text/javascript">
+
+    var obj = {
+        datagrid: "#acctBook"
+    };
+
+    $(function () {
+        $.get("/acctbook/MyAcctBook");
+    });
+
+</script>
+ }
