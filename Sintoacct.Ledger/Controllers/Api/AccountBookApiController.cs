@@ -21,5 +21,10 @@ namespace Sintoacct.Ledger.Controllers.Api
         {
             return Ok(_acctBook.GetBooksOfUser());
         }
+
+        public IHttpActionResult SaveAccountBook()
+        {
+            return null;
+        }
     }
 }

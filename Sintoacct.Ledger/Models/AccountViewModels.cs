@@ -49,8 +49,8 @@ namespace Sintoacct.Ledger.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "电子邮件")]
-        [EmailAddress]
+        [Display(Name = "用户名")]
+        //[EmailAddress]
         public string Email { get; set; }
 
         [Required]

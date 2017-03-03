@@ -22,3 +22,7 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.easyui-dialog form div {
+    margin:5px;
+}

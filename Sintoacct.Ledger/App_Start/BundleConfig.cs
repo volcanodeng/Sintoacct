@@ -22,7 +22,9 @@ namespace Sintoacct.Ledger
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js",
-                      "~/Scripts/jquery.easyui.min.js"));
+                      "~/Scripts/jquery.easyui.min.js",
+                      "~/Scripts/easyui-lang-zh_CN.js",
+                      "~/Scripts/easyui.extend.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

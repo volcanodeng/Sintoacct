@@ -31,11 +31,17 @@ namespace Sintoacct.Ledger.Models
         public string FiscalSystem { get; set; }
 
         public string CompanyName { get; set; }
+
+        public string Creator { get; set; }
+
+        public DateTime CreateTime { get; set; }
     }
 
     public class AcctBookViewModels
     {
         public string AbId { get; set; }
+
+        public string ComapnyName { get; set; }
 
         [MaxLength(10)]
         public string Currency { get; set; }

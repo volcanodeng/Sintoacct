@@ -50,6 +50,16 @@ namespace Sintoacct.Ledger.Models
         public Company Company { get; set; }
 
         /// <summary>
+        /// 创建者
+        /// </summary>
+        public string Creator { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
+
+        /// <summary>
         /// 账套管理员
         /// </summary>
         public virtual ICollection<UserBook> Users { get; set; }
@@ -85,10 +95,10 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 小企业会计准则（2013年颁）
         /// </summary>
-        SmallBiz2013 = 1,
+        小企业会计准则_2013年颁 = 1,
         /// <summary>
         /// 新会计准则（2006年颁）
         /// </summary>
-        Standard2006 = 2
+        新会计准则_2006年颁 = 2
     }
 }

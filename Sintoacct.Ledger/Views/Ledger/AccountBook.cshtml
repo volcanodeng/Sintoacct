@@ -1,39 +1,96 @@
 ﻿
-    <div class="easyui-panel" data-options="fit:true,border:false">
-    <table id="acctBook" class="easyui-datagrid" data-options="fitColumns:true,singleSelect:true">
+<div class="easyui-panel" data-options="fit:true,border:false" style="padding:10px;">
+    <table id="acctBook" class="easyui-datagrid"
+           data-options="fitColumns:true,singleSelect:true,emptyMsg:'（无记录）',toolbar:#tbAcctBook">
         <thead>
             <tr>
-                <th data-options="field:'code',width:100">Code</th>
-                <th data-options="field:'name',width:100">Name</th>
-                <th data-options="field:'price',width:100,align:'right'">Price</th>
+                <th data-options="field:'companyName',width:100,align:'center'">公司名称</th>
+                <th data-options="field:'currency',width:100,align:'center'">币种</th>
+                <th data-options="field:'startYear',width:100,align:'center'">开始年份</th>
+                <th data-options="field:'startPeriod',width:100,align:'center'">账期</th>
+                <th data-options="field:'fiscalSystem',width:100,align:'center'">会计制度</th>
+                <th data-options="field:'creator',width:100,align:'center'">创建人</th>
+                <th data-options="field:'createTime',width:100,align:'center'">创建时间</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td>001</td>
-                <td>name1</td>
-                <td>2323</td>
-            </tr>
-            <tr>
-                <td>002</td>
-                <td>name2</td>
-                <td>4612</td>
-            </tr>
-        </tbody>
     </table>
+
+    <div id="tbAcctBook">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="append()">新增</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="appendSub()">新增下级</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="edit()">编辑</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="remove()">删除</a>
     </div>
+</div>
+
+<div class="easyui-dialog" title="账套" style="width:400px;height:280px;padding:10px;font-size:14px;">
+    <form method="post" id="bookForm">
+        <div>
+            <input class="easyui-textbox" id="ComapnyName" name="ComapnyName" data-options="label:'公司名称',required:true" style="width:300px;height:32px">
+        </div>
+        <div>
+            <input class="easyui-textbox" id="Currency" name="Currency" data-options="label:'本位币种',required:true,value:'RMB'" style="width:300px;height:32px">
+        </div>
+        <div>
+            <input class="easyui-numberspinner" id="StartYear" name="StartYear" data-options="label:'启用期间',required:true,min:2010,max:2050" style="width:160px;height:32px" value="@DateTime.Now.Year"> 年
+            <input class="easyui-numberspinner" id="StartPeriod" name="StartPeriod" data-options="required:true,min:1,max:12" style="width:60px;height:32px" value="1"> 期
+        </div>
+        <div>
+            <select id="FiscalSystem" class="easyui-combobox" name="FiscalSystem" style="width:300px;height:32px;" data-options="label:'会计制度',panelMaxHeight:60">
+                @foreach(var f in typeof(Sintoacct.Ledger.Models.FiscalSystem).GetFields())
+                {
+                    if(f.FieldType.IsEnum)
+                    {
+                        <option value="@Enum.Parse(typeof(Sintoacct.Ledger.Models.FiscalSystem),f.Name,true)">@f.Name</option>
+                    }
+                }
+            </select>
+        </div>
+        <div style="float:right;margin-top:10px;">
+            <a id="btnSave" href="#" class="easyui-linkbutton" style="width:80px;height:35px;">创建</a>
+            <a id="btnClose" href="#" class="easyui-linkbutton" style="width:80px;height:35px;" onclick="form_btnClose()">返回</a>
+
+            <input type="hidden" id="AbId" />
+        </div>
+    </form>
+</div>
 
 @section scripts
 {
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    var obj = {
-        datagrid: "#acctBook"
-    };
+        var obj = {
+            datagrid: "#acctBook",
+            form: "#bookForm"
+        };
 
-    $(function () {
-        $.get("/acctbook/MyAcctBook");
-    });
+        $(function () {
+            
+        });
 
-</script>
- }
+        function init()
+        {
+            $("#acctForm").form({
+                url: "/api/a/save/",
+                onSubmit: formOnSubmit,
+                success: formSuccess
+            });
+        }
+
+        function dg_load()
+        {
+
+        }
+
+        function form_btnClose()
+        {
+            $("#btnClose").dialog("close");
+        }
+
+        function form_btnSave()
+        {
+
+        }
+
+    </script>
+}
