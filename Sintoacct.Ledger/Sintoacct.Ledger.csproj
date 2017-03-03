@@ -212,6 +212,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AccountBookHelper.cs" />
+    <Compile Include="Services\Company.cs" />
     <Compile Include="Services\IAccountBookHelper.cs" />
     <Compile Include="Services\IDependency.cs" />
     <Compile Include="Startup.cs" />
@@ -344,9 +345,9 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sintoacct.Ledger.Models\Sintoacct.Models.csproj">
+    <ProjectReference Include="..\Sintoacct.Ledger.Models\Sintoacct.Ledger.Models.csproj">
       <Project>{3436245a-99d8-41ec-851a-fdee246f5292}</Project>
-      <Name>Sintoacct.Models</Name>
+      <Name>Sintoacct.Ledger.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

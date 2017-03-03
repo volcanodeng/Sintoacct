@@ -52,6 +52,7 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 创建者
         /// </summary>
+        [MaxLength(50)]
         public string Creator { get; set; }
 
         /// <summary>

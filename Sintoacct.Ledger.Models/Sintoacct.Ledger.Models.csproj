@@ -7,8 +7,8 @@
     <ProjectGuid>{3436245A-99D8-41EC-851A-FDEE246F5292}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sintoacct.Models</RootNamespace>
-    <AssemblyName>Sintoacct.Models</AssemblyName>
+    <RootNamespace>Sintoacct.Ledger.Models</RootNamespace>
+    <AssemblyName>Sintoacct.Ledger.Models</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

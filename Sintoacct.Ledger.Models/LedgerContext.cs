@@ -17,5 +17,9 @@ namespace Sintoacct.Ledger.Models
         public DbSet<AbstractTemp> AbstractTemps { get; set; }
 
         public DbSet<UserBook> UserBooks { get; set; }
+
+        public DbSet<Company> Companys { get; set; }
+
+        public DbSet<Region> Regions { get; set; }
     }
 }

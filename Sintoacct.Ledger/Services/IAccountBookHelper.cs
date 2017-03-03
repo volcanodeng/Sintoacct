@@ -9,8 +9,9 @@ namespace Sintoacct.Ledger
 {
     public interface IAccountBookHelper : IDependency
     {
-        LedgerViewModels GetLedger();
 
         List<AccountBook> GetBooksOfUser();
+
+        AccountBook Save(AcctBookViewModels acctBook);
     }
 }

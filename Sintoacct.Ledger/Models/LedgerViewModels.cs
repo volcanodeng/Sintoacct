@@ -55,4 +55,6 @@ namespace Sintoacct.Ledger.Models
         [Required]
         public int FiscalSystem { get; set; }
     }
+
+   
 }

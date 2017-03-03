@@ -1,7 +1,7 @@
 ﻿
 <div class="easyui-panel" data-options="fit:true,border:false" style="padding:10px;">
     <table id="acctBook" class="easyui-datagrid"
-           data-options="fitColumns:true,singleSelect:true,emptyMsg:'（无记录）',toolbar:#tbAcctBook">
+           data-options="fitColumns:true,singleSelect:true,emptyMsg:'（无记录）',toolbar:'#tbAcctBook'">
         <thead>
             <tr>
                 <th data-options="field:'companyName',width:100,align:'center'">公司名称</th>
@@ -17,13 +17,12 @@
 
     <div id="tbAcctBook">
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="append()">新增</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="appendSub()">新增下级</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="edit()">编辑</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="remove()">删除</a>
     </div>
 </div>
 
-<div class="easyui-dialog" title="账套" style="width:400px;height:280px;padding:10px;font-size:14px;">
+<div class="easyui-dialog" id="bookWin" title="账套" style="width:400px;height:280px;padding:10px;font-size:14px;" data-options="closed:true">
     <form method="post" id="bookForm">
         <div>
             <input class="easyui-textbox" id="ComapnyName" name="ComapnyName" data-options="label:'公司名称',required:true" style="width:300px;height:32px">
@@ -71,9 +70,9 @@
         function init()
         {
             $("#acctForm").form({
-                url: "/api/a/save/",
-                onSubmit: formOnSubmit,
-                success: formSuccess
+                url: "/api/acctbook/save/",
+                onSubmit: form_OnSubmit,
+                success: form_Success
             });
         }
 
@@ -84,12 +83,26 @@
 
         function form_btnClose()
         {
-            $("#btnClose").dialog("close");
+            $("#bookWin").dialog("close");
         }
 
         function form_btnSave()
         {
+            $(obj.form).submit();
+        }
 
+        function form_OnSubmit()
+        {
+            return $(this).form('validate');
+        }
+        function form_Success(data)
+        {
+            responseHandle(data);
+        }
+
+        function append()
+        {
+            $("#bookWin").dialog("open");
         }
 
     </script>
