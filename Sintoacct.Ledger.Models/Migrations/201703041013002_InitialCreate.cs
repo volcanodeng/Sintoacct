@@ -29,7 +29,7 @@ namespace Sintoacct.Ledger.Models.Migrations
                         StartPeriod = c.Int(nullable: false),
                         FiscalSystem = c.Int(nullable: false),
                         ComId = c.Int(nullable: false),
-                        Creator = c.String(),
+                        Creator = c.String(maxLength: 50),
                         CreateTime = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.AbId)

@@ -35,24 +35,27 @@
             <input class="easyui-numberspinner" id="StartPeriod" name="StartPeriod" data-options="required:true,min:1,max:12" style="width:60px;height:32px" value="1"> 期
         </div>
         <div>
-            <select id="FiscalSystem" class="easyui-combobox" name="FiscalSystem" style="width:300px;height:32px;" data-options="label:'会计制度',panelMaxHeight:60">
+            <select id="Fiscal" class="easyui-combobox" style="width:300px;height:32px;" data-options="label:'会计制度',panelMaxHeight:60">
                 @foreach(var f in typeof(Sintoacct.Ledger.Models.FiscalSystem).GetFields())
                 {
                     if(f.FieldType.IsEnum)
                     {
-                        <option value="@Enum.Parse(typeof(Sintoacct.Ledger.Models.FiscalSystem),f.Name,true)">@f.Name</option>
+                        <option value="@((int)Enum.Parse(typeof(Sintoacct.Ledger.Models.FiscalSystem),f.Name,true))">@f.Name</option>
                     }
                 }
             </select>
         </div>
         <div style="float:right;margin-top:10px;">
-            <a id="btnSave" href="#" class="easyui-linkbutton" style="width:80px;height:35px;">创建</a>
+            <a id="btnSave" href="#" class="easyui-linkbutton" style="width:80px;height:35px;" onclick="form_btnSave()">创建</a>
             <a id="btnClose" href="#" class="easyui-linkbutton" style="width:80px;height:35px;" onclick="form_btnClose()">返回</a>
 
-            <input type="hidden" id="AbId" />
+            <input type="hidden" id="FiscalSystem" name="FiscalSystem" />
+            <input type="hidden" id="AbId" name="AbId" />
+            @Html.AntiForgeryToken()
         </div>
     </form>
 </div>
+
 
 @section scripts
 {
@@ -60,16 +63,17 @@
 
         var obj = {
             datagrid: "#acctBook",
-            form: "#bookForm"
+            form: "#bookForm",
+            bookWin: "#bookWin"
         };
 
         $(function () {
-            
+            init();
         });
 
         function init()
         {
-            $("#acctForm").form({
+            $(obj.form).form({
                 url: "/api/acctbook/save/",
                 onSubmit: form_OnSubmit,
                 success: form_Success
@@ -83,11 +87,13 @@
 
         function form_btnClose()
         {
-            $("#bookWin").dialog("close");
+            $(obj.bookWin).dialog("close");
         }
 
         function form_btnSave()
         {
+            $("#FiscalSystem").val($("#Fiscal").combobox("getValue"));
+
             $(obj.form).submit();
         }
 
@@ -102,7 +108,7 @@
 
         function append()
         {
-            $("#bookWin").dialog("open");
+            $(obj.bookWin).dialog("open");
         }
 
     </script>

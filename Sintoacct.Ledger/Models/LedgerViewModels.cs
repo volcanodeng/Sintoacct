@@ -6,16 +6,29 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Sintoacct.Ledger.Models
 {
-    public class LedgerViewModels
+    public class ResMessage
     {
-        [Display(Name = "用户编号")]
-        public string UserId { get; set; }
+        public ResMessage()
+        {
+            IsSuccess = true;
 
-        [Display(Name = "用户名")]
-        public string UserName { get; set; }
+            Code = 1;
 
-        [Display(Name = "是否登录")]
-        public bool IsAuth { get; set; }
+            Message = "成功";
+        }
+
+        public ResMessage(string Error)
+        {
+            IsSuccess = false;
+            Code = 9;
+            Message = Error;
+        }
+
+        public bool IsSuccess { get; set; }
+
+        public int Code { get; set; }
+
+        public string Message { get; set; }
     }
 
     public class AcctBookListViewModels
@@ -41,6 +54,7 @@ namespace Sintoacct.Ledger.Models
     {
         public string AbId { get; set; }
 
+        [Required,MaxLength(50)]
         public string ComapnyName { get; set; }
 
         [MaxLength(10)]

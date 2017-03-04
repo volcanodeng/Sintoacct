@@ -11,12 +11,6 @@ namespace Sintoacct.Ledger.Controllers
             _acctBook = acctBook;
         }
 
-        //测试
-        [ClaimsAuthorize("role", "admin","guest")]
-        public ActionResult Test()
-        {
-            return View(_acctBook.GetLedger());
-        }
 
         [ClaimsAuthorize("role", "accountant")]
         public ActionResult AccountBook()

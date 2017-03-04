@@ -55,6 +55,9 @@ namespace Sintoacct.Ledger
             // WebAPI - OPTIONAL: Register the Autofac filter provider.
             builder.RegisterWebApiFilterProvider(GlobalConfiguration.Configuration);
 
+            //注入Log4net
+            builder.RegisterModule(new LogInjectionModule());
+
 
             IContainer container = builder.Build();
             //注入MVC
