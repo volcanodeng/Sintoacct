@@ -8,6 +8,7 @@ using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using System.Reflection;
 using Sintoacct.Ledger.Models;
+using System.Web.Http.ExceptionHandling;
 
 namespace Sintoacct.Ledger
 {
@@ -21,7 +22,11 @@ namespace Sintoacct.Ledger
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
+            //依赖注入
             AutofacConfig();
+
+            //全局异常处理（异常日志）
+            GlobalConfiguration.Configuration.Services.Add(typeof(IExceptionLogger),new TraceExceptionHandle());
         }
 
         private void AutofacConfig()

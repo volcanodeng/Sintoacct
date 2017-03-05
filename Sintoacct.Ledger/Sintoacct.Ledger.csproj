@@ -222,6 +222,7 @@
     <Compile Include="Services\IAccountBookHelper.cs" />
     <Compile Include="Services\IDependency.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="TraceExceptionHandle.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
