@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using Sintoacct.Ledger.Models;
+using Sintoacct.Ledger.Services;
 
 namespace Sintoacct.Ledger.Controllers.Api
 {
@@ -35,9 +36,14 @@ namespace Sintoacct.Ledger.Controllers.Api
                 return BadRequest(err);
             }
 
+            if(!_modelValid.ValidAccountBookCreate(acctBook,out err))
+            {
+                ResMessage.Fail(err);
+            }
+
             _acctBook.Save(acctBook);
 
-            return Ok(new ResMessage());
+            return Ok(ResMessage.Success());
         }
     }
 }

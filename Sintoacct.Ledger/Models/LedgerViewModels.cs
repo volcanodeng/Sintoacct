@@ -2,33 +2,64 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Net;
+using System.Net.Http;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+using System.Text;
+using System.Web.Http;
 
 namespace Sintoacct.Ledger.Models
 {
-    public class ResMessage
+    public class ResMessage : HttpResponseMessage
     {
+        private ResMessageContent _content;
+
         public ResMessage()
         {
-            IsSuccess = true;
+            this.StatusCode = HttpStatusCode.OK;
 
-            Code = 1;
-
-            Message = "成功";
+            _content = new ResMessageContent();
+            _content.message = "成功";
         }
 
-        public ResMessage(string Error)
+        public ResMessageContent MessageContent
         {
-            IsSuccess = false;
-            Code = 9;
-            Message = Error;
+            get
+            {
+                return _content;
+            }
         }
 
-        public bool IsSuccess { get; set; }
+        public static ResMessage Success()
+        {
+            ResMessage msg = new ResMessage();
+            msg.Content = new StringContent(JsonConvert.SerializeObject(msg.MessageContent), Encoding.UTF8, "application/json");
+            return msg;
+        }
 
-        public int Code { get; set; }
+        public static void Fail(string reason)
+        {
+            ResMessage msg = new ResMessage();
+            msg.MessageContent.message = reason;
+            msg.StatusCode = HttpStatusCode.Forbidden;
+            msg.Content = new StringContent(JsonConvert.SerializeObject(msg.MessageContent), Encoding.UTF8, "application/json");
+            throw new HttpResponseException(msg);
+        }
 
-        public string Message { get; set; }
+        public static void Fail(HttpStatusCode code,string reason)
+        {
+            ResMessage msg = new ResMessage();
+            msg.MessageContent.message = reason;
+            msg.StatusCode = code;
+            msg.Content = new StringContent(JsonConvert.SerializeObject(msg.MessageContent), Encoding.UTF8, "application/json");
+            throw new HttpResponseException(msg);
+        }
+    }
+
+    public class ResMessageContent
+    {
+        public string message { get; set; }
     }
 
     public class AcctBookListViewModels

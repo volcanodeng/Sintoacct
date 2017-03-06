@@ -211,16 +211,12 @@ function responseHandle(data) {
     if (data == null) return false;
     if (typeof data != "object") data = JSON.parse(data);
 
-    if (data.message != null) {
-        $.messager.alert("操作结果", data.message, "warning");
-        return false;
-    }
-    else if (data.exceptionMessage != null) {
-        $.messager.alert("操作结果", data.exceptionMessage, "warning");
+    if (!data.IsSuccess) {
+        $.messager.alert("操作结果", data.message + "（" + data.Code + "）", "warning");
         return false;
     }
     else {
-        $.messager.show({ title: "操作结果", msg: "保存成功" });
+        $.messager.show({ title: "操作结果", msg: "操作成功完成" });
         return true;
     }
 }

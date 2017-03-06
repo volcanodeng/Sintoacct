@@ -6,7 +6,7 @@ using Sintoacct.Ledger.Models;
 
 namespace Sintoacct.Ledger.Services
 {
-    public class CompanyHelper
+    public class CompanyHelper 
     {
         private readonly LedgerContext _ledger;
 
@@ -29,5 +29,17 @@ namespace Sintoacct.Ledger.Services
 
             return null;
         }
+
+        public Company GetCompanyByName(string name)
+        {
+            return _ledger.Companys.Where(c => c.ComName == name).FirstOrDefault();
+        }
+    }
+
+    public interface ICompanyHelper : IDependency
+    {
+        Company Edit(Company editCom);
+
+        Company GetCompanyByName(string name);
     }
 }

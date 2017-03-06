@@ -64,4 +64,13 @@ namespace Sintoacct.Ledger.Services
         }
 
     }
+
+
+    public interface IAccountBookHelper : IDependency
+    {
+
+        List<AccountBook> GetBooksOfUser();
+
+        AccountBook Save(AcctBookViewModels acctBook);
+    }
 }

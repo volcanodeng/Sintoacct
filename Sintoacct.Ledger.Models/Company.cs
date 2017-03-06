@@ -18,7 +18,7 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 公司名称
         /// </summary>
-        [MaxLength(50),Required]
+        [MaxLength(50),Required,Index(IsUnique =true)]
         public string ComName { get; set; }
 
         /// <summary>
