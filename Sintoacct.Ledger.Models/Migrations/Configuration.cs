@@ -5,6 +5,7 @@ namespace Sintoacct.Ledger.Models.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
     using System.IO;
+    using System.Reflection;
 
     internal sealed class Configuration : DbMigrationsConfiguration<Sintoacct.Ledger.Models.LedgerContext>
     {
@@ -16,11 +17,14 @@ namespace Sintoacct.Ledger.Models.Migrations
         protected override void Seed(Sintoacct.Ledger.Models.LedgerContext context)
         {
             string sqlInit = "";
-            using (StreamReader sr = File.OpenText(@"F:\Sintoacct\Sintoacct.Ledger.Models\SQL\InitData.sql"))
+            using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("Sintoacct.Ledger.Models.SQL.InitData.sql"))
             {
-                sqlInit = sr.ReadToEnd();
+                using (StreamReader sr = new StreamReader(s,System.Text.Encoding.Unicode))
+                {
+                    sqlInit = sr.ReadToEnd();
 
-                sr.Close();
+                    sr.Close();
+                }
             }
 
             context.Database.ExecuteSqlCommand(sqlInit);

@@ -33,19 +33,19 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 区划名称
         /// </summary>
-        [MaxLength(20),Required]
+        [MaxLength(50),Required]
         public string RegionName { get; set; }
 
         /// <summary>
         /// 省份名称
         /// </summary>
-        [MaxLength(20),Required]
+        [MaxLength(50),Required]
         public string ProvinceName { get; set; }
 
         /// <summary>
         /// 市级名称
         /// </summary>
-        [MaxLength(20),Required]
+        [MaxLength(50),Required]
         public string CityName { get; set; }
 
         /// <summary>

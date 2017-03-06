@@ -62,9 +62,9 @@
     <Compile Include="Company.cs" />
     <Compile Include="Ledger\UserBook.cs" />
     <Compile Include="LedgerContext.cs" />
-    <Compile Include="Migrations\201703060824367_InitialCreate.cs" />
-    <Compile Include="Migrations\201703060824367_InitialCreate.Designer.cs">
-      <DependentUpon>201703060824367_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201703061632140_InitialCreate.cs" />
+    <Compile Include="Migrations\201703061632140_InitialCreate.Designer.cs">
+      <DependentUpon>201703061632140_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,9 +75,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201703060824367_InitialCreate.resx">
-      <DependentUpon>201703060824367_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201703061632140_InitialCreate.resx">
+      <DependentUpon>201703061632140_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SQL\InitData.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
