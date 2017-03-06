@@ -2,6 +2,8 @@
 using Microsoft.AspNet.Identity;
 using Sintoacct.Ledger.Models;
 using IdentityManager.AspNetIdentity;
+using System.Collections.Generic;
+using IdentityManager;
 
 namespace Sintoacct.Ledger.IdentityManager
 {
@@ -34,7 +36,6 @@ namespace Sintoacct.Ledger.IdentityManager
     {
         public ApplicationIdentityManagerService(ApplicationUserManager userMgr, ApplicationRoleManager roleMgr)
             : base(userMgr, roleMgr)
-        {
-        }
+        {}
     }
 }

@@ -4,6 +4,7 @@ namespace Sintoacct.Ledger.Models.Migrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using System.IO;
 
     internal sealed class Configuration : DbMigrationsConfiguration<Sintoacct.Ledger.Models.LedgerContext>
     {
@@ -14,18 +15,15 @@ namespace Sintoacct.Ledger.Models.Migrations
 
         protected override void Seed(Sintoacct.Ledger.Models.LedgerContext context)
         {
-            //  This method will be called after migrating to the latest version.
+            string sqlInit = "";
+            using (StreamReader sr = File.OpenText(@"F:\Sintoacct\Sintoacct.Ledger.Models\SQL\InitData.sql"))
+            {
+                sqlInit = sr.ReadToEnd();
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+                sr.Close();
+            }
+
+            context.Database.ExecuteSqlCommand(sqlInit);
         }
     }
 }

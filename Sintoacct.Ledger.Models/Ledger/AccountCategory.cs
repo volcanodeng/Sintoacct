@@ -9,7 +9,7 @@ namespace Sintoacct.Ledger.Models
         [Key]
         public int AcId { get; set; }
 
-        public int ParentAcId { get; set; }
+        public int? ParentAcId { get; set; }
 
         [MaxLength(50),Required]
         public string CategoryName { get; set; }
