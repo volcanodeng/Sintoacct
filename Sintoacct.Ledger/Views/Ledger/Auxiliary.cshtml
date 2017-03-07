@@ -1,0 +1,189 @@
+﻿@using XinTuo.Accounts.Models;
+@{
+    AuxiliaryTypeRecord auxType = Model.AuxType;
+    List<AuxiliaryTypeRecord> BaseAuxTypes = Model.BaseAuxTypes;
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Html.Partial("ResourcePartial")
+
+    <style type="text/css">
+        #auxForm div {
+            padding: 10px;
+        }
+
+        #auxForm input {
+            font-size: 14pt;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'north',split:false,border:false" style="height:40px;padding:10px;overflow:hidden;">
+            @foreach (AuxiliaryTypeRecord aux in BaseAuxTypes)
+        {
+            <a href="javascript:void(0)" id="auxType_@aux.Id" class="easyui-linkbutton"
+               @if (aux.Id == auxType.Id) { <text> data-options="toggle:true,group:'g1',selected:true" </text>   } else { <text> data-options="toggle:true,group:'g1'" </text>   }
+               onclick="TypeClick(@aux.Id)" style="width:80px;">@aux.AuxType</a>
+        }
+
+        </div>
+
+        <div data-options="region:'center',border:false" style="padding:10px;">
+            <table class="easyui-datagrid" id="auxDatagrid"
+                   data-options="singleSelect:true,toolbar: '#auxToolbar',fitColumns:true,idField:'auxId',onSelect:onDgSelect">
+                <thead>
+                    <tr>
+                        <th data-options="field:'auxCode',width:200,align:'center'">@T("编码")</th>
+                        <th data-options="field:'auxName',width:200,align:'center'">@T("名称")</th>
+                        <th data-options="field:'auxState',width:200,align:'center'">@T("状态")</th>
+                    </tr>
+                </thead>
+            </table>
+
+            <div id="auxToolbar">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="append()">新增</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="edit()">编辑</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="remove()">删除</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="auxeditDialog" class="easyui-dialog" title="编辑科目" style="width:450px;height:200px;font-size:14pt;" data-options="resizable:false,modal:true,closed: true">
+        <form id="auxForm" method="post">
+            <div>
+                <input class="easyui-textbox" id="AuxCode" name="AuxCode" data-options="label:'@T("编码")',required:true" style="width:90%;height:32px">
+            </div>
+            <div>
+                <input class="easyui-textbox" id="AuxName" name="AuxName" data-options="label:'@T("名称")',required:true" style="width:90%;height:32px">
+            </div>
+            <div style="float:right;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="save()" style="width:80px">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="diaClose()" style="width:80px">关闭</a>
+            </div>
+            <input type="hidden" id="AuxTypeId" name="AuxTypeId" />
+            <input type="hidden" id="AuxId" name="AuxId" />
+            <input type="hidden" id="AuxState" name="AuxState" />
+            <input type="hidden" id="__RequestVerificationToken" name="__RequestVerificationToken" value="@Html.AntiForgeryTokenValueOrchard()" />
+        </form>
+    </div>
+
+    <div id="aux_dataCache"></div>
+
+    <script type="text/javascript">
+
+
+    $(function () {
+        init();
+    });
+
+    function init()
+    {
+        $("#auxForm").form({
+            url: "/api/x/save/",
+            onSubmit: formOnSubmit,
+            success: formSuccess
+        });
+
+        TypeClick(@auxType.Id);
+    }
+
+    function TypeClick(auxType)
+    {
+        $("#AuxTypeId").val(auxType);
+
+        var dgCache = $("#aux_dataCache").data("aux" + auxType);
+
+        if (dgCache == undefined) {
+            $.get("/api/x/GetAuxiliary/", { auxTypeId: auxType }, function (data) {
+                $("#auxDatagrid").datagrid("loadData", data);
+                $("#aux_dataCache").data("aux" + auxType, data);
+            });
+        }
+        else {
+            $("#auxDatagrid").datagrid("loadData", dgCache);
+        }
+    }
+
+    function append()
+    {
+        $("#AuxCode").textbox("clear");
+        $("#AuxName").textbox("clear");
+        $("#AuxId").val(0);
+        $("#AuxState").val(1);
+
+        $("#auxeditDialog").dialog("open");
+    }
+
+    function edit()
+    {
+        $("#auxeditDialog").dialog("open");
+    }
+
+    function save()
+    {
+
+        $("#auxForm").submit();
+    }
+
+    function remove()
+    {
+        var selRow = $("#auxDatagrid").datagrid("getSelected");
+        if (selRow != null) {
+            $.get("/api/x/DelAux/", { auxId: selRow.auxId, __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()' }, function (data) {
+                var typeid = $("#AuxTypeId").val();
+                $("#aux_dataCache").removeData("aux" + typeid);
+
+                if (formSuccessHandle(data)) {
+                    TypeClick(typeid);
+                }
+            });
+        }
+        else
+        {
+            $.messager.alert('删除', '请选择要删除的记录', 'info');
+        }
+    }
+
+    function diaClose()
+    {
+        $("#auxeditDialog").dialog("close");
+    }
+
+    function formOnSubmit() {
+        return $(this).form('validate');
+    }
+
+    function formSuccess(data) {
+        var typeid = $("#AuxTypeId").val();
+        $("#aux_dataCache").removeData("aux" + typeid);
+
+        if(formSuccessHandle(data))
+        {
+            diaClose();
+            TypeClick(typeid);
+        }
+    }
+
+    function onDgSelect(index, row)
+    {
+        $("#auxForm").form("load", {
+            AuxCode: row.auxCode,
+            AuxName: row.auxName,
+            AuxId: row.auxId,
+            AuxState: row.auxState
+        });
+    }
+
+    </script>
+
+</body>
+</html>

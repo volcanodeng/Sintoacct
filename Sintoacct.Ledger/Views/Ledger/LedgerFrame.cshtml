@@ -1,0 +1,54 @@
+﻿
+<div id="layout-wrapper" class="easyui-layout" data-options="height:700" >
+
+    <div data-options="region:'west',collapsible:true" title="系统功能" style="width:150px;">
+       
+        <div class="easyui-menu" data-options="inline:true,fit:true">
+            <div data-options="iconCls:'icon-edit'" style="font-weight:bolder;" onclick="AddTabIframe('录凭证', '/XinTuo.Accounts/Voucher/Voucher')">录凭证</div>
+            <div data-options="iconCls:'icon-search'" style="font-weight:bolder;">查凭证</div>
+            <div data-options="iconCls:'icon-large-shapes'" style="font-weight:bolder;">
+                <span>帐簿</span>
+                <div>
+                    <div>明细账</div>
+                    <div>总账</div>
+                    <div>凭证汇总表</div>
+                    <div>科目余额表</div>
+                    <div>数量金额明细账</div>
+                    <div>数量金额总账</div>
+                    <div>多栏账</div>
+                    <div>核算项目余额表</div>
+                    <div>核算项目明细表</div>
+                </div>
+            </div>
+            <div data-options="iconCls:'icon-large-chart'" style="font-weight:bolder;">
+                <span>报表</span>
+                <div>
+                    <div>资产负债表</div>
+                    <div>利润表</div>
+                    <div>现金流量表</div>
+                </div>
+            </div>
+            <div data-options="iconCls:'icon-sum'" style="font-weight:bolder;">结账</div>
+            <div data-options="iconCls:'icon-large-smartart'" style="font-weight:bolder;">
+                <span>设置</span>
+                <div>
+                    <div onclick="AddTabIframe('凭证字', '/ledger/CertWord/')">凭证字</div>
+                    <div onclick="AddTabHref('辅助核算', '/xintuo.accounts/auxiliary/auxiliarytype')">辅助核算</div>
+                    <div onclick="AddTabIframe('科目维护', '/xintuo.accounts/account/account')">科目</div>
+                    <div onclick="AddTabIframe('财务初始余额', '/xintuo.accounts/account/InitialBalance')">财务初始余额</div>
+                    <div>凭证模板</div>
+                </div>
+            </div>
+            <div data-options="iconCls:'icon-man'" style="font-weight:bolder;" onclick="AddTabIframe('公司信息', '/xintuo.accounts/Company/Register')">公司</div>
+        </div>
+    </div>
+
+    <div data-options="region:'center'" style="padding:5px;background:#eee;">
+        <div class="easyui-tabs" id="tab_wrapper" data-options="fit:true">
+            <div title="首页">
+                
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,7 +1,7 @@
 ﻿
 <div class="easyui-panel" data-options="fit:true,border:false" style="padding:10px;">
     <table id="acctBook" class="easyui-datagrid"
-           data-options="fitColumns:true,singleSelect:true,emptyMsg:'（无记录）',toolbar:'#tbAcctBook',idField:'AbId'">
+           data-options="fitColumns:true,singleSelect:true,emptyMsg:'（无记录）',toolbar:'#tbAcctBook',idField:'AbId',onSelect:dg_onSelect">
         <thead>
             <tr>
                 <th data-options="field:'CompanyName',width:100,align:'center'">公司名称</th>
@@ -155,6 +155,11 @@
             {
                 return "已删除";
             }
+        }
+
+        function dg_onSelect(index, row)
+        {
+            location.replace("/Ledger/LedgerFrame?abid="+row.AbId);
         }
 
     </script>

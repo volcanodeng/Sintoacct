@@ -223,7 +223,9 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AccountBookHelper.cs" />
+    <Compile Include="Services\CertificateWordHelper.cs" />
     <Compile Include="Services\CompanyHelper.cs" />
+    <Compile Include="Services\Constants.cs" />
     <Compile Include="Services\IDependency.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="TraceExceptionHandle.cs" />
@@ -341,8 +343,14 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Ledger\Test.cshtml" />
     <Content Include="Views\Ledger\AccountBook.cshtml" />
+    <Content Include="Views\Ledger\Account.cshtml" />
+    <Content Include="Views\Ledger\Auxiliary.cshtml" />
+    <Content Include="Views\Ledger\AuxiliaryType.cshtml" />
+    <Content Include="Views\Ledger\CertWord.cshtml" />
+    <Content Include="Views\Ledger\InitialBalance.cshtml" />
+    <Content Include="Views\Ledger\Voucher.cshtml" />
+    <Content Include="Views\Ledger\LedgerFrame.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

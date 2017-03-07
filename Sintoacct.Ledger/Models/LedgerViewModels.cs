@@ -103,5 +103,19 @@ namespace Sintoacct.Ledger.Models
         public int FiscalSystem { get; set; }
     }
 
+
+    public class CertWordViewModel
+    {
+        public int CwId { get; set; }
+
+        [MaxLength(50), Required]
+        public string CertWord { get; set; }
+
+        [MaxLength(50)]
+        public string PrintTitle { get; set; }
+
+        public bool IsDefault { get; set; }
+    }
+
    
 }

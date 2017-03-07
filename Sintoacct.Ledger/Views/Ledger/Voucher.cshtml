@@ -1,0 +1,300 @@
+﻿
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Html.Partial("ResourcePartial")
+
+   <style type="text/css">
+       .mod-toolbar-top:after{content:".";display:block;clear:both;height:0;overflow:hidden;}
+       .mod-toolbar-top{padding:0 18px;margin:18px 0;color:#555;zoom:1;}
+
+       .mod-toolbar-top .left{float:left;}
+       .mod-toolbar-top .right{float:right;display:inline;margin-right:-10px; height: 30px;}
+
+       .voucher_wrap { margin-left: 18px; padding: 15px 45px;  border: 1px solid #cfcfcf; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2); position: relative; }
+       .voucher_tit { display: inline; margin-right: 20px; font: 28px/1.8 "Microsoft Yahei"; text-align: center; text-shadow: 1px 1px 1px rgba(0,0,0,0.2); }
+       .voucher_top { padding-top: 20px; margin-bottom: 10px; overflow: hidden; zoom: 1; }
+       .voucher_top .tit_wrap { margin: -20px 0 0 110px; }
+       .voucher_top .attach_wrap { float: right; }
+       .voucher_top .attach_wrap .ui-input { width: 25px; }
+       .voucher_top .mark_wrap, .voucher_top .tit_wrap { float: left; }
+       .voucher_top .mark_wrap .txt { display: inline-block;zoom: 1; line-height: 30px; vertical-align: middle; }
+
+       .datagrid-cell .money_unit { height: 22px; line-height: 22px; font-weight: normal; border-top: 1px solid #dadada; text-align: center; }
+       .datagrid-cell .money_unit span { float: left; display: inline; width: 19px; height: 100%; margin-right: 1px; background-color: #fff; }
+       .datagrid-cell .money_unit .last { margin-right: 0; width:18px;}
+
+       .datagrid-btable td[field="debit"] .col_debite,.datagrid-btable td[field="credit"] .col_credit, .datagrid-htable td[field="debit"] .money_unit, .datagrid-htable td[field="credit"] .money_unit { background-image: url('/modules/xintuo.accounts/styles/images/money_rp.png'); background-repeat: repeat-y; }
+       .datagrid-cell .col_debite, .datagrid-cell .col_credit, .datagrid-cell .col_money { width: 218px; }
+       .datagrid-cell .col_debite .cell_val, .datagrid-cell .col_credit .cell_val { overflow: hidden; font-family: 'tahoma'; font-weight: bold; font-size: 14px; letter-spacing: 11px; overflow: hidden; position: relative; right: -5px; *right: 4px;.datagrid-cell .col_debite, .datagrid-cell .col_credit, .datagrid-cell .col_money { width: 218px; }
+       .datagrid-cell .col_debite .cell_val, .datagrid-cell .col_credit .cell_val { overflow: hidden; font-family: 'tahoma'; font-weight: bold; font-size: 14px; letter-spacing: 11px; overflow: hidden; position: relative; right: -5px;text-align: right; }
+
+       .datagrid-header-row td {
+            text-align:center;
+            font-weight:bold;
+        }
+   </style>
+</head>
+<body style="max-width:1200px;">
+    
+
+        <div class="easyui-panel" style="padding:20px;" data-options="fit:true">
+            <div class="mod-toolbar-top">
+                <div class="left">
+                    <a class="button primaryAction" id="add" onclick="addVoucher()">新增</a>
+                    <a class="button" id="edit" onclick="saveVoucher()">保存</a>
+                    <a class="button" id="print">打印</a>
+                    <a class="button" id="audit" onclick="reviewVoucher()">审核</a>
+                    <a class="button" id="copy">复制</a>
+                    <a class="button" id="delete">删除</a>
+                </div>
+
+                <div class="right">
+                    <a class="button" id="prev" title="上一张" href="javascript:prevClick()">&lt;</a>
+                    <a class="button" id="next" title="下一张" href="javascript:nextClick()">&gt;</a>
+                </div>
+            </div>
+            <div class="voucher_wrap">
+                <div class="voucher_top">
+                    <div class="mark_wrap">
+                        <span class="txt">凭证字</span>
+                        <input id="cw" class="easyui-combobox" data-options="valueField:'certificateWord',textField:'certificateWord',url:'/api/v/GetCertWords',width:60,height:30">
+                        <input id="ss" class="easyui-numberspinner" data-options="min:1,max:999,width:60,height:30">
+                        <span class="txt">号</span>
+                        <span class="date_wrap">
+                            <span class="txt">日期</span>
+                            <input id="dd" type="text" class="easyui-datebox" style="width:100px;height:30px;" data-options="onChange:onDateChange">
+                        </span>
+                    </div>
+                    <div class="tit_wrap">
+                        <h1 class="voucher_tit">记账凭证</h1>
+                        <span id="vch_year"></span>年第<span id="vch_period"></span>期
+                    </div>
+                    <span class="attach_wrap">
+                        附单据
+                        <input type="text" id="attCw" class="easyui-numberbox" value="0" data-options="min:0,width:60,height:30">
+                        张
+                    </span>
+                </div>
+
+                <table class="easyui-datagrid" id="voucherTab" data-options="singleSelect: true">
+                    <thead>
+                        <tr>
+
+                            <th data-options="field:'abstracts',width:180,editor:{type:'textbox',options:{buttonText:'摘要',onClickButton:absClickButton}}" rowspan="2">摘要</th>
+                            <th data-options="field:'subjectCode',formatter:scFormatter,width:120,editor:{type:'combotree',options:{url:'/api/s/GetComSubjectsForTree'}}" rowspan="2">会计科目</th>
+                            <th>借方金额</th>
+                            <th>贷方金额</th>
+                        </tr>
+                        <tr>
+                            <th data-options="field:'debit',align:'center',width:230,formatter:debiteFormatter,editor:{type:'numberbox'}">
+
+                                <div class="money_unit"><span>亿</span> <span>千</span> <span>百</span> <span>十</span> <span>万</span> <span>千</span> <span>百</span> <span>十</span> <span>元</span> <span>角</span> <span class="last">分</span> </div>
+                            </th>
+                            <th data-options="field:'credit',align:'center',width:230,formatter:creditFormatter,editor:{type:'numberbox'}">
+
+                                <div class="money_unit"><span>亿</span> <span>千</span> <span>百</span> <span>十</span> <span>万</span> <span>千</span> <span>百</span> <span>十</span> <span>元</span> <span>角</span> <span class="last">分</span> </div>
+                            </th>
+                        </tr>
+                    </thead>
+
+                </table>
+
+            </div>
+
+            <div id="abstractsWin" class="easyui-dialog" title="摘要选择" style="width:400px;height:500px;" data-options="modal:true,closed: true">
+                <div class="wrap">
+                    <p><label for="">摘要内容：</label></p>
+                    <input class="easyui-textbox" data-options="multiline:true" style="width:355px;height:60px;">
+                    <p class="footBtn">
+                        <a class="button" id="absSave">保 存</a>
+                        <a class="button" id="cancel" onclick="absClose()">取 消</a>
+                    </p>
+
+                    <table class="easyui-datagrid" id="absList" data-options="singleSelect: true" style="width:355px;">
+                        <thead>
+                            <tr>
+                                <th data-options="field:'abstracts',width:240,align:'center'">摘要</th>
+                                <th data-options="field:'aId',width:100,align:'center'">操作</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+            <div id="auditMark" class="has-audit"></div>
+
+            <div id="mydata"></div>
+        </div>
+
+    <script type="text/javascript">
+
+        //全局定义
+        var globVar = {
+            voucher: [],             //凭证数据集合
+            voucherIndex: -1         //当前凭证实例在集合中的索引
+        };
+
+        //======初始化=======
+        $(function () {
+            loadVoucher();
+        });
+
+        function loadVoucher() {
+            $.get('/api/v/GetComVouchers', function (data) {
+                globVar.voucher = data;
+                if (data && data.length > 0) {
+                    if (globVar.voucherIndex == -1) globVar.voucherIndex = data.length - 1;
+
+                    binding(data[globVar.voucherIndex]);
+
+                    $("#voucherTab").datagrid("enableCellEditing");
+                }
+            });
+        }
+
+        function binding(voucher) {
+            $("#cw").combobox("setValue", voucher.certWord);
+            $("#ss").numberspinner("setValue", voucher.certWordSn);
+            $("#dd").datebox("setValue", voucher.voucherTime.substr(0, voucher.voucherTime.indexOf("T")));
+            onDateChange($("#dd").datebox("getValue"));
+
+            $("#attCw").numberbox("setValue", voucher.attachedInvoices);
+            if (voucher.status == 2) $("#auditMark").show(); else $("#auditMark").hide();
+
+            $("#voucherTab").datagrid("loadData", globVar.voucher[globVar.voucherIndex].voucherDetails);
+        }
+
+        //=========初始化=======
+
+        //=========事件响应=====
+        function debiteFormatter(value, row, index) {
+            if (value.toString().indexOf(".") == -1)
+                value = value * 100;
+            else
+                value = value.replace(/./gi, "");
+
+            return '<div class="col_debite"><div class="cell_val debit_val">' + value + '</div></div>';
+        }
+        function creditFormatter(value, row, index) {
+            if (value.toString().indexOf(".") == -1)
+                value = value * 100;
+            else
+                value = value.replace(/./gi, "");
+
+            return '<div class="col_credit"><div class="cell_val credit_val">' + value + '</div></div>';
+        }
+        function scFormatter(value, row, index) {
+            return value + " " + row.subjectName;
+        }
+        function absClickButton() {
+            $("#abstractsWin").dialog("open");
+        }
+        function absClose() {
+            $("#abstractsWin").dialog("close");
+        }
+        function onDateChange(newValue, oldValue) {
+            var dArr = newValue.split('-');
+            if (dArr.length == 3) {
+                var m = new Number(dArr[1]);
+                $("#vch_year").text(dArr[0]);
+                $("#vch_period").text(m);
+            }
+        }
+        function datagridEndEdit() {
+            var dg = $("#voucherTab");
+            var editInd = dg.datagrid('options').editIndex;
+            if (editInd == undefined) return true;
+
+            if (dg.datagrid('validateRow', editInd)) {
+                if (typeof (fieldSettingFun) == "function") fieldSettingFun(editInd);
+
+                dg.datagrid('endEdit', editInd);
+                dg.datagrid('options').editIndex = undefined;
+
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        function saveVoucher() {
+            if (datagridEndEdit()) {
+                var voucherDetails = [];
+                var changeRows = $("#voucherTab").datagrid("getChanges");
+                if (changeRows.length == 0) {
+                    $.messager.show({ title: '保存', msg: '没有修改内容' });
+                    return;
+                }
+
+                $.post("/api/v/SaveVoucher",
+                    {
+                        VId: globVar.voucher[globVar.voucherIndex].vId,
+                        CertWord: $("#cw").combobox("getValue"),
+                        CertWordSn: $("#ss").numberspinner('getValue'),
+                        AttachedInvoices: $("#attCw").numberbox('getValue'),
+                        VoucherTime: $("#dd").datebox("getValue"),
+                        VoucherDetails: changeRows
+                    },
+                    function (data) {
+                        if (data >= 1) {
+                            $.messager.show({ title: '保存', msg: '保存操作成功完成' });
+                        }
+                        else {
+                            $.messager.alert('保存', '保存失败，请联系管理员处理', 'warning');
+                        }
+                    });
+            }
+        }
+        function addVoucher() {
+            if (datagridEndEdit()) {
+                var dg = $("#voucherTab");
+                dg.datagrid('appendRow', { vId: globVar.voucher[globVar.voucherIndex].vId, abstracts: '', subjectCode: '', subjectName: '', debit: 0, credit: 0 });
+
+            }
+        }
+        function reviewVoucher() {
+            $.post("/api/v/ReviewVoucher", { vid: globVar.voucher[globVar.voucherIndex].vId },
+                function (data) {
+                    if (data >= 1) {
+                        loadVoucher();
+                        binding(globVar.voucher[globVar.voucherIndex]);
+
+                        $.messager.show({ title: '审核', msg: '审核完成' });
+                    }
+                    else {
+                        $.messager.alert('审核', '审核失败，请联系管理员处理', 'warning');
+                    }
+                });
+        }
+
+        function fieldSettingFun(editIndex) {
+            var ed = $('#voucherTab').datagrid('getEditor', { index: editIndex, field: 'subjectCode' });
+            if (!ed) return;
+
+            var subjectName = $(ed.target).combotree('getText');
+            var sNames = subjectName.split(" ");
+            if (sNames.length > 1) $('#voucherTab').datagrid('getRows')[editIndex]['subjectName'] = sNames[1];
+        }
+        function prevClick() {
+            if (globVar.voucherIndex == 0) { $.messager.alert("前一项", "已到达第一项", "info"); return; }
+
+            if (globVar.voucherIndex > 0) globVar.voucherIndex--;
+            binding(globVar.voucher[globVar.voucherIndex]);
+        }
+        function nextClick() {
+
+            if (globVar.voucherIndex == globVar.voucher.length - 1) { $.messager.alert("下一项", "已到达最后一项", "info"); }
+
+            if (globVar.voucherIndex < globVar.voucher.length - 1) globVar.voucherIndex++;
+            binding(globVar.voucher[globVar.voucherIndex]);
+        }
+        //=========事件响应=====
+
+    </script>
+    </body>
+</html>

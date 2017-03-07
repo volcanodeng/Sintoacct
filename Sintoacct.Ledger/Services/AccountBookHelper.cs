@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNet.Identity;
 using Sintoacct.Ledger.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Principal;
 using System.Web;
-using System;
 
 
 namespace Sintoacct.Ledger.Services

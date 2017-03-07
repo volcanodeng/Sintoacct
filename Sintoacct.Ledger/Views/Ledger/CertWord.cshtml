@@ -1,0 +1,197 @@
+﻿@{ 
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/easyui")
+    <style type="text/css">
+        #formCertWord div {
+            padding: 10px;
+        }
+
+        #formCertWord input {
+            font-size: 14pt;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <table class="easyui-datagrid" id="dgCertWord" 
+               data-options="singleSelect:true,toolbar: '#tbCertWord',fitColumns:true,idField:'id',onSelect:onDgSelect,onLoadSuccess:dgLoadSuccess">
+            <thead>
+                <tr>
+                    <th data-options="field:'certWord',width:200,align:'center'">凭证字</th>
+                    <th data-options="field:'printTitle',width:200,align:'center'">打印标题</th>
+                    <th data-options="field:'isDefault',width:200,align:'center',formatter:fmtIsDefault">是否默认</th>
+                </tr>
+            </thead>
+        </table>
+
+        <div id="tbCertWord">
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="append()">新增</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="edit()">编辑</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="remove()">删除</a>
+        </div>
+    </div>
+
+    <div id="dlCertWord" class="easyui-dialog" title="编辑凭证字" style="width:450px;height:250px;" data-options="resizable:false,modal:true,closed: true">
+        <form id="formCertWord" method="post">
+            <div>
+                <input class="easyui-textbox" id="CertWord" name="CertWord" data-options="label:'凭证字',required:true" style="width:90%;height:32px">
+            </div>
+            <div>
+                <input class="easyui-textbox" id="PrintTitle" name="PrintTitle" data-options="label:'打印标题',required:true" style="width:90%;height:32px">
+            </div>
+            <div>
+                <label class="textbox-label textbox-label-before" for="IsDefault" style="text-align: left; height: 32px; line-height: 32px;">是否默认</label> <input class="easyui-switchbutton" id="IsDefault" name="IsDefault"  data-options="onText:'是',offText:'否'">
+            </div>
+            <div style="float:right;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="save()" style="width:80px">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="diaClose()" style="width:80px">关闭</a>
+            </div>
+            <input type="hidden" id="Id" name="Id" value="0" />
+            @Html.AntiForgeryToken()
+        </form>
+    </div>
+
+    <div id="cacheCertWord"></div>
+
+
+    @Scripts.Render("~/bundles/jquery")
+
+    <script type="text/javascript">
+        $(function () {
+            //init();
+        });
+
+        function init()
+        {
+            $("#formCertWord").form({
+                url: "/api/w/SaveCertWord/",
+                onSubmit: formOnSubmit,
+                success: formSuccess
+            });
+
+            loadData();
+        }
+
+        function formOnSubmit() {
+            return $(this).form('validate');
+        }
+
+        function formSuccess(data) {
+            $("#cacheCertWord").removeData("CertWordList");
+            loadData();
+
+            if (formSuccessHandle(data)) {
+                $("#dlCertWord").dialog("close");
+            }
+        }
+
+        function onDgSelect(index, row) {
+            $("#formCertWord").form("load", {
+                CertWord: row.certWord,
+                PrintTitle: row.printTitle,
+                Id: row.id
+            });
+        }
+
+        function loadData()
+        {
+            var dgCache = $("#cacheCertWord").data("CertWordList");
+
+            if (dgCache == undefined) {
+                $.get("/api/w/GetComCertWord", function (data) {
+                    $("#dgCertWord").datagrid("loadData", data);
+                    $("#cacheCertWord").data("CertWordList", data);
+                });
+            }
+            else
+            {
+                $("#dgCertWord").datagrid("loadData", dgCache);
+            }
+        }
+
+        function append()
+        {
+            $("#CertWord").textbox("clear");
+            $("#PrintTitle").textbox("clear");
+            $("#IsDefault").switchbutton("setValue", "on");
+
+            $("#dlCertWord").dialog("open");
+        }
+
+        function edit()
+        {
+            var selRow = $("#dgCertWord").datagrid("getSelected");
+            if(selRow != null)
+            {
+                $("#dlCertWord").dialog("open");
+            }
+            else
+            {
+                $.messager.alert('编辑凭证字', '请在列表中选择要编辑的凭证字！', 'warning');
+            }
+        }
+
+        function save()
+        {
+            $("#formCertWord").submit();
+        }
+
+        function diaClose()
+        {
+            $("#dlCertWord").dialog("close");
+        }
+
+        function fmtIsDefault(value, row, index)
+        {
+            var chk = (value == "on" ? "checked" : "");
+            return '<input class="easyui-switchbutton" data-options="onText:\'是\',offText:\'否\',onChange:setDefault" ' + chk + ' cwid="' + row.id + '" >';
+        }
+
+        function dgLoadSuccess(data)
+        {
+            $.parser.parse();
+        }
+
+        function remove() {
+            var selRow = $("#dgCertWord").datagrid("getSelected");
+            if (selRow != null) {
+                $.get("/api/w/DelCertWord/", { cwId: selRow.id}, function (data) {
+                    $("#cacheCertWord").removeData("CertWordList");
+
+                    if (formSuccessHandle(data)) {
+                        loadData();
+                    }
+                });
+            }
+            else {
+                $.messager.alert('删除', '请选择要删除的记录', 'info');
+            }
+        }
+
+        function setDefault(chk) {
+            var cwid = $(this).attr("cwid");
+            if (cwid != null) {
+                $.get("/api/w/SetDefault/", { cwId: cwid }, function (data) {
+                    $("#cacheCertWord").removeData("CertWordList");
+
+                    if (formSuccessHandle(data)) {
+                        loadData();
+                    }
+                });
+            }
+            else {
+                $.messager.alert('删除', '请选择要删除的记录', 'info');
+            }
+        }
+
+    </script>
+
+</body>
+</html>

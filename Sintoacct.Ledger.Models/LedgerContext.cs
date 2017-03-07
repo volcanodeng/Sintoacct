@@ -14,6 +14,8 @@ namespace Sintoacct.Ledger.Models
 
         public DbSet<AccountBook> AccountBooks { get; set; }
 
+        public DbSet<CertificateWord> CertificateWords { get; set; }
+
         public DbSet<AbstractTemp> AbstractTemps { get; set; }
 
         public DbSet<UserBook> UserBooks { get; set; }

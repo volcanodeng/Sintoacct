@@ -1,0 +1,364 @@
+﻿
+@using XinTuo.Accounts.Models;
+@{
+    List<AccountCategoryRecord> cates = Model.Category;
+    List<AuxiliaryTypeRecord> auxTypes = Model.AuxiliaryType;
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Html.Partial("ResourcePartial")
+    
+    <style type="text/css">
+        #acctForm div {
+            padding: 10px;
+        }
+
+        #acctForm input {
+            font-size: 14pt;
+        }
+
+        .datagrid-header-row td {
+            text-align:center;
+            font-weight:bold;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'north',split:false,border:false" style="padding:10px;overflow:hidden;">
+            @foreach (AccountCategoryRecord c in cates)
+            {
+                <a href="javascript:void(0)" id="cate_@c.Id" class="easyui-linkbutton cate"
+                   data-options="iconCls:'icon-large-picture',size:'large',iconAlign:'left',toggle:true,group:'g1'"
+                   onclick="cateOnClick(@c.Id)" style="width:80px;">@c.CateName</a>
+            }
+        </div>
+        <div data-options="region:'center',border:false" style="padding:10px;">
+            <table class="easyui-datagrid" id="accDatagrid" 
+                   data-options="singleSelect:true,toolbar: '#accToolbar',fitColumns:true,idField:'accId',pagination:true,fit:true,pageList:[10,50,100],pageSize:100,onSelect:onDgSelect,onDblClickRow:onDgDblClickRow">
+                <thead>
+                    <tr>
+                        <th data-options="field:'accCode',width:80,formatter:formatterAccCode" >@T("编码")</th>
+                        <th data-options="field:'accName',width:150,formatter:formatterAccCode" >@T("名称")</th>
+                        <th data-options="field:'cateName',align:'center',width:100" >@T("类别")</th>
+                        <th data-options="field:'direction',align:'center',width:50" >@T("余额方向")</th>
+                        <th data-options="field:'auxTypeNames',align:'center',width:150">@T("辅助核算")</th>
+                        <th data-options="field:'unit',align:'center',width:150">@T("数量单位")</th>
+                        <th data-options="field:'accState',formatter:formatterAccState,align:'center',width:50">@T("状态")</th>
+                    </tr>
+                </thead>
+            </table>
+
+            <div id="accToolbar">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="append()">新增</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="appendSub()">新增下级</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="edit()">编辑</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="remove()">删除</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="dataCache"></div>
+
+    <div id="editDialog" class="easyui-dialog" title="编辑科目" style="width:450px;height:600px;font-size:14pt;" data-options="resizable:false,modal:true,closed: true,onClose:editOnClose">
+        <form id="acctForm" method="post">
+
+            <div>
+                <input class="easyui-textbox" id="AccCode" name="AccCode" data-options="label:'@T("科目编码")',required:true" style="width:90%;height:32px">
+            </div>
+
+            <div>
+                <input class="easyui-textbox" id="AccName" name="AccName" data-options="label:'@T("科目名称")',required:true" style="width:90%;height:32px">
+            </div>
+
+            <div>
+                <input class="easyui-textbox" id="ParentCode" name="ParentCode" data-options="label:'@T("上级科目")'" style="width:90%;height:32px">
+            </div>
+
+            <div>
+                <input class="easyui-combobox" id="CateId" name="CateId" data-options="label:'@T("科目类别")',required:true,valueField:'id',textField:'cateName',method: 'GET',editable:false,onLoadSuccess:cateIdOnLoadSuccess" style="width:90%;height:32px">
+            </div>
+
+            <div>
+                <label for="dirGroup" style="display:inline-block;" class="textbox-label textbox-label-before">余额方向</label>
+                <fieldset id="dirGroup" style="display:inline;">
+                    <input type="radio" id="dirDebit" name="dir" value="借" /><label for="dirDebit" style="display:inline;font-weight:bold;margin-right:10px;">借</label>
+                    <input type="radio" id="dirCredit" name="dir" value="贷" /><label for="dirCredit" style="display:inline;font-weight:bold;">贷</label>
+                </fieldset>
+                <input type="hidden" id="Direction" name="Direction" />
+            </div>
+
+            <div>
+                <input type="checkbox" id="IsAuxiliary" name="IsAuxiliary" /><label for="IsAuxiliary" style="display:inline;margin-left:5px;">辅助核算</label>
+                <div id="auxItems" style="display:inline-block;">
+                    @foreach (AuxiliaryTypeRecord aux in auxTypes)
+                    {
+                        <input type="checkbox" id="aux_@aux.Id" name="aux_@aux.Id" auxval="@aux.Id"  aux="@aux.AuxType" /><label for="aux_@aux.Id" style="display:inline;margin-left:5px;">@aux.AuxType</label>
+                    }
+                </div>
+                <input type="hidden" id="AuxTypeIds" name="AuxTypeIds" />
+                <input type="hidden" id="AuxTypeNames" name="AuxTypeNames" />
+            </div>
+
+            <div>
+                <input type="checkbox" id="IsQuantity" name="IsQuantity" /><label for="IsQuantity" style="display:inline;margin-left:5px;">数量核算</label>
+                <div id="qtyUnit" style="padding:0px;margin:0px;display:inline;">
+                    <input class="easyui-textbox" id="Unit" name="Unit" data-options="label:'@T("计量单位")'" style="width:100%;height:32px">
+                </div>
+            </div>
+
+            <div style="text-align:right;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="save()" style="width:80px">确 定</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="cancel()" style="width:80px">取 消</a>
+                <input type="hidden" id="acctTopCate" name="acctTopCate" />
+                <input type="hidden" id="AccId" name="AccId" />
+                <input type="hidden" id="__RequestVerificationToken" name="__RequestVerificationToken" value="@Html.AntiForgeryTokenValueOrchard()" />
+            </div>
+
+        </form>
+    </div>
+
+    
+
+    <script type="text/javascript">
+
+
+    $(function () {
+        init();
+    });
+
+    function init()
+    {
+        $("#acctForm").form({
+            url: "/api/a/save/",
+            onSubmit: formOnSubmit,
+            success: formSuccess
+        });
+
+        //启动或禁用辅助核算
+        $("#IsAuxiliary").change(function () {
+            if($(this).is(":checked"))
+            {  
+                $("#auxItems").show();
+            }
+            else
+            {
+                $("#auxItems").hide();
+            }
+        });
+        $("#auxItems").hide();
+
+        //启动或禁用数量核算
+        $("#IsQuantity").change(function () {
+            if ($(this).is(":checked")) {
+                $("#qtyUnit").show();
+            }
+            else {
+                $("#qtyUnit").hide();
+            }
+        });
+        $("#qtyUnit").hide();
+        //默认类别
+        $(".cate:first").linkbutton("select");
+        $(".cate:first").click();
+        
+    }
+
+    function append()
+    {
+        //新增记录设置id为0
+        $("#AccId").val(0);
+
+        $("#editDialog").dialog('open');
+    }
+
+    function save()
+    {
+        //辅助核算
+        var auxIds = $.map($("#auxItems > input:checked"), function (n) { return $(n).attr("auxval"); }).join(",");
+        var auxNames = $.map($("#auxItems > input:checked"), function (n) { return $(n).attr("aux"); }).join(",");
+        $("#AuxTypeIds").val(auxIds);
+        $("#AuxTypeNames").val(auxNames);
+
+        //余额方向
+        $("#Direction").val( $("#dirGroup > input:checked").val());
+
+        //科目类型
+        $("#acctTopCate",this.context).val($("#dataCache").data("AccCate"));
+
+        $("#acctForm").submit();
+    }
+
+    function formOnSubmit() {
+        return $(this).form('validate');
+    }
+
+    function formSuccess(data) {
+        var cateId = $("#dataCache").data("AccCate");
+        $("#dataCache").removeData("account" + cateId);
+
+        if(formSuccessHandle(data))
+        {
+            cateOnClick(cateId);
+            $("#editDialog").dialog('close');
+        }
+    }
+
+    function cancel()
+    {
+        $("#editDialog").dialog('close');
+    }
+    function editOnClose()
+    {
+        $("#auxItems").hide();
+        $("#qtyUnit").hide();
+        $('#acctForm').form('clear');
+    }
+
+    function cateOnClick(cateId)
+    {
+        $("#dataCache").data("AccCate",cateId);
+        var dgCache = $("#dataCache").data("account"+cateId);
+
+        if(dgCache == undefined)
+        {
+            $.get("/api/a/GetAccounts/",{cateid : cateId},function(data){
+                $("#accDatagrid").datagrid("loadData", data);
+                $("#dataCache").data("account" + cateId, data);
+            });
+        }
+        else
+        {
+            $("#accDatagrid").datagrid("loadData", dgCache);
+        }
+
+    }
+
+
+    function formatterAccState(value,row,index)
+    {
+        return value == 1?"已启用":"已禁用";
+    }
+
+    function formatterAccCode(value,row,index)
+    {
+        if(row.accCode.length > 4)
+        {
+            return "&nbsp;&nbsp;&nbsp;&nbsp;"+value;
+        }
+
+        return value;
+    }
+
+    function onDgSelect(index, row)
+    {
+        var token = "@Html.AntiForgeryTokenValueOrchard()";
+        $("#acctForm").form("load", {
+            AccCode: row.accCode,
+            AccName: row.accName,
+            ParentCode: row.parentCode==null?"没有上级科目":row.parentCode+" "+getParentAcct(row.parentCode),
+            dir:row.direction,
+            Direction:row.direction,
+            IsAuxiliary: row.isAuxiliary,
+            AuxTypeIds: row.auxTypeIds,
+            AuxTypeNames: row.auxTypeNames,
+            IsQuantity: row.isQuantity,
+            Unit:row.unit,
+            CateId: row.cateId,
+            AccId: row.accId,
+            __RequestVerificationToken: token
+        });
+
+        loadCateId();
+
+        if (row.isAuxiliary == "on") $("#auxItems").show();
+        if (row.isQuantity == "on") $("#qtyUnit").show();
+
+        if (row.auxTypeIds != null && row.auxTypeIds.length > 1) {
+            $.each(row.auxTypeIds.split(","),
+                function (i, n) {
+                    var auxData = {};
+                    auxData["aux_" + n] = "on";
+                    $("#acctForm").form("load", auxData);
+                });
+        }
+    }
+
+    function onDgDblClickRow(index,row)
+    {
+        edit();
+    }
+
+    function edit()
+    {
+        var row = $("#accDatagrid").datagrid("getSelected");
+        onDgSelect(0,row);
+        $("#ParentCode").textbox("disable");
+        $("#editDialog").dialog('open');
+    }
+
+    function getParentAcct(parCode)
+    {
+        var cateId = $("#dataCache").data("AccCate");
+
+        var dgCache = $("#dataCache").data("account"+cateId);
+
+        var pAcc  =$.grep(dgCache,function(n,i){return n.accCode==parCode});
+
+        return (pAcc==null || pAcc.length==0)?"":pAcc[0].accName;
+    }
+
+    function cateIdOnLoadSuccess()
+    {
+        var subCate = $("#CateId").combobox('getData');
+        var cateId = $("#dataCache").data("AccCate");
+
+        $("#dataCache").removeData("subcate" + cateId);
+        $("#dataCache").data("subcate" + cateId, subCate);
+    }
+
+    function loadCateId()
+    {
+        var cateId = $("#dataCache").data("AccCate");
+        var subCate = $("#dataCache").data("subcate" + cateId);
+
+        if (subCate)
+        {
+            $("#CateId").combobox('loadData', subCate);
+        }
+        else
+        {
+            $("#CateId").combobox('reload', '/api/a/GetSubAccCate?cid=' + $("#dataCache").data("AccCate"));
+        }
+    }
+
+    function remove()
+    {
+        var row = $("#accDatagrid").datagrid("getSelected");
+
+        if(!row)
+        {
+            $.messager.alert('删除','请选择要删除的科目！','warning');
+            return;
+        }
+
+        $.messager.confirm('删除', '您确定要删除该科目吗？删除后不能再恢复。', function (r) {
+            if (r) {
+                $.post("/api/a/Delete?accId="+row.accId, null, function (data) {
+                    formSuccess(data);
+                }).fail(function () { $.messager.alert("操作失败", "删除科目操作失败", "warning"); });
+            }
+        });
+    }
+    </script>
+
+
+</body>
+</html>
