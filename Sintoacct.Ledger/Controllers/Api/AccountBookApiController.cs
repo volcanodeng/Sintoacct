@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Http;
 using Sintoacct.Ledger.Models;
 using Sintoacct.Ledger.Services;
+using AutoMapper;
 
 namespace Sintoacct.Ledger.Controllers.Api
 {
@@ -23,7 +24,9 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, Route("api/acctbook/MyAcctBook")]
         public IHttpActionResult GetMyAccountBook()
         {
-            return Ok(_acctBook.GetBooksOfUser());
+            DatagridViewModels<AcctBookListViewModels> data = new DatagridViewModels<AcctBookListViewModels>();
+            data.rows = Mapper.Map<List<AcctBookListViewModels>>(_acctBook.GetBooksOfUser());
+            return Ok(data);
         }
 
         [ClaimsAuthorize("role", "accountant-edit")]
@@ -42,6 +45,26 @@ namespace Sintoacct.Ledger.Controllers.Api
             }
 
             _acctBook.Save(acctBook);
+
+            return Ok(ResMessage.Success());
+        }
+
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/acctbook/del"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult DeleteAccountBook(AcctBookViewModels acctBook)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            if (!_modelValid.ValidAccountBookCreate(acctBook, out err))
+            {
+                ResMessage.Fail(err);
+            }
+
+            _acctBook.Delete(acctBook.AbId);
 
             return Ok(ResMessage.Success());
         }

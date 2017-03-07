@@ -22,6 +22,9 @@ namespace Sintoacct.Ledger
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
+            //Automapper配置
+            AutoMapperConfiguration.Configure();
+
             //依赖注入
             AutofacConfig();
 

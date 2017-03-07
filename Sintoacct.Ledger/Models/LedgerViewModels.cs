@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Newtonsoft.Json;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http;
-using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
 using System.Text;
 using System.Web.Http;
 
@@ -21,6 +18,7 @@ namespace Sintoacct.Ledger.Models
 
             _content = new ResMessageContent();
             _content.message = "成功";
+            _content.IsSuccess = true;
         }
 
         public ResMessageContent MessageContent
@@ -31,17 +29,17 @@ namespace Sintoacct.Ledger.Models
             }
         }
 
-        public static ResMessage Success()
+        public static ResMessageContent Success()
         {
             ResMessage msg = new ResMessage();
-            msg.Content = new StringContent(JsonConvert.SerializeObject(msg.MessageContent), Encoding.UTF8, "application/json");
-            return msg;
+            return msg.MessageContent;
         }
 
         public static void Fail(string reason)
         {
             ResMessage msg = new ResMessage();
             msg.MessageContent.message = reason;
+            msg.MessageContent.IsSuccess = false;
             msg.StatusCode = HttpStatusCode.Forbidden;
             msg.Content = new StringContent(JsonConvert.SerializeObject(msg.MessageContent), Encoding.UTF8, "application/json");
             throw new HttpResponseException(msg);
@@ -51,6 +49,7 @@ namespace Sintoacct.Ledger.Models
         {
             ResMessage msg = new ResMessage();
             msg.MessageContent.message = reason;
+            msg.MessageContent.IsSuccess = false;
             msg.StatusCode = code;
             msg.Content = new StringContent(JsonConvert.SerializeObject(msg.MessageContent), Encoding.UTF8, "application/json");
             throw new HttpResponseException(msg);
@@ -59,6 +58,7 @@ namespace Sintoacct.Ledger.Models
 
     public class ResMessageContent
     {
+        public bool IsSuccess { get; set; }
         public string message { get; set; }
     }
 
@@ -79,6 +79,8 @@ namespace Sintoacct.Ledger.Models
         public string Creator { get; set; }
 
         public DateTime CreateTime { get; set; }
+
+        public int State { get; set; }
     }
 
     public class AcctBookViewModels

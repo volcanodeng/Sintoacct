@@ -1,26 +1,28 @@
 ﻿
 <div class="easyui-panel" data-options="fit:true,border:false" style="padding:10px;">
     <table id="acctBook" class="easyui-datagrid"
-           data-options="fitColumns:true,singleSelect:true,emptyMsg:'（无记录）',toolbar:'#tbAcctBook'">
+           data-options="fitColumns:true,singleSelect:true,emptyMsg:'（无记录）',toolbar:'#tbAcctBook',idField:'AbId'">
         <thead>
             <tr>
-                <th data-options="field:'companyName',width:100,align:'center'">公司名称</th>
-                <th data-options="field:'currency',width:100,align:'center'">币种</th>
-                <th data-options="field:'startYear',width:100,align:'center'">开始年份</th>
-                <th data-options="field:'startPeriod',width:100,align:'center'">账期</th>
-                <th data-options="field:'fiscalSystem',width:100,align:'center'">会计制度</th>
-                <th data-options="field:'creator',width:100,align:'center'">创建人</th>
-                <th data-options="field:'createTime',width:100,align:'center'">创建时间</th>
+                <th data-options="field:'CompanyName',width:100,align:'center'">公司名称</th>
+                <th data-options="field:'Currency',width:100,align:'center'">币种</th>
+                <th data-options="field:'StartYear',width:100,align:'center'">开始年份</th>
+                <th data-options="field:'StartPeriod',width:100,align:'center'">账期</th>
+                <th data-options="field:'FiscalSystem',width:100,align:'center'">会计制度</th>
+                <th data-options="field:'Creator',width:100,align:'center'">创建人</th>
+                <th data-options="field:'CreateTime',width:100,align:'center'">创建时间</th>
+                <th data-options="field:'State',width:100,align:'center',formatter:fmt_State">状态</th>
             </tr>
         </thead>
     </table>
 
     <div id="tbAcctBook">
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="append()">新增</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="edit()">编辑</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="remove()">删除</a>
     </div>
 </div>
+
+<div id=""></div>
 
 <div class="easyui-dialog" id="bookWin" title="账套" style="width:400px;height:280px;padding:10px;font-size:14px;" data-options="closed:true">
     <form method="post" id="bookForm">
@@ -64,7 +66,8 @@
         var obj = {
             datagrid: "#acctBook",
             form: "#bookForm",
-            bookWin: "#bookWin"
+            bookWin: "#bookWin",
+            cache: "#dataCache"
         };
 
         $(function () {
@@ -78,11 +81,24 @@
                 onSubmit: form_OnSubmit,
                 success: form_Success
             });
+
+            dg_load();
         }
 
         function dg_load()
         {
+            var dgData = $(obj.cache).data("MyAcctBook");
 
+            if (dgData == null || dgData == undefined) {
+                $.get("/api/acctbook/MyAcctBook/", null, function (data) {
+                    $(obj.datagrid).datagrid("loadData", data);
+                    $(obj.cache).data("MyAcctBook", data);
+                });
+            }
+            else
+            {
+                $(obj.datagrid).datagrid("loadData", dgData);
+            }
         }
 
         function form_btnClose()
@@ -109,6 +125,36 @@
         function append()
         {
             $(obj.bookWin).dialog("open");
+        }
+
+        function remove()
+        {
+            var row = $(obj.datagrid).datagrid("getSelected");
+            if (row != null) {
+                $.messager.confirm('删除', '您确定要删除该账套吗？', function (r) {
+                    if (r) {
+                        $.post("/api/acctbook/del/", { AbId: row.AbId }, function (data) {
+                            responseHandle(data);
+                        });
+                    }
+                });
+            }
+            else
+            {
+                $.messager.alert('删除', '请选择要删除的账套', 'warning');
+            }
+        }
+
+        function fmt_State(value, row, index)
+        {
+            if(value == 1)
+            {
+                return "正常";
+            }
+            else
+            {
+                return "已删除";
+            }
         }
 
     </script>

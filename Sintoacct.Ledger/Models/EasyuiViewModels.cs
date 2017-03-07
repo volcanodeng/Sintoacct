@@ -7,7 +7,7 @@ namespace Sintoacct.Ledger.Models
 {
     public class DatagridViewModels<T> 
     {
-        public int total { get; set; }
+        public int total { get { return rows.Count; } }
 
         public List<T> rows { get; set; }
     }

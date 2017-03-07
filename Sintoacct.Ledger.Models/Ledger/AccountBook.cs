@@ -11,6 +11,11 @@ namespace Sintoacct.Ledger.Models
     [Table("T_Account_Book")]
     public class AccountBook
     {
+        public AccountBook()
+        {
+            Users = new List<UserBook>();
+        }
+
         /// <summary>
         /// 账套编号
         /// </summary>
@@ -61,6 +66,11 @@ namespace Sintoacct.Ledger.Models
         public DateTime CreateTime { get; set; }
 
         /// <summary>
+        /// 账套状态
+        /// </summary>
+        public AccountBookState State { get; set; }
+
+        /// <summary>
         /// 账套管理员
         /// </summary>
         public virtual ICollection<UserBook> Users { get; set; }
@@ -101,5 +111,20 @@ namespace Sintoacct.Ledger.Models
         /// 新会计准则（2006年颁）
         /// </summary>
         新会计准则_2006年颁 = 2
+    }
+
+    /// <summary>
+    /// 账套状态
+    /// </summary>
+    public enum AccountBookState
+    {
+        /// <summary>
+        /// 正常
+        /// </summary>
+        Normal = 1,
+        /// <summary>
+        /// 已删除
+        /// </summary>
+        Deleted = 0
     }
 }

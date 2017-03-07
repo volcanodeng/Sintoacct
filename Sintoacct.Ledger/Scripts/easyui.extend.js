@@ -212,7 +212,7 @@ function responseHandle(data) {
     if (typeof data != "object") data = JSON.parse(data);
 
     if (!data.IsSuccess) {
-        $.messager.alert("操作结果", data.message + "（" + data.Code + "）", "warning");
+        $.messager.alert("操作结果", data.message, "warning");
         return false;
     }
     else {

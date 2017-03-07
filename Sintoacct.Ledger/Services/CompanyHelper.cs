@@ -6,7 +6,7 @@ using Sintoacct.Ledger.Models;
 
 namespace Sintoacct.Ledger.Services
 {
-    public class CompanyHelper 
+    public class CompanyHelper : ICompanyHelper
     {
         private readonly LedgerContext _ledger;
 

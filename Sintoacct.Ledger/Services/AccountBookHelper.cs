@@ -25,7 +25,9 @@ namespace Sintoacct.Ledger.Services
         public List<AccountBook> GetBooksOfUser()
         {
             string userId = _identity.GetUserId();
-            List<UserBook> books = _ledger.UserBooks.Where(ub => ub.UserId == userId).Include(ub => ub.AccountBook).ToList();
+            List<UserBook> books = _ledger.UserBooks.Where(ub => ub.UserId == userId)
+                                          .Include(ub => ub.AccountBook)
+                                          .Include(ub=>ub.AccountBook.Company).ToList();
 
             return books.Select(ub => ub.AccountBook).ToList();
         }
@@ -49,6 +51,12 @@ namespace Sintoacct.Ledger.Services
                 book.Creator = _identity.GetUserName();
                 book.CreateTime = DateTime.Now;
 
+                //创建人默认具有编辑账套内容的权限
+                UserBook ub = new UserBook();
+                ub.AccountBook = book;
+                ub.UserId = _identity.GetUserId();
+                book.Users.Add(ub);
+
                 _ledger.AccountBooks.Add(book);
             }
             else
@@ -63,6 +71,16 @@ namespace Sintoacct.Ledger.Services
             return null;
         }
 
+        public void Delete(string abId)
+        {
+            AccountBook book = _ledger.AccountBooks.Where(ab => ab.AbId == Guid.Parse(abId)).FirstOrDefault();
+            if(book!= null)
+            {
+                book.State = AccountBookState.Deleted;
+                _ledger.SaveChanges();
+            }
+        }
+
     }
 
 
@@ -72,5 +90,7 @@ namespace Sintoacct.Ledger.Services
         List<AccountBook> GetBooksOfUser();
 
         AccountBook Save(AcctBookViewModels acctBook);
+
+        void Delete(string abId);
     }
 }

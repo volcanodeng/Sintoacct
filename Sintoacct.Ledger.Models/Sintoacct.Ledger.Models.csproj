@@ -62,9 +62,9 @@
     <Compile Include="Company.cs" />
     <Compile Include="Ledger\UserBook.cs" />
     <Compile Include="LedgerContext.cs" />
-    <Compile Include="Migrations\201703061632140_InitialCreate.cs" />
-    <Compile Include="Migrations\201703061632140_InitialCreate.Designer.cs">
-      <DependentUpon>201703061632140_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201703071030312_InitialCreate.cs" />
+    <Compile Include="Migrations\201703071030312_InitialCreate.Designer.cs">
+      <DependentUpon>201703071030312_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,8 +75,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201703061632140_InitialCreate.resx">
-      <DependentUpon>201703061632140_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201703071030312_InitialCreate.resx">
+      <DependentUpon>201703071030312_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SQL\InitData.sql" />
   </ItemGroup>
