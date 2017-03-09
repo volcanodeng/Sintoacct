@@ -13,11 +13,15 @@ namespace Sintoacct.Ledger.Controllers.Api
     {
         private readonly IAccountBookHelper _acctBook;
         private readonly IModelValidation _modelValid;
+        private readonly ICertificateWordHelper _certWord;
 
-        public AccountBookApiController(IAccountBookHelper acctBook,IModelValidation modelValid)
+        public AccountBookApiController(IAccountBookHelper acctBook,
+                                        ICertificateWordHelper certWord,
+                                        IModelValidation modelValid)
         {
             _acctBook = acctBook;
             _modelValid = modelValid;
+            _certWord = certWord;
         }
 
         [ClaimsAuthorize("role", "accountant")]
@@ -59,12 +63,61 @@ namespace Sintoacct.Ledger.Controllers.Api
                 return BadRequest(err);
             }
 
-            if (!_modelValid.ValidAccountBookCreate(acctBook, out err))
+            _acctBook.Delete(acctBook.AbId);
+
+            return Ok(ResMessage.Success());
+        }
+
+        [ClaimsAuthorize("role", "accountant")]
+        [HttpGet, Route("api/acctbook/MyCertWord")]
+        public IHttpActionResult GetCertWord()
+        {
+            DatagridViewModels<CertWordViewModel> data = new DatagridViewModels<CertWordViewModel>();
+            data.rows = Mapper.Map<List<CertWordViewModel>>(_certWord.GetCertWordInAccountBook());
+            return Ok(data);
+        }
+
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/acctbook/saveCertword"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult SaveCertWord(CertWordViewModel certWord)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
             {
-                ResMessage.Fail(err);
+                return BadRequest(err);
             }
 
-            _acctBook.Delete(acctBook.AbId);
+            _certWord.Save(certWord);
+
+            return Ok(ResMessage.Success());
+        }
+
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/acctbook/delCertword"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult DeleteCertWord(CertWordViewModel certWord)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            _certWord.Delete(certWord);
+
+            return Ok(ResMessage.Success());
+        }
+
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/acctbook/setCwDef"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult SetCertWordDefault(CertWordViewModel certWord)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            _certWord.SetDefault(certWord);
 
             return Ok(ResMessage.Success());
         }

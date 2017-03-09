@@ -24,9 +24,9 @@
                data-options="singleSelect:true,toolbar: '#tbCertWord',fitColumns:true,idField:'id',onSelect:onDgSelect,onLoadSuccess:dgLoadSuccess">
             <thead>
                 <tr>
-                    <th data-options="field:'certWord',width:200,align:'center'">凭证字</th>
-                    <th data-options="field:'printTitle',width:200,align:'center'">打印标题</th>
-                    <th data-options="field:'isDefault',width:200,align:'center',formatter:fmtIsDefault">是否默认</th>
+                    <th data-options="field:'CertWord',width:200,align:'center'">凭证字</th>
+                    <th data-options="field:'PrintTitle',width:200,align:'center'">打印标题</th>
+                    <th data-options="field:'IsDefault',width:200,align:'center',formatter:fmtIsDefault">是否默认</th>
                 </tr>
             </thead>
         </table>
@@ -58,20 +58,20 @@
         </form>
     </div>
 
-    <div id="cacheCertWord"></div>
+    <div id="cacheCertWord" ></div>
 
 
     @Scripts.Render("~/bundles/jquery")
 
     <script type="text/javascript">
         $(function () {
-            //init();
+            init();
         });
 
         function init()
         {
             $("#formCertWord").form({
-                url: "/api/w/SaveCertWord/",
+                url: "/api/acctbook/saveCertword/",
                 onSubmit: formOnSubmit,
                 success: formSuccess
             });
@@ -105,7 +105,7 @@
             var dgCache = $("#cacheCertWord").data("CertWordList");
 
             if (dgCache == undefined) {
-                $.get("/api/w/GetComCertWord", function (data) {
+                $.get("/api/acctbook/MyCertWord", function (data) {
                     $("#dgCertWord").datagrid("loadData", data);
                     $("#cacheCertWord").data("CertWordList", data);
                 });
@@ -140,6 +140,8 @@
 
         function save()
         {
+            var def = $("#IsDefault").switchbutton("Value");
+            $("#IsDefault").switchbutton("setValue", def == "on" ? "true" : "false");
             $("#formCertWord").submit();
         }
 
@@ -150,7 +152,7 @@
 
         function fmtIsDefault(value, row, index)
         {
-            var chk = (value == "on" ? "checked" : "");
+            var chk = (value == true ? "checked" : "");
             return '<input class="easyui-switchbutton" data-options="onText:\'是\',offText:\'否\',onChange:setDefault" ' + chk + ' cwid="' + row.id + '" >';
         }
 
@@ -162,7 +164,7 @@
         function remove() {
             var selRow = $("#dgCertWord").datagrid("getSelected");
             if (selRow != null) {
-                $.get("/api/w/DelCertWord/", { cwId: selRow.id}, function (data) {
+                $.get("/api/acctbook/delCertword/", { cwId: selRow.id }, function (data) {
                     $("#cacheCertWord").removeData("CertWordList");
 
                     if (formSuccessHandle(data)) {
@@ -178,7 +180,7 @@
         function setDefault(chk) {
             var cwid = $(this).attr("cwid");
             if (cwid != null) {
-                $.get("/api/w/SetDefault/", { cwId: cwid }, function (data) {
+                $.get("/api/acctbook/setCwDef/", { cwId: cwid }, function (data) {
                     $("#cacheCertWord").removeData("CertWordList");
 
                     if (formSuccessHandle(data)) {
@@ -187,7 +189,7 @@
                 });
             }
             else {
-                $.messager.alert('删除', '请选择要删除的记录', 'info');
+                $.messager.alert('默认', '请选择要设置默认的记录', 'info');
             }
         }
 

@@ -14,7 +14,9 @@ namespace Sintoacct.Ledger
             Mapper.Initialize(cfg => {
                 cfg.CreateMap<AccountBook, AcctBookListViewModels>()
                 .ForMember(dest=>dest.CompanyName,opt=>opt.MapFrom(src=>src.Company.ComName));
-                
+
+
+                cfg.CreateMap<CertificateWord, CertWordViewModel>();
             });
         }
     }
