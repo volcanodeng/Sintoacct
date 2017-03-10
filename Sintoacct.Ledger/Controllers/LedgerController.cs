@@ -1,15 +1,18 @@
 ﻿using System.Web.Mvc;
 using Sintoacct.Ledger.Services;
 using System;
+using System.Web;
 using System.Security.Claims;
 
 namespace Sintoacct.Ledger.Controllers
 {
     public class LedgerController : Controller
     {
+        private ClaimsIdentity _identity;
 
-        public LedgerController()
+        public LedgerController(HttpContextBase context)
         {
+            _identity = context.User.Identity as ClaimsIdentity;
         }
 
 
@@ -28,6 +31,7 @@ namespace Sintoacct.Ledger.Controllers
             {
                 var identity = this.HttpContext.User.Identity as ClaimsIdentity;
                 identity.AddClaim(new Claim(Constants.ClaimAccountBookID, abidStr));
+                //Session[Constants.ClaimAccountBookID] = abidStr;
             }
             else
             {

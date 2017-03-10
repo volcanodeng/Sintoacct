@@ -47,7 +47,8 @@
                 <input class="easyui-textbox" id="PrintTitle" name="PrintTitle" data-options="label:'打印标题',required:true" style="width:90%;height:32px">
             </div>
             <div>
-                <label class="textbox-label textbox-label-before" for="IsDefault" style="text-align: left; height: 32px; line-height: 32px;">是否默认</label> <input class="easyui-switchbutton" id="IsDefault" name="IsDefault"  data-options="onText:'是',offText:'否'">
+                <label class="textbox-label textbox-label-before" for="IsDefault" style="text-align: left; height: 32px; line-height: 32px;">是否默认</label> <input class="easyui-switchbutton" id="btnDefault"   data-options="onText:'是',offText:'否',onChange:sbtnOnChange">
+                <input id="IsDefault" name="IsDefault" type="hidden" />
             </div>
             <div style="float:right;">
                 <a href="javascript:void(0)" class="easyui-linkbutton" onclick="save()" style="width:80px">保存</a>
@@ -120,7 +121,7 @@
         {
             $("#CertWord").textbox("clear");
             $("#PrintTitle").textbox("clear");
-            $("#IsDefault").switchbutton("setValue", "on");
+            $("#btnDefault").switchbutton("uncheck");
 
             $("#dlCertWord").dialog("open");
         }
@@ -140,8 +141,8 @@
 
         function save()
         {
-            var def = $("#IsDefault").switchbutton("Value");
-            $("#IsDefault").switchbutton("setValue", def == "on" ? "true" : "false");
+            $("#IsDefault").val($("#btnDefault").switchbutton("options").checked);
+
             $("#formCertWord").submit();
         }
 
@@ -191,6 +192,11 @@
             else {
                 $.messager.alert('默认', '请选择要设置默认的记录', 'info');
             }
+        }
+
+        function sbtnOnChange(checked)
+        {
+            $("#IsDefault").val(checked);
         }
 
     </script>

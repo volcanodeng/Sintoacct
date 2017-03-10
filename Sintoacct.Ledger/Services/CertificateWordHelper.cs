@@ -46,8 +46,10 @@ namespace Sintoacct.Ledger.Services
                 newWord.PrintTitle = certWord.PrintTitle;
                 newWord.IsDefault = false;
 
-                var val = _identity.Claims.Where(c => c.Type == Constants.ClaimAccountBookID).Select(c => c.Value).FirstOrDefault();
-                newWord.AccountBook = _ledger.AccountBooks.Where(ab => ab.AbId == Guid.Parse(val)).FirstOrDefault();
+                Guid abid;
+                string val = _identity.Claims.Where(c => c.Type == Constants.ClaimAccountBookID).Select(c => c.Value).FirstOrDefault();
+                if (string.IsNullOrEmpty(val) || !Guid.TryParse(val, out abid)) throw new Exception("未绑定所属账套");
+                newWord.AccountBook = _ledger.AccountBooks.Where(ab => ab.AbId == abid).FirstOrDefault();
 
                 _ledger.CertificateWords.Add(newWord);
             }
