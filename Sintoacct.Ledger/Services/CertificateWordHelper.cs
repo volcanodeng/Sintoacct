@@ -10,13 +10,15 @@ namespace Sintoacct.Ledger.Services
 {
     public class CertificateWordHelper : ICertificateWordHelper
     {
-        private ClaimsIdentity _identity;
+        private readonly ClaimsIdentity _identity;
         private readonly LedgerContext _ledger;
+        private readonly HttpContextBase _context;
 
         public CertificateWordHelper(HttpContextBase context, LedgerContext ledger)
         {
             _identity = context.User.Identity as ClaimsIdentity;
             _ledger = ledger;
+            _context = context;
         }
 
         public List<CertificateWord> GetCertWordInAccountBook()
