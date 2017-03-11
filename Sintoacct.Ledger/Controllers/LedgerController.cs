@@ -31,7 +31,8 @@ namespace Sintoacct.Ledger.Controllers
             {
                 var identity = this.HttpContext.User.Identity as ClaimsIdentity;
                 identity.AddClaim(new Claim(Constants.ClaimAccountBookID, abidStr));
-                //Session[Constants.ClaimAccountBookID] = abidStr;
+
+                Session[Constants.ClaimAccountBookID] = abidStr;
                 this.HttpContext.Cache[Constants.ClaimAccountBookID] = abidStr;
             }
             else

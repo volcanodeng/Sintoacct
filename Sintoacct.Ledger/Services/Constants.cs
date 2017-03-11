@@ -8,6 +8,7 @@ namespace Sintoacct.Ledger.Services
     public static class Constants
     {
         public const string ClaimAccountBookID = "AccountBook_ID";
-        
+
+        public const string AccountBookCache = "Account_Book_Cache";
     }
 }

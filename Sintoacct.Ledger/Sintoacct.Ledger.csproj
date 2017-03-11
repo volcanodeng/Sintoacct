@@ -217,12 +217,14 @@
     <Compile Include="IdentityManager\ApplicationIdentityManagerService.cs" />
     <Compile Include="LogInjectionModule.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CacheModels.cs" />
     <Compile Include="Models\EasyuiViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LedgerViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AccountBookHelper.cs" />
+    <Compile Include="Services\CacheHelper.cs" />
     <Compile Include="Services\CertificateWordHelper.cs" />
     <Compile Include="Services\CompanyHelper.cs" />
     <Compile Include="Services\Constants.cs" />
