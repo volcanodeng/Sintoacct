@@ -3,16 +3,20 @@ using Sintoacct.Ledger.Services;
 using System;
 using System.Web;
 using System.Security.Claims;
+using Sintoacct.Ledger.Models;
+using Microsoft.AspNet.Identity;
 
 namespace Sintoacct.Ledger.Controllers
 {
     public class LedgerController : Controller
     {
         private ClaimsIdentity _identity;
+        private ICacheHelper _cache;
 
-        public LedgerController(HttpContextBase context)
+        public LedgerController(HttpContextBase context,ICacheHelper cache)
         {
             _identity = context.User.Identity as ClaimsIdentity;
+            _cache = cache;
         }
 
 
@@ -29,11 +33,9 @@ namespace Sintoacct.Ledger.Controllers
             Guid abid; 
             if(!string.IsNullOrEmpty(abidStr) && Guid.TryParse(abidStr,out abid))
             {
-                var identity = this.HttpContext.User.Identity as ClaimsIdentity;
-                identity.AddClaim(new Claim(Constants.ClaimAccountBookID, abidStr));
-
-                Session[Constants.ClaimAccountBookID] = abidStr;
-                this.HttpContext.Cache[Constants.ClaimAccountBookID] = abidStr;
+                UserCacheModel userCache = new UserCacheModel();
+                userCache.AccountBookID = abidStr;
+                _cache.SetUserCache(userCache);
             }
             else
             {

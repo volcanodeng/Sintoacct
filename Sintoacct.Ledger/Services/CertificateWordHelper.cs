@@ -13,12 +13,14 @@ namespace Sintoacct.Ledger.Services
         private readonly ClaimsIdentity _identity;
         private readonly LedgerContext _ledger;
         private readonly HttpContextBase _context;
+        private readonly ICacheHelper _cache;
 
-        public CertificateWordHelper(HttpContextBase context, LedgerContext ledger)
+        public CertificateWordHelper(HttpContextBase context, LedgerContext ledger,ICacheHelper cache)
         {
             _identity = context.User.Identity as ClaimsIdentity;
             _ledger = ledger;
             _context = context;
+            _cache = cache;
         }
 
         public List<CertificateWord> GetCertWordInAccountBook()
@@ -49,7 +51,7 @@ namespace Sintoacct.Ledger.Services
                 newWord.IsDefault = false;
 
                 Guid abid;
-                string val = _identity.Claims.Where(c => c.Type == Constants.ClaimAccountBookID).Select(c => c.Value).FirstOrDefault();
+                string val = _cache.GetUserCache().AccountBookID;//_identity.Claims.Where(c => c.Type == Constants.ClaimAccountBookID).Select(c => c.Value).FirstOrDefault();
                 if (string.IsNullOrEmpty(val) || !Guid.TryParse(val, out abid)) throw new Exception("未绑定所属账套");
                 newWord.AccountBook = _ledger.AccountBooks.Where(ab => ab.AbId == abid).FirstOrDefault();
 

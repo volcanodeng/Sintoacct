@@ -4,10 +4,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Caching;
 using Sintoacct.Ledger.Models;
+using System.Security.Claims;
+using Microsoft.AspNet.Identity;
 
 namespace Sintoacct.Ledger.Services
 {
-    public class CacheHelper
+    public class CacheHelper : ICacheHelper
     {
         private readonly HttpContextBase _context;
 
@@ -16,26 +18,38 @@ namespace Sintoacct.Ledger.Services
             _context = context;
         }
 
-        public void AddEditingAccountBook(string userId,string acctBookId)
+        private string CacheKey()
         {
-            AccountBookCacheModel accountBookCache = (AccountBookCacheModel)_context.Cache.Get(Constants.AccountBookCache);
-            if(accountBookCache == null)
-            {
-                accountBookCache = new AccountBookCacheModel();
-                _context.Cache.Add(Constants.AccountBookCache,accountBookCache,null,Cache.NoAbsoluteExpiration,TimeSpan.f)
-            }
+            return string.Format("{0}_{1}",Constants.UserCache, ((ClaimsIdentity)_context.User.Identity).GetUserId());
+        }
 
-            if(accountBookCache.CurrentEditAccountBook.ContainsKey(userId))
+        public UserCacheModel SetUserCache(UserCacheModel userCache)
+        {
+            
+            UserCacheModel userProfile = (UserCacheModel)_context.Cache.Get(CacheKey());
+            if(userProfile == null)
             {
-                accountBookCache.CurrentEditAccountBook[userId] = acctBookId;
+                userCache.UserID = ((ClaimsIdentity)_context.User.Identity).GetUserId();
+                _context.Cache.Add(CacheKey(), userCache, null, Cache.NoAbsoluteExpiration, TimeSpan.FromHours(Constants.UserCacheExpiration), CacheItemPriority.Default, null);
             }
             else
             {
-                accountBookCache.CurrentEditAccountBook.Add(userId, acctBookId);
+                _context.Cache[CacheKey()] = userCache;
             }
 
-
-
+            return userCache;
         }
+
+        public UserCacheModel GetUserCache()
+        {
+            return (UserCacheModel)_context.Cache.Get(CacheKey()); 
+        }
+    }
+
+    public interface ICacheHelper : IDependency
+    {
+        UserCacheModel SetUserCache(UserCacheModel userCache);
+
+        UserCacheModel GetUserCache();
     }
 }
