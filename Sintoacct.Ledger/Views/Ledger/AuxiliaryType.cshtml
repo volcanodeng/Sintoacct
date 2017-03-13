@@ -34,7 +34,7 @@
             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="auxtype_save()" style="width:80px">保存</a>
             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="auxtype_diaClose()" style="width:80px">关闭</a>
         </div>
-        <input type="hidden" id="__RequestVerificationToken" name="__RequestVerificationToken" value="@Html.AntiForgeryTokenValueOrchard()" />
+        @Html.AntiForgeryToken()
     </form>
 </div>
 
