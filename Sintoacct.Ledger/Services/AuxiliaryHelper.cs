@@ -52,6 +52,11 @@ namespace Sintoacct.Ledger.Services
 
             return auxType;
         }
+
+        public Auxiliary SaveAuxiliary()
+        {
+            return null;
+        }
     }
 
     public interface IAuxiliaryHelper : IDependency
