@@ -8,6 +8,9 @@ using System.Web.Http;
 
 namespace Sintoacct.Ledger.Models
 {
+    /// <summary>
+    /// Ajax响应消息
+    /// </summary>
     public class ResMessage : HttpResponseMessage
     {
         private ResMessageContent _content;
@@ -40,12 +43,12 @@ namespace Sintoacct.Ledger.Models
             ResMessage msg = new ResMessage();
             msg.MessageContent.message = reason;
             msg.MessageContent.IsSuccess = false;
-            msg.StatusCode = HttpStatusCode.Forbidden;
+            msg.StatusCode = HttpStatusCode.OK;
             msg.Content = new StringContent(JsonConvert.SerializeObject(msg.MessageContent), Encoding.UTF8, "application/json");
             throw new HttpResponseException(msg);
         }
 
-        public static void Fail(HttpStatusCode code,string reason)
+        public static void Fail(HttpStatusCode code, string reason)
         {
             ResMessage msg = new ResMessage();
             msg.MessageContent.message = reason;
@@ -55,13 +58,18 @@ namespace Sintoacct.Ledger.Models
             throw new HttpResponseException(msg);
         }
     }
-
+    /// <summary>
+    /// Ajax响应消息的内容
+    /// </summary>
     public class ResMessageContent
     {
         public bool IsSuccess { get; set; }
         public string message { get; set; }
     }
 
+    /// <summary>
+    /// 账套列表
+    /// </summary>
     public class AcctBookListViewModels
     {
         public string AbId { get; set; }
@@ -82,12 +90,14 @@ namespace Sintoacct.Ledger.Models
 
         public int State { get; set; }
     }
-
+    /// <summary>
+    /// 账套保存
+    /// </summary>
     public class AcctBookViewModels
     {
         public string AbId { get; set; }
 
-        [Required,MaxLength(50)]
+        [Required, MaxLength(50)]
         public string ComapnyName { get; set; }
 
         [MaxLength(10)]
@@ -103,7 +113,9 @@ namespace Sintoacct.Ledger.Models
         public int FiscalSystem { get; set; }
     }
 
-
+    /// <summary>
+    /// 凭证字保存
+    /// </summary>
     public class CertWordViewModel
     {
         public int CwId { get; set; }
@@ -116,6 +128,25 @@ namespace Sintoacct.Ledger.Models
 
         public bool IsDefault { get; set; }
     }
+    /// <summary>
+    /// 凭证字删除及设置默认
+    /// </summary>
+    public class CertWordDeleteViewModel
+    {
+        public int CwId { get; set; }
+    }
 
-   
+
+    public class AuxiliaryTypeListViewModel
+    {
+        public int AtId { get; set; }
+
+        /// <summary>
+        /// 核算类型名称
+        /// </summary>
+        [MaxLength(20)]
+        public string AuxType { get; set; }
+    }
+
+
 }

@@ -5,6 +5,7 @@ using System.Web;
 using System.Security.Claims;
 using Sintoacct.Ledger.Models;
 using Microsoft.AspNet.Identity;
+using System.Collections.Generic;
 
 namespace Sintoacct.Ledger.Controllers
 {
@@ -12,11 +13,13 @@ namespace Sintoacct.Ledger.Controllers
     {
         private ClaimsIdentity _identity;
         private ICacheHelper _cache;
+        private readonly IAuxiliaryHelper _auxiliary;
 
-        public LedgerController(HttpContextBase context,ICacheHelper cache)
+        public LedgerController(HttpContextBase context,ICacheHelper cache,IAuxiliaryHelper auxiliary)
         {
             _identity = context.User.Identity as ClaimsIdentity;
             _cache = cache;
+            _auxiliary = auxiliary;
         }
 
 
@@ -49,6 +52,13 @@ namespace Sintoacct.Ledger.Controllers
         public ActionResult CertWord()
         {
             return View();
+        }
+
+        [ClaimsAuthorize("role", "accountant")]
+        public ActionResult AuxiliaryType()
+        {
+            List<AuxiliaryType> auxTypes = _auxiliary.GetAuxiliaryType();
+            return View(auxTypes);
         }
     }
 }

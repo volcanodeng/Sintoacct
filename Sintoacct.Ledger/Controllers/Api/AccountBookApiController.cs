@@ -94,7 +94,7 @@ namespace Sintoacct.Ledger.Controllers.Api
 
         [ClaimsAuthorize("role", "accountant-edit")]
         [HttpPost, Route("api/acctbook/delCertword"), System.Web.Mvc.ValidateAntiForgeryToken]
-        public IHttpActionResult DeleteCertWord(CertWordViewModel certWord)
+        public IHttpActionResult DeleteCertWord(CertWordDeleteViewModel certWord)
         {
             string err;
             if (!_modelValid.Valid(ModelState, out err))
@@ -102,14 +102,19 @@ namespace Sintoacct.Ledger.Controllers.Api
                 return BadRequest(err);
             }
 
-            _certWord.Delete(certWord);
+            if(certWord == null)
+            {
+                ResMessage.Fail("传入模型为空");
+            }
+
+            _certWord.Delete(certWord.CwId);
 
             return Ok(ResMessage.Success());
         }
 
         [ClaimsAuthorize("role", "accountant-edit")]
         [HttpPost, Route("api/acctbook/setCwDef"), System.Web.Mvc.ValidateAntiForgeryToken]
-        public IHttpActionResult SetCertWordDefault(CertWordViewModel certWord)
+        public IHttpActionResult SetCertWordDefault(CertWordDeleteViewModel certWord)
         {
             string err;
             if (!_modelValid.Valid(ModelState, out err))
@@ -117,7 +122,7 @@ namespace Sintoacct.Ledger.Controllers.Api
                 return BadRequest(err);
             }
 
-            _certWord.SetDefault(certWord);
+            _certWord.SetDefault(certWord.CwId);
 
             return Ok(ResMessage.Success());
         }

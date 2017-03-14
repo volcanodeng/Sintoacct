@@ -88,7 +88,7 @@
             $("#cacheCertWord").removeData("CertWordList");
             loadData();
 
-            if (formSuccessHandle(data)) {
+            if (responseHandle(data)) {
                 $("#dlCertWord").dialog("close");
             }
         }
@@ -154,7 +154,7 @@
         function fmtIsDefault(value, row, index)
         {
             var chk = (value == true ? "checked" : "");
-            return '<input class="easyui-switchbutton" data-options="onText:\'是\',offText:\'否\',onChange:setDefault" ' + chk + ' cwid="' + row.id + '" >';
+            return '<input class="easyui-switchbutton" data-options="onText:\'是\',offText:\'否\',onChange:setDefault" ' + chk + ' cwid="' + row.CwId + '" >';
         }
 
         function dgLoadSuccess(data)
@@ -164,27 +164,31 @@
 
         function remove() {
             var selRow = $("#dgCertWord").datagrid("getSelected");
-            if (selRow != null) {
-                $.get("/api/acctbook/delCertword/", { cwId: selRow.id }, function (data) {
-                    $("#cacheCertWord").removeData("CertWordList");
+            $.messager.confirm('删除', '你确定要删除该记录吗?', function (r) {
+                if (r) {
+                    if (selRow != null) {
+                        $.post("/api/acctbook/delCertword/", { CwId: selRow.CwId }, function (data) {
+                            $("#cacheCertWord").removeData("CertWordList");
 
-                    if (formSuccessHandle(data)) {
-                        loadData();
+                            if (responseHandle(data)) {
+                                loadData();
+                            }
+                        });
                     }
-                });
-            }
-            else {
-                $.messager.alert('删除', '请选择要删除的记录', 'info');
-            }
+                    else {
+                        $.messager.alert('删除', '请选择要删除的记录', 'info');
+                    }
+                }
+            });
         }
 
         function setDefault(chk) {
             var cwid = $(this).attr("cwid");
             if (cwid != null) {
-                $.get("/api/acctbook/setCwDef/", { cwId: cwid }, function (data) {
+                $.post("/api/acctbook/setCwDef/", { CwId: cwid }, function (data) {
                     $("#cacheCertWord").removeData("CertWordList");
 
-                    if (formSuccessHandle(data)) {
+                    if (responseHandle(data)) {
                         loadData();
                     }
                 });

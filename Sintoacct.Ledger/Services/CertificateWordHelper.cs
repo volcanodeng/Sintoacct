@@ -39,8 +39,7 @@ namespace Sintoacct.Ledger.Services
                 {
                     cw.CertWord = certWord.CertWord;
                     cw.PrintTitle = certWord.PrintTitle;
-                    //cw.IsDefault = certWord.IsDefault;
-                    this.SetDefault(new CertWordViewModel() {CwId=cw.CwId,IsDefault=certWord.IsDefault });
+                    if (certWord.IsDefault) this.SetDefault(cw.CwId);
                 }
             }
             else
@@ -61,9 +60,9 @@ namespace Sintoacct.Ledger.Services
             return _ledger.SaveChanges();
         }
 
-        public int Delete(CertWordViewModel certWord)
+        public int Delete(int certWordId)
         {
-            CertificateWord cWord = _ledger.CertificateWords.Where(cw=>cw.CwId==certWord.CwId).FirstOrDefault();
+            CertificateWord cWord = _ledger.CertificateWords.Where(cw=>cw.CwId== certWordId).FirstOrDefault();
 
             if(cWord != null)
             {
@@ -73,14 +72,15 @@ namespace Sintoacct.Ledger.Services
             return 0;
         }
 
-        public int SetDefault(CertWordViewModel certWord)
+        public int SetDefault(int certWordId)
         {
-            CertificateWord cWord = _ledger.CertificateWords.Where(cw => cw.CwId == certWord.CwId).FirstOrDefault();
+            CertificateWord cWord = _ledger.CertificateWords.Where(cw => cw.CwId == certWordId).FirstOrDefault();
             List<CertificateWord> certWords = this.GetCertWordInAccountBook();
-            if (cWord != null && certWord.IsDefault)
+            if (cWord != null)
             {
                 var defWord = certWords.Where(cw=>cw.IsDefault).FirstOrDefault();
-                defWord.IsDefault = false;
+                if (defWord != null) defWord.IsDefault = false;
+
                 cWord.IsDefault = true;
 
                 return _ledger.SaveChanges(); ;
@@ -95,8 +95,8 @@ namespace Sintoacct.Ledger.Services
 
         int Save(CertWordViewModel certWord);
 
-        int Delete(CertWordViewModel certWord);
+        int Delete(int certWordId);
 
-        int SetDefault(CertWordViewModel certWord);
+        int SetDefault(int certWordId);
     }
 }

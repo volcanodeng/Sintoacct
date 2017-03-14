@@ -1,15 +1,16 @@
 ﻿
-@using XinTuo.Accounts.Models;
+@using Sintoacct.Ledger.Models
 @{
-    List<AuxiliaryTypeRecord> auxTypes = Model.AuxiliaryType;
+    Layout = null;
+    List<AuxiliaryType> auxTypes = (List<AuxiliaryType>)Model;
 }
 
 <div class="assisting-list-wrap">
     <ul class="assisting-list">
-        @foreach (AuxiliaryTypeRecord aux in auxTypes)
+        @foreach (AuxiliaryType aux in auxTypes)
         {
-            <li class="base_@aux.Id">
-                <a href="javascript:auxtype_ItemClick(@aux.Id,'@aux.AuxType')" class="item">
+            <li class="base_@aux.AtId">
+                <a href="javascript:auxtype_ItemClick(@aux.AtId,'@aux.AuxType')" class="item">
                     <i></i>
                     <strong> @aux.AuxType </strong>
                 </a>
@@ -28,7 +29,7 @@
 <div id="addAuxTypeDialog" class="easyui-dialog" title="新增分类" style="width:400px;height:150px;font-size:14pt;" data-options="resizable:false,modal:true,closed: true">
     <form id="auxTypeForm" method="post">
         <div>
-            <input class="easyui-textbox" id="auxTypeName" name="auxTypeName" data-options="label:'@T("名称")',required:true" style="width:90%;height:32px">
+            <input class="easyui-textbox" id="auxTypeName" name="auxTypeName" data-options="label:'名称',required:true" style="width:90%;height:32px">
         </div>
         <div style="float:right;">
             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="auxtype_save()" style="width:80px">保存</a>
