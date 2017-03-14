@@ -31,6 +31,17 @@ namespace Sintoacct.Ledger.Services
             return books.Select(ub => ub.AccountBook).ToList();
         }
 
+        public AccountBook GetAccountBook(string abidStr)
+        {
+            Guid abid;
+            if(Guid.TryParse(abidStr,out abid))
+            {
+                return _ledger.AccountBooks.Where(ab => ab.AbId == abid).FirstOrDefault();
+            }
+
+            return null;
+        }
+
         public AccountBook Save(AcctBookViewModels acctBook)
         {
             AccountBook book = null;
@@ -87,6 +98,8 @@ namespace Sintoacct.Ledger.Services
     {
 
         List<AccountBook> GetBooksOfUser();
+
+        AccountBook GetAccountBook(string abidStr);
 
         AccountBook Save(AcctBookViewModels acctBook);
 

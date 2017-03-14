@@ -19,7 +19,7 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 核算类型名称
         /// </summary>
-        [MaxLength(20)]
+        [MaxLength(20),Required]
         public string AuxType { get; set; }
 
         /// <summary>

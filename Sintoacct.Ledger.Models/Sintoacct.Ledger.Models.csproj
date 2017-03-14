@@ -66,6 +66,10 @@
     <Compile Include="Migrations\201703071030312_InitialCreate.Designer.cs">
       <DependentUpon>201703071030312_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703141212091_AddAuxiliaryType.cs" />
+    <Compile Include="Migrations\201703141212091_AddAuxiliaryType.Designer.cs">
+      <DependentUpon>201703141212091_AddAuxiliaryType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Region.cs" />
@@ -77,6 +81,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703071030312_InitialCreate.resx">
       <DependentUpon>201703071030312_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703141212091_AddAuxiliaryType.resx">
+      <DependentUpon>201703141212091_AddAuxiliaryType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SQL\InitData.sql" />
   </ItemGroup>

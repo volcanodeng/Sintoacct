@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
+using System.Collections.Generic;
 
 namespace Sintoacct.Ledger.Models
 {
@@ -137,15 +138,22 @@ namespace Sintoacct.Ledger.Models
     }
 
 
-    public class AuxiliaryTypeListViewModel
+    public class AuxiliaryTypeViewModel
     {
         public int AtId { get; set; }
 
         /// <summary>
         /// 核算类型名称
         /// </summary>
-        [MaxLength(20)]
+        [MaxLength(20),Required]
         public string AuxType { get; set; }
+    }
+
+    public class AuxiliaryViewModel
+    {
+        public int AuxType { get; set; }
+
+        public List<AuxiliaryTypeViewModel> AuxTypes { get; set; }
     }
 
 

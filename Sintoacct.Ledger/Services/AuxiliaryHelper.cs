@@ -10,11 +10,13 @@ namespace Sintoacct.Ledger.Services
     {
         private readonly LedgerContext _ledger;
         private readonly ICacheHelper _cache;
+        private readonly IAccountBookHelper _acctBook;
 
-        public AuxiliaryHelper(LedgerContext ledger,ICacheHelper cache)
+        public AuxiliaryHelper(LedgerContext ledger,ICacheHelper cache,IAccountBookHelper acctBook)
         {
             _ledger = ledger;
             _cache = cache;
+            _acctBook = acctBook;
         }
 
         public List<AuxiliaryType> GetAuxiliaryType()
@@ -29,10 +31,35 @@ namespace Sintoacct.Ledger.Services
 
             return baseAuxTypes;
         }
+
+        public AuxiliaryType Add(string typeName)
+        {
+            AuxiliaryType auxType = new AuxiliaryType();
+            auxType.AuxType = typeName;
+            auxType.AccountBook = _acctBook.GetAccountBook(_cache.GetUserCache().AccountBookID);
+
+            _ledger.AuxiliaryType.Add(auxType);
+            _ledger.SaveChanges();
+
+            return auxType;
+        }
+
+        public AuxiliaryType Delete(int atid)
+        {
+            AuxiliaryType auxType = _ledger.AuxiliaryType.Where(at => at.AtId == atid).FirstOrDefault();
+            auxType = _ledger.AuxiliaryType.Remove(auxType);
+            _ledger.SaveChanges();
+
+            return auxType;
+        }
     }
 
     public interface IAuxiliaryHelper : IDependency
     {
         List<AuxiliaryType> GetAuxiliaryType();
+
+        AuxiliaryType Add(string typeName);
+
+        AuxiliaryType Delete(int atid);
     }
 }

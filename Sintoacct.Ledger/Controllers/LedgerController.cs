@@ -6,6 +6,7 @@ using System.Security.Claims;
 using Sintoacct.Ledger.Models;
 using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
+using AutoMapper;
 
 namespace Sintoacct.Ledger.Controllers
 {
@@ -59,6 +60,13 @@ namespace Sintoacct.Ledger.Controllers
         {
             List<AuxiliaryType> auxTypes = _auxiliary.GetAuxiliaryType();
             return View(auxTypes);
+        }
+
+        [ClaimsAuthorize("role", "accountant")]
+        public ActionResult Auxiliary(int id)
+        {
+            List<AuxiliaryType> auxTypes = _auxiliary.GetAuxiliaryType();
+            return View(new AuxiliaryViewModel() { AuxType = id, AuxTypes = Mapper.Map<List<AuxiliaryTypeViewModel>>(auxTypes) });
         }
     }
 }

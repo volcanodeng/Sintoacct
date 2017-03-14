@@ -26,10 +26,10 @@
     </ul>
 </div>
 
-<div id="addAuxTypeDialog" class="easyui-dialog" title="新增分类" style="width:400px;height:150px;font-size:14pt;" data-options="resizable:false,modal:true,closed: true">
+<div id="addAuxTypeDialog" class="easyui-dialog" title="新增分类" style="width:400px;height:200px;" data-options="resizable:false,modal:true,closed: true">
     <form id="auxTypeForm" method="post">
         <div>
-            <input class="easyui-textbox" id="auxTypeName" name="auxTypeName" data-options="label:'名称',required:true" style="width:90%;height:32px">
+            <input class="easyui-textbox" id="AuxType" name="AuxType" data-options="label:'名称',required:true" style="width:90%;height:32px">
         </div>
         <div style="float:right;">
             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="auxtype_save()" style="width:80px">保存</a>
@@ -159,18 +159,19 @@
     }
 </style>
 
+
 <script type="text/javascript">
 
     $(function () {
         $("#auxTypeForm").form({
-            url: "/api/x/auxtype_saveAuxType/",
+            url: "/api/acctbook/addAuxType/",
             onSubmit: auxtype_formOnSubmit,
             success: auxtype_formSuccess
         });
     });
 
     function auxtype_ItemClick(type, tName) {
-        AddTabIframe(tName, '/xintuo.accounts/auxiliary/Auxiliary/' + type);
+        AddTabIframe(tName, '/Ledger/Auxiliary/' + type);
     }
 
     function auxtype_append() {
@@ -202,3 +203,4 @@
         $("#addAuxTypeDialog").dialog("close");
     }
 </script>
+    

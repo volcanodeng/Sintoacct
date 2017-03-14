@@ -1,7 +1,8 @@
-﻿@using XinTuo.Accounts.Models;
+﻿@using Sintoacct.Ledger.Models;
 @{
-    AuxiliaryTypeRecord auxType = Model.AuxType;
-    List<AuxiliaryTypeRecord> BaseAuxTypes = Model.BaseAuxTypes;
+    Layout = null;
+    int auxType = Model.AuxType;
+    List<AuxiliaryTypeViewModel> BaseAuxTypes = Model.AuxTypes;
 }
 
 
@@ -10,7 +11,8 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    @Html.Partial("ResourcePartial")
+
+    @Styles.Render("~/Content/easyui")
 
     <style type="text/css">
         #auxForm div {
@@ -27,11 +29,11 @@
 
     <div class="easyui-layout" data-options="fit:true">
         <div data-options="region:'north',split:false,border:false" style="height:40px;padding:10px;overflow:hidden;">
-            @foreach (AuxiliaryTypeRecord aux in BaseAuxTypes)
+            @foreach (AuxiliaryTypeViewModel aux in BaseAuxTypes)
         {
-            <a href="javascript:void(0)" id="auxType_@aux.Id" class="easyui-linkbutton"
-               @if (aux.Id == auxType.Id) { <text> data-options="toggle:true,group:'g1',selected:true" </text>   } else { <text> data-options="toggle:true,group:'g1'" </text>   }
-               onclick="TypeClick(@aux.Id)" style="width:80px;">@aux.AuxType</a>
+            <a href="javascript:void(0)" id="auxType_@aux.AtId" class="easyui-linkbutton"
+               @if (aux.AtId == auxType) { <text> data-options="toggle:true,group:'g1',selected:true" </text>   } else { <text> data-options="toggle:true,group:'g1'" </text>   }
+               onclick="TypeClick(@aux.AtId)" style="width:80px;">@aux.AuxType</a>
         }
 
         </div>
@@ -41,9 +43,9 @@
                    data-options="singleSelect:true,toolbar: '#auxToolbar',fitColumns:true,idField:'auxId',onSelect:onDgSelect">
                 <thead>
                     <tr>
-                        <th data-options="field:'auxCode',width:200,align:'center'">@T("编码")</th>
-                        <th data-options="field:'auxName',width:200,align:'center'">@T("名称")</th>
-                        <th data-options="field:'auxState',width:200,align:'center'">@T("状态")</th>
+                        <th data-options="field:'auxCode',width:200,align:'center'">编码</th>
+                        <th data-options="field:'auxName',width:200,align:'center'">名称</th>
+                        <th data-options="field:'auxState',width:200,align:'center'">状态</th>
                     </tr>
                 </thead>
             </table>
@@ -60,10 +62,10 @@
     <div id="auxeditDialog" class="easyui-dialog" title="编辑科目" style="width:450px;height:200px;font-size:14pt;" data-options="resizable:false,modal:true,closed: true">
         <form id="auxForm" method="post">
             <div>
-                <input class="easyui-textbox" id="AuxCode" name="AuxCode" data-options="label:'@T("编码")',required:true" style="width:90%;height:32px">
+                <input class="easyui-textbox" id="AuxCode" name="AuxCode" data-options="label:'编码',required:true" style="width:90%;height:32px">
             </div>
             <div>
-                <input class="easyui-textbox" id="AuxName" name="AuxName" data-options="label:'@T("名称")',required:true" style="width:90%;height:32px">
+                <input class="easyui-textbox" id="AuxName" name="AuxName" data-options="label:'名称',required:true" style="width:90%;height:32px">
             </div>
             <div style="float:right;">
                 <a href="javascript:void(0)" class="easyui-linkbutton" onclick="save()" style="width:80px">保存</a>
@@ -72,11 +74,13 @@
             <input type="hidden" id="AuxTypeId" name="AuxTypeId" />
             <input type="hidden" id="AuxId" name="AuxId" />
             <input type="hidden" id="AuxState" name="AuxState" />
-            <input type="hidden" id="__RequestVerificationToken" name="__RequestVerificationToken" value="@Html.AntiForgeryTokenValueOrchard()" />
+            @Html.AntiForgeryToken()
         </form>
     </div>
 
     <div id="aux_dataCache"></div>
+
+    @Scripts.Render("~/bundles/jquery")
 
     <script type="text/javascript">
 
@@ -93,7 +97,7 @@
             success: formSuccess
         });
 
-        TypeClick(@auxType.Id);
+        TypeClick(@auxType);
     }
 
     function TypeClick(auxType)
@@ -138,7 +142,7 @@
     {
         var selRow = $("#auxDatagrid").datagrid("getSelected");
         if (selRow != null) {
-            $.get("/api/x/DelAux/", { auxId: selRow.auxId, __RequestVerificationToken: '@Html.AntiForgeryTokenValueOrchard()' }, function (data) {
+            $.get("/api/x/DelAux/", { auxId: selRow.auxId }, function (data) {
                 var typeid = $("#AuxTypeId").val();
                 $("#aux_dataCache").removeData("aux" + typeid);
 

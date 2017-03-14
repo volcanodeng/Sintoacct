@@ -14,14 +14,17 @@ namespace Sintoacct.Ledger.Controllers.Api
         private readonly IAccountBookHelper _acctBook;
         private readonly IModelValidation _modelValid;
         private readonly ICertificateWordHelper _certWord;
+        private readonly IAuxiliaryHelper _auxType;
 
         public AccountBookApiController(IAccountBookHelper acctBook,
                                         ICertificateWordHelper certWord,
-                                        IModelValidation modelValid)
+                                        IModelValidation modelValid,
+                                        IAuxiliaryHelper auxType)
         {
             _acctBook = acctBook;
             _modelValid = modelValid;
             _certWord = certWord;
+            _auxType = auxType;
         }
 
         [ClaimsAuthorize("role", "accountant")]
@@ -126,5 +129,37 @@ namespace Sintoacct.Ledger.Controllers.Api
 
             return Ok(ResMessage.Success());
         }
+
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/acctbook/addAuxType"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult AddAuxiliaryType(AuxiliaryTypeViewModel auxType)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            _auxType.Add(auxType.AuxType);
+
+            return Ok(ResMessage.Success());
+        }
+
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/acctbook/delAuxType"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult DeleteAuxiliaryType(AuxiliaryTypeViewModel auxType)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            _auxType.Delete(auxType.AtId);
+
+            return Ok(ResMessage.Success());
+        }
+
+        
     }
 }
