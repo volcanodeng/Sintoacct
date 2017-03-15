@@ -68,5 +68,17 @@ namespace Sintoacct.Ledger.Controllers
             List<AuxiliaryType> auxTypes = _auxiliary.GetAuxiliaryType();
             return View(new AuxiliaryListViewModel() { AuxType = id, AuxTypes = Mapper.Map<List<AuxiliaryTypeViewModel>>(auxTypes) });
         }
+
+        [ClaimsAuthorize("role", "accountant")]
+        public ActionResult Account()
+        {
+            return View();
+        }
+
+        [ClaimsAuthorize("role", "accountant")]
+        public ActionResult InitialBalance()
+        {
+            return View();
+        }
     }
 }
