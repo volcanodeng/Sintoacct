@@ -19,6 +19,8 @@ namespace Sintoacct.Ledger
                 cfg.CreateMap<CertificateWord, CertWordViewModel>();
 
                 cfg.CreateMap<AuxiliaryType, AuxiliaryTypeViewModel>();
+
+                cfg.CreateMap<Auxiliary, AuxiliaryViewModel>();
             });
         }
     }

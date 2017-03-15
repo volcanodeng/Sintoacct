@@ -12,8 +12,8 @@ namespace Sintoacct.Ledger.Controllers
 {
     public class LedgerController : Controller
     {
-        private ClaimsIdentity _identity;
-        private ICacheHelper _cache;
+        private readonly ClaimsIdentity _identity;
+        private readonly ICacheHelper _cache;
         private readonly IAuxiliaryHelper _auxiliary;
 
         public LedgerController(HttpContextBase context,ICacheHelper cache,IAuxiliaryHelper auxiliary)
@@ -66,7 +66,7 @@ namespace Sintoacct.Ledger.Controllers
         public ActionResult Auxiliary(int id)
         {
             List<AuxiliaryType> auxTypes = _auxiliary.GetAuxiliaryType();
-            return View(new AuxiliaryViewModel() { AuxType = id, AuxTypes = Mapper.Map<List<AuxiliaryTypeViewModel>>(auxTypes) });
+            return View(new AuxiliaryListViewModel() { AuxType = id, AuxTypes = Mapper.Map<List<AuxiliaryTypeViewModel>>(auxTypes) });
         }
     }
 }

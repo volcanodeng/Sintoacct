@@ -20,13 +20,13 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 辅助核算编码
         /// </summary>
-        [MaxLength(20)]
+        [MaxLength(20),Required]
         public string AuxCode { get; set; }
 
         /// <summary>
         /// 辅助核算名称
         /// </summary>
-        [MaxLength(20)]
+        [MaxLength(20),Required]
         public string AuxName { get; set; }
 
         /// <summary>
@@ -57,9 +57,9 @@ namespace Sintoacct.Ledger.Models
         public AccountBook AccountBook { get; set; }
 
         /// <summary>
-        /// 创建人
+        /// 创建人名称。userid在审计表记录。
         /// </summary>
-        [MaxLength(50)]
+        [MaxLength(50),Required]
         public string Creator { get; set; }
 
         /// <summary>

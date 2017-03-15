@@ -40,12 +40,12 @@
 
         <div data-options="region:'center',border:false" style="padding:10px;">
             <table class="easyui-datagrid" id="auxDatagrid"
-                   data-options="singleSelect:true,toolbar: '#auxToolbar',fitColumns:true,idField:'auxId',onSelect:onDgSelect">
+                   data-options="singleSelect:true,toolbar: '#auxToolbar',fitColumns:true,idField:'AuxId',onSelect:onDgSelect">
                 <thead>
                     <tr>
-                        <th data-options="field:'auxCode',width:200,align:'center'">编码</th>
-                        <th data-options="field:'auxName',width:200,align:'center'">名称</th>
-                        <th data-options="field:'auxState',width:200,align:'center'">状态</th>
+                        <th data-options="field:'AuxCode',width:200,align:'center'">编码</th>
+                        <th data-options="field:'AuxName',width:200,align:'center'">名称</th>
+                        <th data-options="field:'AuxiliaryState',width:200,align:'center',formatter: fmtAuxiliaryState">状态</th>
                     </tr>
                 </thead>
             </table>
@@ -71,9 +71,8 @@
                 <a href="javascript:void(0)" class="easyui-linkbutton" onclick="save()" style="width:80px">保存</a>
                 <a href="javascript:void(0)" class="easyui-linkbutton" onclick="diaClose()" style="width:80px">关闭</a>
             </div>
-            <input type="hidden" id="AuxTypeId" name="AuxTypeId" />
+            <input type="hidden" id="AtId" name="AtId" />
             <input type="hidden" id="AuxId" name="AuxId" />
-            <input type="hidden" id="AuxState" name="AuxState" />
             @Html.AntiForgeryToken()
         </form>
     </div>
@@ -92,7 +91,7 @@
     function init()
     {
         $("#auxForm").form({
-            url: "/api/x/save/",
+            url: "/api/acctbook/saveAux/",
             onSubmit: formOnSubmit,
             success: formSuccess
         });
@@ -102,12 +101,12 @@
 
     function TypeClick(auxType)
     {
-        $("#AuxTypeId").val(auxType);
+        $("#AtId").val(auxType);
 
         var dgCache = $("#aux_dataCache").data("aux" + auxType);
 
         if (dgCache == undefined) {
-            $.get("/api/x/GetAuxiliary/", { auxTypeId: auxType }, function (data) {
+            $.get("/api/acctbook/GetAuxOfType?auxTypeId=" + auxType, null, function (data) {
                 $("#auxDatagrid").datagrid("loadData", data);
                 $("#aux_dataCache").data("aux" + auxType, data);
             });
@@ -122,7 +121,7 @@
         $("#AuxCode").textbox("clear");
         $("#AuxName").textbox("clear");
         $("#AuxId").val(0);
-        $("#AuxState").val(1);
+        
 
         $("#auxeditDialog").dialog("open");
     }
@@ -142,11 +141,11 @@
     {
         var selRow = $("#auxDatagrid").datagrid("getSelected");
         if (selRow != null) {
-            $.get("/api/x/DelAux/", { auxId: selRow.auxId }, function (data) {
-                var typeid = $("#AuxTypeId").val();
+            $.post("/api/acctbook/delAux/", { AuxId: selRow.auxId }, function (data) {
+                var typeid = $("#AtId").val();
                 $("#aux_dataCache").removeData("aux" + typeid);
 
-                if (formSuccessHandle(data)) {
+                if (responseHandle(data)) {
                     TypeClick(typeid);
                 }
             });
@@ -167,10 +166,10 @@
     }
 
     function formSuccess(data) {
-        var typeid = $("#AuxTypeId").val();
+        var typeid = $("#AtId").val();
         $("#aux_dataCache").removeData("aux" + typeid);
 
-        if(formSuccessHandle(data))
+        if (responseHandle(data))
         {
             diaClose();
             TypeClick(typeid);
@@ -182,9 +181,15 @@
         $("#auxForm").form("load", {
             AuxCode: row.auxCode,
             AuxName: row.auxName,
-            AuxId: row.auxId,
-            AuxState: row.auxState
+            AuxId: row.auxId
         });
+    }
+
+    function fmtAuxiliaryState(value, row, index)
+    {
+        if (value == "Normal") return "正常";
+
+        return "禁用";
     }
 
     </script>

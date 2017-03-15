@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Web.Http;
 using System.Collections.Generic;
+using Newtonsoft.Json.Converters;
 
 namespace Sintoacct.Ledger.Models
 {
@@ -137,7 +138,9 @@ namespace Sintoacct.Ledger.Models
         public int CwId { get; set; }
     }
 
-
+    /// <summary>
+    /// 辅助核算类型保存、删除和显示
+    /// </summary>
     public class AuxiliaryTypeViewModel
     {
         public int AtId { get; set; }
@@ -149,12 +152,70 @@ namespace Sintoacct.Ledger.Models
         public string AuxType { get; set; }
     }
 
-    public class AuxiliaryViewModel
+    /// <summary>
+    /// 辅助核算明细列表
+    /// </summary>
+    public class AuxiliaryListViewModel
     {
         public int AuxType { get; set; }
 
         public List<AuxiliaryTypeViewModel> AuxTypes { get; set; }
     }
 
+    public class AuxiliaryViewModel
+    {
+        
+        /// <summary>
+        /// 辅助核算编号
+        /// </summary>
+        public long AuxId { get; set; }
 
+        /// <summary>
+        /// 辅助核算编码
+        /// </summary>
+        [MaxLength(20), Required]
+        public string AuxCode { get; set; }
+
+        /// <summary>
+        /// 辅助核算名称
+        /// </summary>
+        [MaxLength(20), Required]
+        public string AuxName { get; set; }
+
+        /// <summary>
+        /// 状态
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public AuxiliaryState AuxiliaryState { get; set; }
+
+        /// <summary>
+        /// 核算类型编号
+        /// </summary>
+        public int AtId { get; set; }
+
+        /// <summary>
+        /// 核算类型名称
+        /// </summary>
+        [MaxLength(20)]
+        public string AuxType { get; set; }
+
+        /// <summary>
+        /// 创建人名称。userid在审计表记录。
+        /// </summary>
+        [MaxLength(50)]
+        public string Creator { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime? CreateTime { get; set; }
+    }
+
+    public class AuxiliaryDeleteViewModel
+    {
+        /// <summary>
+        /// 辅助核算编号
+        /// </summary>
+        public long AuxId { get; set; }
+    }
 }

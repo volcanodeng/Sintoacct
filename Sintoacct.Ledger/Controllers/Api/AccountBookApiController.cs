@@ -160,6 +160,53 @@ namespace Sintoacct.Ledger.Controllers.Api
             return Ok(ResMessage.Success());
         }
 
-        
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/acctbook/saveAux"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult SaveAuxiliary(AuxiliaryViewModel vmAux)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            _auxType.SaveAuxiliary(vmAux);
+
+            return Ok(ResMessage.Success());
+        }
+
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/acctbook/delAux"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult DeleteAuxiliary(AuxiliaryDeleteViewModel delAux)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            _auxType.DeleteAuxiliary(delAux.AuxId);
+
+            return Ok(ResMessage.Success());
+        }
+
+        [ClaimsAuthorize("role", "accountant")]
+        [HttpGet, Route("api/acctbook/GetAuxOfType")]
+        public IHttpActionResult GetAuxiliaryOfType(int auxTypeId)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            List<Auxiliary> auxList = _auxType.GetAuxiliaryOfType(auxTypeId);
+
+            DatagridViewModels<AuxiliaryViewModel> auxDg = new DatagridViewModels<AuxiliaryViewModel>();
+            auxDg.rows = Mapper.Map<List<AuxiliaryViewModel>>(auxList);
+
+            return Ok(auxDg);
+        }
+
     }
 }

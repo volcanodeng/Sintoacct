@@ -18,6 +18,8 @@ namespace Sintoacct.Ledger.Models
 
         public DbSet<AuxiliaryType> AuxiliaryType { get; set; }
 
+        public DbSet<Auxiliary> Auxiliarys { get; set; }
+
         public DbSet<AbstractTemp> AbstractTemps { get; set; }
 
         public DbSet<UserBook> UserBooks { get; set; }
