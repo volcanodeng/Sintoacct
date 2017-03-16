@@ -12,13 +12,15 @@ namespace Sintoacct.Ledger.Services
 {
     public class AccountBookHelper : IAccountBookHelper
     {
-        private ClaimsIdentity _identity;
+        private readonly ClaimsIdentity _identity;
         private readonly LedgerContext _ledger;
+        private readonly ICacheHelper _cache;
 
-        public AccountBookHelper(HttpContextBase context,LedgerContext ledger)
+        public AccountBookHelper(HttpContextBase context,LedgerContext ledger, ICacheHelper cache)
         {
             _identity = context.User.Identity as ClaimsIdentity;
             _ledger = ledger;
+            _cache = cache;
         }
 
         public List<AccountBook> GetBooksOfUser()
@@ -40,6 +42,14 @@ namespace Sintoacct.Ledger.Services
             }
 
             return null;
+        }
+
+        public AccountBook GetCurrentBook()
+        {
+            UserCacheModel userCache = _cache.GetUserCache();
+            if (userCache == null) return null;
+
+            return this.GetAccountBook(userCache.AccountBookID);
         }
 
         public AccountBook Save(AcctBookViewModels acctBook)
@@ -100,6 +110,8 @@ namespace Sintoacct.Ledger.Services
         List<AccountBook> GetBooksOfUser();
 
         AccountBook GetAccountBook(string abidStr);
+
+        AccountBook GetCurrentBook();
 
         AccountBook Save(AcctBookViewModels acctBook);
 

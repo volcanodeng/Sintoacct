@@ -18,23 +18,28 @@ namespace Sintoacct.Ledger.Services
             _context = context;
         }
 
-        private string CacheKey()
+        private string UserCacheKey()
         {
             return string.Format("{0}_{1}",Constants.UserCache, ((ClaimsIdentity)_context.User.Identity).GetUserId());
+        }
+
+        private string AccountCacheKey(string acctBookId)
+        {
+            return string.Format("{0}_{1}", Constants.AccountCache, acctBookId);
         }
 
         public UserCacheModel SetUserCache(UserCacheModel userCache)
         {
             
-            UserCacheModel userProfile = (UserCacheModel)_context.Cache.Get(CacheKey());
+            UserCacheModel userProfile = (UserCacheModel)_context.Cache.Get(UserCacheKey());
             if(userProfile == null)
             {
                 userCache.UserID = ((ClaimsIdentity)_context.User.Identity).GetUserId();
-                _context.Cache.Add(CacheKey(), userCache, null, Cache.NoAbsoluteExpiration, TimeSpan.FromHours(Constants.UserCacheExpiration), CacheItemPriority.Default, null);
+                _context.Cache.Add(UserCacheKey(), userCache, null, Cache.NoAbsoluteExpiration, TimeSpan.FromHours(Constants.UserCacheExpiration), CacheItemPriority.Default, null);
             }
             else
             {
-                _context.Cache[CacheKey()] = userCache;
+                _context.Cache[UserCacheKey()] = userCache;
             }
 
             return userCache;
@@ -42,7 +47,30 @@ namespace Sintoacct.Ledger.Services
 
         public UserCacheModel GetUserCache()
         {
-            return (UserCacheModel)_context.Cache.Get(CacheKey()); 
+            return (UserCacheModel)_context.Cache.Get(UserCacheKey()); 
+        }
+
+        public AccountCacheModel SetAccountCache(AccountCacheModel acctCache)
+        {
+            if (acctCache == null) return null;
+
+            string key = this.AccountCacheKey(acctCache.AccountBookID);
+            AccountCacheModel acct = (AccountCacheModel)_context.Cache.Get(key);
+            if(acct==null)
+            {
+                _context.Cache.Add(key, acctCache, null, Cache.NoAbsoluteExpiration, TimeSpan.FromMinutes(Constants.AccountCacheExpiration), CacheItemPriority.Default, null);
+            }
+            else
+            {
+                _context.Cache[key] = acctCache;
+            }
+
+            return acctCache;
+        }
+
+        public AccountCacheModel GetAccountCache(string acctBookId)
+        {
+            return (AccountCacheModel)_context.Cache.Get(AccountCacheKey(acctBookId));
         }
     }
 
@@ -51,5 +79,9 @@ namespace Sintoacct.Ledger.Services
         UserCacheModel SetUserCache(UserCacheModel userCache);
 
         UserCacheModel GetUserCache();
+
+        AccountCacheModel SetAccountCache(AccountCacheModel acctCache);
+
+        AccountCacheModel GetAccountCache(string acctBookId);
     }
 }
