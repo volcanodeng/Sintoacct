@@ -21,6 +21,8 @@ namespace Sintoacct.Ledger
                 cfg.CreateMap<AuxiliaryType, AuxiliaryTypeViewModel>();
 
                 cfg.CreateMap<Auxiliary, AuxiliaryViewModel>();
+
+                cfg.CreateMap<AccountCategory, AccountCategoryViewModel>();
             });
         }
     }

@@ -226,6 +226,19 @@ namespace Sintoacct.Ledger.Models
     }
 
     /// <summary>
+    /// 科目类别保存、显示
+    /// </summary>
+    public class AccountCategoryViewModel
+    {
+        public int AcId { get; set; }
+
+        public int? ParentAcId { get; set; }
+
+        [MaxLength(50), Required]
+        public string CategoryName { get; set; }
+    }
+
+    /// <summary>
     /// 科目保存
     /// </summary>
     public class AccountViewModel
@@ -284,5 +297,15 @@ namespace Sintoacct.Ledger.Models
         public string Creator { get; set; }
 
         public DateTime CreateTime { get; set; }
+    }
+
+    /// <summary>
+    /// 返回Account
+    /// </summary>
+    public class AccountControllerViewModel
+    {
+        public List<AccountCategoryViewModel> Accounts { get; set; }
+
+        public List<AuxiliaryTypeViewModel> AuxiliaryTypes { get; set; }
     }
 }

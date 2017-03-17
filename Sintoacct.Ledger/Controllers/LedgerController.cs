@@ -15,12 +15,17 @@ namespace Sintoacct.Ledger.Controllers
         private readonly ClaimsIdentity _identity;
         private readonly ICacheHelper _cache;
         private readonly IAuxiliaryHelper _auxiliary;
+        private readonly IAccountHelper _account;
 
-        public LedgerController(HttpContextBase context,ICacheHelper cache,IAuxiliaryHelper auxiliary)
+        public LedgerController(HttpContextBase context,
+                                ICacheHelper cache,
+                                IAuxiliaryHelper auxiliary,
+                                IAccountHelper account)
         {
             _identity = context.User.Identity as ClaimsIdentity;
             _cache = cache;
             _auxiliary = auxiliary;
+            _account = account;
         }
 
 
@@ -72,6 +77,8 @@ namespace Sintoacct.Ledger.Controllers
         [ClaimsAuthorize("role", "accountant")]
         public ActionResult Account()
         {
+            List<AccountCategory> accCates = _account.GetMainAccountCategory();
+            List<AuxiliaryType> auxTypes = _auxiliary.GetAuxiliaryType();
             return View();
         }
 
