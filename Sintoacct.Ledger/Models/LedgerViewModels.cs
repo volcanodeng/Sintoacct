@@ -162,6 +162,9 @@ namespace Sintoacct.Ledger.Models
         public List<AuxiliaryTypeViewModel> AuxTypes { get; set; }
     }
 
+    /// <summary>
+    /// 辅助核算保存
+    /// </summary>
     public class AuxiliaryViewModel
     {
         
@@ -211,11 +214,75 @@ namespace Sintoacct.Ledger.Models
         public DateTime? CreateTime { get; set; }
     }
 
+    /// <summary>
+    /// 辅助核算删除
+    /// </summary>
     public class AuxiliaryDeleteViewModel
     {
         /// <summary>
         /// 辅助核算编号
         /// </summary>
         public long AuxId { get; set; }
+    }
+
+    /// <summary>
+    /// 科目保存
+    /// </summary>
+    public class AccountViewModel
+    {
+        public long AccId { get; set; }
+
+        [MaxLength(20), Required]
+        public string AccCode { get; set; }
+
+        [MaxLength(20)]
+        public string ParentAccCode { get; set; }
+
+        public int AcId { get; set; }
+
+        [MaxLength(50)]
+        public string CategoryName { get; set; }
+
+        [Required, MaxLength(50)]
+        public string AccName { get; set; }
+
+        [Required, MaxLength(5)]
+        public string Direction { get; set; }
+
+        public bool IsAuxiliary { get; set; }
+
+        [MaxLength(200)]
+        public string AuxTypeIds { get; set; }
+
+        [MaxLength(200)]
+        public string AuxTypeNames { get; set; }
+
+        public bool IsQuantity { get; set; }
+
+        [MaxLength(5)]
+        public string Unit { get; set; }
+
+        public decimal? InitialQuantity { get; set; }
+
+        public decimal? InitialBalance { get; set; }
+
+        public decimal? YtdDebitQuantity { get; set; }
+
+        public decimal? YtdDebit { get; set; }
+
+        public decimal? YtdCreditQuantity { get; set; }
+
+        public decimal? YtdCredit { get; set; }
+
+        public decimal? YtdBeginBalanceQuantity { get; set; }
+
+        public decimal? YtdBeginBalance { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public AccountState State { get; set; }
+
+        public string Creator { get; set; }
+
+        public DateTime CreateTime { get; set; }
     }
 }
