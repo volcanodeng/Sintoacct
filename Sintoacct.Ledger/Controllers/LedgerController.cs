@@ -79,7 +79,11 @@ namespace Sintoacct.Ledger.Controllers
         {
             List<AccountCategory> accCates = _account.GetMainAccountCategory();
             List<AuxiliaryType> auxTypes = _auxiliary.GetAuxiliaryType();
-            return View();
+
+            AccountControllerViewModel account = new AccountControllerViewModel();
+            account.AccountCategorys = Mapper.Map<List<AccountCategoryViewModel>>(accCates);
+            account.AuxiliaryTypes = Mapper.Map<List<AuxiliaryTypeViewModel>>(auxTypes);
+            return View(account);
         }
 
         [ClaimsAuthorize("role", "accountant")]

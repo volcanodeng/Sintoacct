@@ -15,16 +15,19 @@ namespace Sintoacct.Ledger.Controllers.Api
         private readonly IModelValidation _modelValid;
         private readonly ICertificateWordHelper _certWord;
         private readonly IAuxiliaryHelper _auxType;
+        private readonly IAccountHelper _account;
 
         public AccountBookApiController(IAccountBookHelper acctBook,
                                         ICertificateWordHelper certWord,
                                         IModelValidation modelValid,
-                                        IAuxiliaryHelper auxType)
+                                        IAuxiliaryHelper auxType,
+                                        IAccountHelper account)
         {
             _acctBook = acctBook;
             _modelValid = modelValid;
             _certWord = certWord;
             _auxType = auxType;
+            _account = account;
         }
 
         [ClaimsAuthorize("role", "accountant")]
@@ -206,6 +209,75 @@ namespace Sintoacct.Ledger.Controllers.Api
             auxDg.rows = Mapper.Map<List<AuxiliaryViewModel>>(auxList);
 
             return Ok(auxDg);
+        }
+
+
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/acctbook/saveAccount"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult SaveAccount(AccountViewModel vmAccount)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            _account.SaveAccount(vmAccount);
+
+            return Ok(ResMessage.Success());
+        }
+
+        [ClaimsAuthorize("role", "accountant")]
+        [HttpGet, Route("api/acctbook/accountofcate")]
+        public IHttpActionResult GetAccountsOfCategory(int acctCateId)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            List<Account> accList = _account.GetAccountsOfCategory(acctCateId);
+
+            DatagridViewModels<AccountViewModel> accDg = new DatagridViewModels<AccountViewModel>();
+            accDg.rows = Mapper.Map<List<AccountViewModel>>(accList);
+
+            return Ok(accDg);
+        }
+
+
+        [ClaimsAuthorize("role", "accountant")]
+        [HttpGet, Route("api/acctbook/subAccCate")]
+        public IHttpActionResult GetSubAccountCategory(int mainCateId)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            List<AccountCategory> accCateList = _account.GetSubAccountCategory(mainCateId);
+
+            DatagridViewModels<AccountCategoryViewModel> accDg = new DatagridViewModels<AccountCategoryViewModel>();
+            accDg.rows = Mapper.Map<List<AccountCategoryViewModel>>(accCateList);
+
+            return Ok(accDg);
+        }
+
+
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/acctbook/delAccount"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult DeleteAccount(AccountDeleteViewModel vmAccount)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            _account.DeleteAccount(vmAccount.AccId);
+
+            return Ok(ResMessage.Success());
         }
 
     }

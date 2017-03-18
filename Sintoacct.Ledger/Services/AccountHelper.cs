@@ -151,6 +151,15 @@ namespace Sintoacct.Ledger.Services
             _ledger.SaveChanges();
         }
 
+        public void DeleteAccount(long acctId)
+        {
+            Account acc = GetAccount(acctId);
+            if (acc == null) throw new ArgumentNullException("找不到要删除的科目");
+
+            _ledger.Accounts.Remove(acc);
+            _ledger.SaveChanges();
+        }
+
         #endregion
     }
 
@@ -170,5 +179,7 @@ namespace Sintoacct.Ledger.Services
         void SaveAccount(AccountViewModel vmAccount);
 
         void SaveAccountInitial(AccountViewModel vmAccount);
+
+        void DeleteAccount(long acctId);
     }
 }

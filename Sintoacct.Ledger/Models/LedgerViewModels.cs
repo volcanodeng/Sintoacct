@@ -300,11 +300,19 @@ namespace Sintoacct.Ledger.Models
     }
 
     /// <summary>
+    /// 科目删除
+    /// </summary>
+    public class AccountDeleteViewModel
+    {
+        public long AccId { get; set; }
+    }
+
+    /// <summary>
     /// 返回Account
     /// </summary>
     public class AccountControllerViewModel
     {
-        public List<AccountCategoryViewModel> Accounts { get; set; }
+        public List<AccountCategoryViewModel> AccountCategorys { get; set; }
 
         public List<AuxiliaryTypeViewModel> AuxiliaryTypes { get; set; }
     }
