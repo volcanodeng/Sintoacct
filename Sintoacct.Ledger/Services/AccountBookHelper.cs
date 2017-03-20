@@ -16,11 +16,39 @@ namespace Sintoacct.Ledger.Services
         private readonly LedgerContext _ledger;
         private readonly ICacheHelper _cache;
 
-        public AccountBookHelper(HttpContextBase context,LedgerContext ledger, ICacheHelper cache)
+        public AccountBookHelper(HttpContextBase context, LedgerContext ledger, ICacheHelper cache)
         {
             _identity = context.User.Identity as ClaimsIdentity;
             _ledger = ledger;
             _cache = cache;
+        }
+
+        private int AccountBookInitData(Guid newAbId)
+        {
+            Guid abid = new Guid("00000000-0000-0000-0000-000000000000");
+
+            List<Account> baseAccounts = _ledger.Accounts.Where(a => a.AbId == abid).ToList();
+
+            foreach (Account acc in baseAccounts)
+            {
+                Account newAccount = new Account();
+                newAccount.AccCode = acc.AccCode;
+                newAccount.ParentAccCode = acc.ParentAccCode;
+                newAccount.AcId = acc.AcId;
+                newAccount.AccName = acc.AccName;
+                newAccount.Direction = acc.Direction;
+                newAccount.IsAuxiliary = false;
+                newAccount.IsQuantity = false;
+                newAccount.State = AccountState.Normal;
+                newAccount.AbId = newAbId;
+                newAccount.Creator = _identity.GetUserName();
+                newAccount.CreateTime = DateTime.Now;
+
+                _ledger.Accounts.Add(newAccount);
+            }
+
+            return _ledger.SaveChanges();
+
         }
 
         public List<AccountBook> GetBooksOfUser()
@@ -28,7 +56,7 @@ namespace Sintoacct.Ledger.Services
             string userId = _identity.GetUserId();
             List<UserBook> books = _ledger.UserBooks.Where(ub => ub.UserId == userId)
                                           .Include(ub => ub.AccountBook)
-                                          .Include(ub=>ub.AccountBook.Company).ToList();
+                                          .Include(ub => ub.AccountBook.Company).ToList();
 
             return books.Select(ub => ub.AccountBook).ToList();
         }
@@ -36,9 +64,9 @@ namespace Sintoacct.Ledger.Services
         public AccountBook GetAccountBook(string abidStr)
         {
             Guid abid;
-            if(Guid.TryParse(abidStr,out abid))
+            if (Guid.TryParse(abidStr, out abid))
             {
-                return _ledger.AccountBooks.Where(ab => ab.AbId == abid).FirstOrDefault();
+                return _ledger.AccountBooks.Where(ab => ab.AbId == abid).Include("Accounts.AccountCategory").FirstOrDefault();
             }
 
             return null;
@@ -55,6 +83,7 @@ namespace Sintoacct.Ledger.Services
         public AccountBook Save(AcctBookViewModels acctBook)
         {
             AccountBook book = null;
+            bool isNew = false;
             if (string.IsNullOrEmpty(acctBook.AbId))
             {
                 book = new AccountBook();
@@ -78,18 +107,27 @@ namespace Sintoacct.Ledger.Services
                 book.Users.Add(ub);
 
                 _ledger.AccountBooks.Add(book);
+
+                isNew = true;
             }
             else
             {
                 book = _ledger.AccountBooks.Where(ab => ab.AbId == Guid.Parse(acctBook.AbId)).FirstOrDefault();
                 book.Currency = acctBook.Currency;
                 book.FiscalSystem = (FiscalSystem)acctBook.FiscalSystem;
+
+                isNew = false;
             }
 
-            if (_ledger.SaveChanges() > 0) return book;
+            if (_ledger.SaveChanges() > 0 && isNew)
+            {
+                //初始化数据
+                this.AccountBookInitData(book.AbId);
+            }
 
-            return null;
+            return book;
         }
+    
 
         public void Delete(string abId)
         {
