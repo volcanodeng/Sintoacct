@@ -24,7 +24,8 @@ namespace Sintoacct.Ledger
 
                 cfg.CreateMap<AccountCategory, AccountCategoryViewModel>();
 
-                cfg.CreateMap<Account, AccountViewModel>();
+                cfg.CreateMap<Account, AccountViewModel>()
+                .ForMember(dest=>dest.CategoryName,opt=>opt.MapFrom(src=>src.AccountCategory.CategoryName));
             });
         }
     }

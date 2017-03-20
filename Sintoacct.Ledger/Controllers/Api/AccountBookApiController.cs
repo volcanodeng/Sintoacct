@@ -261,7 +261,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             DatagridViewModels<AccountCategoryViewModel> accDg = new DatagridViewModels<AccountCategoryViewModel>();
             accDg.rows = Mapper.Map<List<AccountCategoryViewModel>>(accCateList);
 
-            return Ok(accDg);
+            return Ok(accDg.rows);
         }
 
 

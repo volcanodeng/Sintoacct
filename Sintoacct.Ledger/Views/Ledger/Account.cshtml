@@ -45,13 +45,13 @@
                    data-options="singleSelect:true,toolbar: '#accToolbar',fitColumns:true,idField:'accId',pagination:true,fit:true,pageList:[10,50,100],pageSize:100,onSelect:onDgSelect,onDblClickRow:onDgDblClickRow">
                 <thead>
                     <tr>
-                        <th data-options="field:'accCode',width:80,formatter:formatterAccCode" >编码</th>
-                        <th data-options="field:'accName',width:150,formatter:formatterAccCode" >名称</th>
-                        <th data-options="field:'cateName',align:'center',width:100" >类别</th>
-                        <th data-options="field:'direction',align:'center',width:50" >余额方向</th>
-                        <th data-options="field:'auxTypeNames',align:'center',width:150">辅助核算</th>
-                        <th data-options="field:'unit',align:'center',width:150">数量单位</th>
-                        <th data-options="field:'accState',formatter:formatterAccState,align:'center',width:50">状态</th>
+                        <th data-options="field:'AccCode',width:80,formatter:formatterAccCode" >编码</th>
+                        <th data-options="field:'AccName',width:150,formatter:formatterAccCode" >名称</th>
+                        <th data-options="field:'CategoryName',align:'center',width:100" >类别</th>
+                        <th data-options="field:'Direction',align:'center',width:50" >余额方向</th>
+                        <th data-options="field:'AuxTypeNames',align:'center',width:150">辅助核算</th>
+                        <th data-options="field:'Unit',align:'center',width:150">数量单位</th>
+                        <th data-options="field:'State',formatter:formatterAccState,align:'center',width:50">状态</th>
                     </tr>
                 </thead>
             </table>
@@ -83,7 +83,7 @@
             </div>
 
             <div>
-                <input class="easyui-combobox" id="CateId" name="CateId" data-options="label:'科目类别',required:true,valueField:'id',textField:'cateName',method: 'GET',editable:false,onLoadSuccess:cateIdOnLoadSuccess" style="width:90%;height:32px">
+                <input class="easyui-combobox" id="AcId" name="AcId" data-options="label:'科目类别',required:true,valueField:'AcId',textField:'CategoryName',method: 'GET',editable:false,onLoadSuccess:cateIdOnLoadSuccess" style="width:90%;height:32px">
             </div>
 
             <div>
@@ -205,7 +205,7 @@
         var cateId = $("#dataCache").data("AccCate");
         $("#dataCache").removeData("account" + cateId);
 
-        if(formSuccessHandle(data))
+        if(responseHandle(data))
         {
             cateOnClick(cateId);
             $("#editDialog").dialog('close');
@@ -245,12 +245,12 @@
 
     function formatterAccState(value,row,index)
     {
-        return value == 1?"已启用":"已禁用";
+        return value == "Normal"?"已启用":"已禁用";
     }
 
     function formatterAccCode(value,row,index)
     {
-        if(row.accCode.length > 4)
+        if(row.AccCode.length > 4)
         {
             return "&nbsp;&nbsp;&nbsp;&nbsp;"+value;
         }
@@ -261,27 +261,27 @@
     function onDgSelect(index, row)
     {
         $("#acctForm").form("load", {
-            AccCode: row.accCode,
-            AccName: row.accName,
-            ParentCode: row.parentCode==null?"没有上级科目":row.parentCode+" "+getParentAcct(row.parentCode),
-            dir:row.direction,
-            Direction:row.direction,
-            IsAuxiliary: row.isAuxiliary,
-            AuxTypeIds: row.auxTypeIds,
-            AuxTypeNames: row.auxTypeNames,
-            IsQuantity: row.isQuantity,
-            Unit:row.unit,
-            CateId: row.cateId,
-            AccId: row.accId
+            AccCode: row.AccCode,
+            AccName: row.AccName,
+            ParentCode: row.ParentAccCode==null?"没有上级科目":row.ParentAccCode+" "+getParentAcct(row.ParentAccCode),
+            dir:row.Direction,
+            Direction:row.Direction,
+            IsAuxiliary: row.IsAuxiliary,
+            AuxTypeIds: row.AuxTypeIds,
+            AuxTypeNames: row.AuxTypeNames,
+            IsQuantity: row.IsQuantity,
+            Unit:row.Unit,
+            AcId: row.AcId,
+            AccId: row.AccId
         });
 
         loadCateId();
 
-        if (row.isAuxiliary == "on") $("#auxItems").show();
-        if (row.isQuantity == "on") $("#qtyUnit").show();
+        if (row.IsAuxiliary == "on") $("#auxItems").show();
+        if (row.IsQuantity == "on") $("#qtyUnit").show();
 
-        if (row.auxTypeIds != null && row.auxTypeIds.length > 1) {
-            $.each(row.auxTypeIds.split(","),
+        if (row.AuxTypeIds != null && row.AuxTypeIds.length > 1) {
+            $.each(row.AuxTypeIds.split(","),
                 function (i, n) {
                     var auxData = {};
                     auxData["aux_" + n] = "on";
@@ -309,14 +309,14 @@
 
         var dgCache = $("#dataCache").data("account"+cateId);
 
-        var pAcc  =$.grep(dgCache,function(n,i){return n.accCode==parCode});
+        var pAcc  =$.grep(dgCache.rows,function(n,i){return n.AccCode==parCode});
 
-        return (pAcc==null || pAcc.length==0)?"":pAcc[0].accName;
+        return (pAcc==null || pAcc.length==0)?"":pAcc[0].AccName;
     }
 
     function cateIdOnLoadSuccess()
     {
-        var subCate = $("#CateId").combobox('getData');
+        var subCate = $("#AcId").combobox('getData');
         var cateId = $("#dataCache").data("AccCate");
 
         $("#dataCache").removeData("subcate" + cateId);
@@ -330,11 +330,11 @@
 
         if (subCate)
         {
-            $("#CateId").combobox('loadData', subCate);
+            $("#AcId").combobox('loadData', subCate);
         }
         else
         {
-            $("#CateId").combobox('reload', '/api/acctbook/subAccCate?mainCateId=' + $("#dataCache").data("AccCate"));
+            $("#AcId").combobox('reload', '/api/acctbook/subAccCate?mainCateId=' + $("#dataCache").data("AccCate"));
         }
     }
 

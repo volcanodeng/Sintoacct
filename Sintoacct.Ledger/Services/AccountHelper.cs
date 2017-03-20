@@ -80,7 +80,7 @@ namespace Sintoacct.Ledger.Services
 
             List<Account> accounts = this.GetAccountsWithAcctBookId(accBook.AbId.ToString());
 
-            return accounts.Where(a => a.AccountCategory.ParentAcId == acctCateId || a.AccountCategory.AcId == acctCateId).ToList();
+            return accounts.Where(a => a.AccountCategory.ParentAcId == acctCateId || a.AccountCategory.AcId == acctCateId).OrderBy(a=>a.AccCode).ToList();
         }
 
         public void SaveAccount(AccountViewModel vmAccount)

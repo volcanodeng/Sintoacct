@@ -91,6 +91,7 @@ namespace Sintoacct.Ledger.Services
                 book.StartYear = acctBook.StartYear;
                 book.StartPeriod = acctBook.StartPeriod;
                 book.FiscalSystem = (FiscalSystem)acctBook.FiscalSystem;
+                book.State = AccountBookState.Normal;
 
                 book.Company = new Company();
                 book.Company.ComName = acctBook.ComapnyName;
