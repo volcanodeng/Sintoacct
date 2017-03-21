@@ -89,7 +89,18 @@ namespace Sintoacct.Ledger.Controllers
         [ClaimsAuthorize("role", "accountant")]
         public ActionResult InitialBalance()
         {
-            return View();
+            List<AccountCategory> accCates = _account.GetMainAccountCategory();
+            AccountControllerViewModel account = new AccountControllerViewModel();
+            account.AccountCategorys = Mapper.Map<List<AccountCategoryViewModel>>(accCates);
+            account.AccountCategoriesWithQuantity = _account.GetAccountCategoriesWithQuantity();
+
+            account.AuxCustom = Mapper.Map<List<AuxiliaryViewModel>>(_auxiliary.GetAuxiliaryOfType(1));
+            account.AuxSuppliers = Mapper.Map<List<AuxiliaryViewModel>>(_auxiliary.GetAuxiliaryOfType(2));
+            account.AuxEmployee = Mapper.Map<List<AuxiliaryViewModel>>(_auxiliary.GetAuxiliaryOfType(3));
+            account.AuxProject = Mapper.Map<List<AuxiliaryViewModel>>(_auxiliary.GetAuxiliaryOfType(4));
+            account.AuxSector = Mapper.Map<List<AuxiliaryViewModel>>(_auxiliary.GetAuxiliaryOfType(5));
+            account.AuxInventory = Mapper.Map<List<AuxiliaryViewModel>>(_auxiliary.GetAuxiliaryOfType(6));
+            return View(account);
         }
     }
 }

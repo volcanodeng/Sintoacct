@@ -315,5 +315,53 @@ namespace Sintoacct.Ledger.Models
         public List<AccountCategoryViewModel> AccountCategorys { get; set; }
 
         public List<AuxiliaryTypeViewModel> AuxiliaryTypes { get; set; }
+
+        public List<int> AccountCategoriesWithQuantity { get; set; }
+
+        public List<AuxiliaryViewModel> AuxCustom { get; set; }
+        public List<AuxiliaryViewModel> AuxSuppliers { get; set; }
+        public List<AuxiliaryViewModel> AuxEmployee { get; set; }
+        public List<AuxiliaryViewModel> AuxProject { get; set; }
+        public List<AuxiliaryViewModel> AuxSector { get; set; }
+        public List<AuxiliaryViewModel> AuxInventory { get; set; }
+
+    }
+
+    public class AuxiliaryAccountViewModel
+    {
+        public long AccId
+        {
+            get; set;
+        }
+
+        public int? Custom
+        {
+            get; set;
+        }
+
+        public int? Suppliers
+        {
+            get; set;
+        }
+
+        public int? Employee
+        {
+            get; set;
+        }
+
+        public int? Project
+        {
+            get; set;
+        }
+
+        public int? Sector
+        {
+            get; set;
+        }
+
+        public int? Inventory
+        {
+            get; set;
+        }
     }
 }

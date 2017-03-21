@@ -42,6 +42,17 @@ namespace Sintoacct.Ledger.Services
             return _ledger.AccountCategories.Where(ac => ac.AcId == acId).FirstOrDefault();
         }
 
+        public List<int> GetAccountCategoriesWithQuantity()
+        {
+            List<int> c = new List<int>();
+            List<AccountCategory> mainCate = GetMainAccountCategory();
+            foreach(AccountCategory cate in mainCate)
+            {
+                if (this.GetAccountsOfCategory(cate.AcId).Any(a => a.IsQuantity)) c.Add(cate.AcId);
+            }
+            return c;
+        }
+
         #endregion
 
 
@@ -162,6 +173,15 @@ namespace Sintoacct.Ledger.Services
             _cache.ClearAccountCache(_cache.GetUserCache().AccountBookID);
         }
 
+        public void SaveAuxAccount(AuxiliaryAccountViewModel vmAuxAccount)
+        {
+            Account auxAccount = this.GetAccount(vmAuxAccount.AccId);
+            auxAccount.AccId = 0;
+            _ledger.Entry(auxAccount).State = System.Data.Entity.EntityState.Unchanged;
+            
+
+        }
+
         #endregion
     }
 
@@ -172,6 +192,10 @@ namespace Sintoacct.Ledger.Services
         List<AccountCategory> GetSubAccountCategory(int mainCateId);
 
         AccountCategory GetAccountCategory(int acId);
+
+        List<int> GetAccountCategoriesWithQuantity();
+
+
 
 
         Account GetAccount(long acctId);

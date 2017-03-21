@@ -93,7 +93,8 @@ namespace Sintoacct.Ledger.Services
 
         public List<Auxiliary> GetAuxiliaryOfType(int auxTypeId)
         {
-            return _ledger.Auxiliarys.Where(a => a.AtId == auxTypeId).ToList();
+            Guid abid = _cache.GetUserCache().AccountBookID;
+            return _ledger.Auxiliarys.Where(a => a.AtId == auxTypeId && a.AbId == abid).ToList();
         }
     }
 
