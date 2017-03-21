@@ -61,15 +61,9 @@ namespace Sintoacct.Ledger.Services
             return books.Select(ub => ub.AccountBook).ToList();
         }
 
-        public AccountBook GetAccountBook(string abidStr)
+        public AccountBook GetAccountBook(Guid abid)
         {
-            Guid abid;
-            if (Guid.TryParse(abidStr, out abid))
-            {
-                return _ledger.AccountBooks.Where(ab => ab.AbId == abid).Include("Accounts.AccountCategory").FirstOrDefault();
-            }
-
-            return null;
+            return _ledger.AccountBooks.Where(ab => ab.AbId == abid).Include("Accounts.AccountCategory").FirstOrDefault();
         }
 
         public AccountBook GetCurrentBook()
@@ -148,7 +142,7 @@ namespace Sintoacct.Ledger.Services
 
         List<AccountBook> GetBooksOfUser();
 
-        AccountBook GetAccountBook(string abidStr);
+        AccountBook GetAccountBook(Guid abid);
 
         AccountBook GetCurrentBook();
 

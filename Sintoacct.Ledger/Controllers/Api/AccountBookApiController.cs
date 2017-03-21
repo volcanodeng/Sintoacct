@@ -275,6 +275,11 @@ namespace Sintoacct.Ledger.Controllers.Api
                 return BadRequest(err);
             }
 
+            if(vmAccount==null)
+            {
+                ResMessage.Fail("参数为空");
+            }
+
             _account.DeleteAccount(vmAccount.AccId);
 
             return Ok(ResMessage.Success());

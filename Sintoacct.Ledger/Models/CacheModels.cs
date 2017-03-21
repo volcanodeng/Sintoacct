@@ -20,7 +20,7 @@ namespace Sintoacct.Ledger.Models
             get;set;
         }
 
-        public string AccountBookID
+        public Guid AccountBookID
         {
             get;set;
         }
@@ -31,7 +31,7 @@ namespace Sintoacct.Ledger.Models
     /// </summary>
     public class AccountCacheModel
     {
-        public string AccountBookID
+        public Guid AccountBookID
         {
             get; set;
         }

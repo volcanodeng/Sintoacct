@@ -47,24 +47,21 @@ namespace Sintoacct.Ledger.Services
 
         #region Account
 
-        private List<Account> GetAccountsWithAcctBookId(string acctBookId)
+        private List<Account> GetAccountsWithAcctBookId()
         {
-            AccountCacheModel accounts = _cache.GetAccountCache(acctBookId);
-            AccountBook accountBook = _acctBook.GetAccountBook(acctBookId);
-
-            if (accountBook == null) throw new Exception("未找到账套");
+            AccountCacheModel accounts = _cache.GetAccountCache(_cache.GetUserCache().AccountBookID);
 
             if (accounts == null)
             {
+                AccountBook accountBook = _acctBook.GetCurrentBook();
+                if (accountBook == null) throw new Exception("未找到账套");
+
                 accounts = new AccountCacheModel();
-                accounts.AccountBookID = acctBookId;
+                accounts.AccountBookID = accountBook.AbId;
                 accounts.Accounts = accountBook.Accounts.ToList();
                 _cache.SetAccountCache(accounts);
             }
-            else
-            {
-                accounts.Accounts = accountBook.Accounts.ToList();
-            }
+            
             return accounts.Accounts;
         }
 
@@ -75,10 +72,7 @@ namespace Sintoacct.Ledger.Services
 
         public List<Account> GetAccountsOfCategory(int acctCateId)
         {
-            AccountBook accBook = _acctBook.GetCurrentBook();
-            if (accBook == null) throw new Exception("未找到账套");
-
-            List<Account> accounts = this.GetAccountsWithAcctBookId(accBook.AbId.ToString());
+            List<Account> accounts = this.GetAccountsWithAcctBookId();
 
             return accounts.Where(a => a.AccountCategory.ParentAcId == acctCateId || a.AccountCategory.AcId == acctCateId).OrderBy(a=>a.AccCode).ToList();
         }
@@ -96,9 +90,7 @@ namespace Sintoacct.Ledger.Services
                 account.AccCode = vmAccount.AccCode;
                 account.ParentAccCode = vmAccount.ParentAccCode;
 
-                AccountCategory Cate = this.GetAccountCategory(vmAccount.AcId);
-                if (Cate == null) throw new Exception("科目类型为空");
-                account.AccountCategory = Cate;
+                
 
                 account.State = AccountState.Normal;
 
@@ -107,6 +99,10 @@ namespace Sintoacct.Ledger.Services
 
                 _ledger.Accounts.Add(account);
             }
+
+            AccountCategory Cate = this.GetAccountCategory(vmAccount.AcId);
+            if (Cate == null) throw new Exception("科目类型为空");
+            account.AccountCategory = Cate;
 
             account.AccName = vmAccount.AccName;
             account.Direction = vmAccount.Direction;
@@ -132,6 +128,8 @@ namespace Sintoacct.Ledger.Services
             }
 
             _ledger.SaveChanges();
+
+            _cache.ClearAccountCache(_cache.GetUserCache().AccountBookID);
         }
 
         public void SaveAccountInitial(AccountViewModel vmAccount)
@@ -149,6 +147,8 @@ namespace Sintoacct.Ledger.Services
             acct.YtdBeginBalance = vmAccount.YtdBeginBalance;
 
             _ledger.SaveChanges();
+
+            _cache.ClearAccountCache(_cache.GetUserCache().AccountBookID);
         }
 
         public void DeleteAccount(long acctId)
@@ -158,6 +158,8 @@ namespace Sintoacct.Ledger.Services
 
             _ledger.Accounts.Remove(acc);
             _ledger.SaveChanges();
+
+            _cache.ClearAccountCache(_cache.GetUserCache().AccountBookID);
         }
 
         #endregion

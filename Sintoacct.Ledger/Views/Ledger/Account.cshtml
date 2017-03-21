@@ -117,7 +117,7 @@
             <div style="text-align:right;">
                 <a href="javascript:void(0)" class="easyui-linkbutton" onclick="save()" style="width:80px">确 定</a>
                 <a href="javascript:void(0)" class="easyui-linkbutton" onclick="cancel()" style="width:80px">取 消</a>
-                <input type="hidden" id="acctTopCate" name="acctTopCate" />
+                @*<input type="hidden" id="acctTopCate" name="acctTopCate" />*@
                 <input type="hidden" id="AccId" name="AccId" />
                 @Html.AntiForgeryToken()
             </div>
@@ -188,11 +188,15 @@
         $("#AuxTypeIds").val(auxIds);
         $("#AuxTypeNames").val(auxNames);
 
+        //checkbox默认值为on,重新赋值为true
+        $("#IsAuxiliary").val($("#IsAuxiliary").is(':checked'));
+        $("#IsQuantity").val($("#IsQuantity").is(':checked'));
+
         //余额方向
         $("#Direction").val( $("#dirGroup > input:checked").val());
 
         //科目类型
-        $("#acctTopCate",this.context).val($("#dataCache").data("AccCate"));
+        //$("#acctTopCate",this.context).val($("#dataCache").data("AccCate"));
 
         $("#acctForm").submit();
     }
@@ -266,10 +270,10 @@
             ParentCode: row.ParentAccCode==null?"没有上级科目":row.ParentAccCode+" "+getParentAcct(row.ParentAccCode),
             dir:row.Direction,
             Direction:row.Direction,
-            IsAuxiliary: row.IsAuxiliary,
+            IsAuxiliary: row.IsAuxiliary?"on":"",
             AuxTypeIds: row.AuxTypeIds,
             AuxTypeNames: row.AuxTypeNames,
-            IsQuantity: row.IsQuantity,
+            IsQuantity: row.IsQuantity?"on":"",
             Unit:row.Unit,
             AcId: row.AcId,
             AccId: row.AccId
@@ -277,8 +281,8 @@
 
         loadCateId();
 
-        if (row.IsAuxiliary == "on") $("#auxItems").show();
-        if (row.IsQuantity == "on") $("#qtyUnit").show();
+        if (row.IsAuxiliary ) $("#auxItems").show();
+        if (row.IsQuantity ) $("#qtyUnit").show();
 
         if (row.AuxTypeIds != null && row.AuxTypeIds.length > 1) {
             $.each(row.AuxTypeIds.split(","),
@@ -350,8 +354,14 @@
 
         $.messager.confirm('删除', '您确定要删除该科目吗？删除后不能再恢复。', function (r) {
             if (r) {
-                $.post("/api/acctbook/delAccount?AccId=" + row.accId, null, function (data) {
-                    formSuccess(data);
+                $.post("/api/acctbook/delAccount/", {AccId:row.AccId}, function (data) {
+                    
+                    if(responseHandle(data))
+                    {
+                        var cateId = $("#dataCache").data("AccCate");
+                        $("#dataCache").removeData("account" + cateId);
+                        cateOnClick(cateId);
+                    }
                 }).fail(function () { $.messager.alert("操作失败", "删除科目操作失败", "warning"); });
             }
         });

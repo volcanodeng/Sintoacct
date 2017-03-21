@@ -43,7 +43,7 @@ namespace Sintoacct.Ledger.Controllers
             if(!string.IsNullOrEmpty(abidStr) && Guid.TryParse(abidStr,out abid))
             {
                 UserCacheModel userCache = new UserCacheModel();
-                userCache.AccountBookID = abidStr;
+                userCache.AccountBookID = abid;
                 _cache.SetUserCache(userCache);
             }
             else

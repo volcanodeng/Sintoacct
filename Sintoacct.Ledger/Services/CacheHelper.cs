@@ -23,7 +23,7 @@ namespace Sintoacct.Ledger.Services
             return string.Format("{0}_{1}",Constants.UserCache, ((ClaimsIdentity)_context.User.Identity).GetUserId());
         }
 
-        private string AccountCacheKey(string acctBookId)
+        private string AccountCacheKey(Guid acctBookId)
         {
             return string.Format("{0}_{1}", Constants.AccountCache, acctBookId);
         }
@@ -50,6 +50,11 @@ namespace Sintoacct.Ledger.Services
             return (UserCacheModel)_context.Cache.Get(UserCacheKey()); 
         }
 
+        public void ClearUserCache()
+        {
+            _context.Cache.Remove(this.UserCacheKey());
+        }
+
         public AccountCacheModel SetAccountCache(AccountCacheModel acctCache)
         {
             if (acctCache == null) return null;
@@ -68,9 +73,14 @@ namespace Sintoacct.Ledger.Services
             return acctCache;
         }
 
-        public AccountCacheModel GetAccountCache(string acctBookId)
+        public AccountCacheModel GetAccountCache(Guid acctBookId)
         {
             return (AccountCacheModel)_context.Cache.Get(AccountCacheKey(acctBookId));
+        }
+
+        public void ClearAccountCache(Guid acctBookId)
+        {
+            _context.Cache.Remove(this.AccountCacheKey(acctBookId));
         }
     }
 
@@ -80,8 +90,12 @@ namespace Sintoacct.Ledger.Services
 
         UserCacheModel GetUserCache();
 
+        void ClearUserCache();
+
         AccountCacheModel SetAccountCache(AccountCacheModel acctCache);
 
-        AccountCacheModel GetAccountCache(string acctBookId);
+        AccountCacheModel GetAccountCache(Guid acctBookId);
+
+        void ClearAccountCache(Guid acctBookId);
     }
 }

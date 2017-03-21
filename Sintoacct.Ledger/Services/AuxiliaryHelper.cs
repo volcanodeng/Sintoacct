@@ -27,7 +27,7 @@ namespace Sintoacct.Ledger.Services
             UserCacheModel userCache = _cache.GetUserCache();
             if(userCache != null)
             {
-                List<AuxiliaryType> customAuxType = _ledger.AuxiliaryType.Where(at => at.AbId.HasValue && at.AbId.Value.ToString() == userCache.AccountBookID).ToList();
+                List<AuxiliaryType> customAuxType = _ledger.AuxiliaryType.Where(at => at.AbId.HasValue && at.AbId.Value == userCache.AccountBookID).ToList();
                 baseAuxTypes.AddRange(customAuxType);
             }
 
