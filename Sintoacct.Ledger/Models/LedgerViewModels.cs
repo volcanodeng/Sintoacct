@@ -307,6 +307,11 @@ namespace Sintoacct.Ledger.Models
         public long AccId { get; set; }
     }
 
+    public class AccountInitViewModel
+    {
+        public List<AccountViewModel> Accounts { get; set; }
+    }
+
     /// <summary>
     /// 返回Account
     /// </summary>
@@ -334,32 +339,32 @@ namespace Sintoacct.Ledger.Models
             get; set;
         }
 
-        public int? Custom
+        public long? Custom
         {
             get; set;
         }
 
-        public int? Suppliers
+        public long? Suppliers
         {
             get; set;
         }
 
-        public int? Employee
+        public long? Employee
         {
             get; set;
         }
 
-        public int? Project
+        public long? Project
         {
             get; set;
         }
 
-        public int? Sector
+        public long? Sector
         {
             get; set;
         }
 
-        public int? Inventory
+        public long? Inventory
         {
             get; set;
         }

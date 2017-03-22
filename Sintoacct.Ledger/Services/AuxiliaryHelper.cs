@@ -96,6 +96,13 @@ namespace Sintoacct.Ledger.Services
             Guid abid = _cache.GetUserCache().AccountBookID;
             return _ledger.Auxiliarys.Where(a => a.AtId == auxTypeId && a.AbId == abid).ToList();
         }
+
+        public Auxiliary GetAuxiliary(long auxId)
+        {
+            Guid abid = _cache.GetUserCache().AccountBookID;
+
+            return _ledger.Auxiliarys.Where(aux => aux.AbId == abid && aux.AuxId == auxId).FirstOrDefault();
+        }
     }
 
     public interface IAuxiliaryHelper : IDependency
@@ -111,5 +118,7 @@ namespace Sintoacct.Ledger.Services
         Auxiliary DeleteAuxiliary(long auxid);
 
         List<Auxiliary> GetAuxiliaryOfType(int auxTypeId);
+
+        Auxiliary GetAuxiliary(long auxId);
     }
 }

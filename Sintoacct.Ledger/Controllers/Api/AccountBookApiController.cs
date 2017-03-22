@@ -227,6 +227,21 @@ namespace Sintoacct.Ledger.Controllers.Api
             return Ok(ResMessage.Success());
         }
 
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/acctbook/saveAccountInit"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult SaveAccountInitial(AccountInitViewModel vmAccount)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            _account.SaveAccountInitial(vmAccount.Accounts);
+
+            return Ok(ResMessage.Success());
+        }
+
         [ClaimsAuthorize("role", "accountant")]
         [HttpGet, Route("api/acctbook/accountofcate")]
         public IHttpActionResult GetAccountsOfCategory(int acctCateId)
@@ -281,6 +296,21 @@ namespace Sintoacct.Ledger.Controllers.Api
             }
 
             _account.DeleteAccount(vmAccount.AccId);
+
+            return Ok(ResMessage.Success());
+        }
+
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/acctbook/addAuxAccount"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult AddAuxAccount(AuxiliaryAccountViewModel vmAuxAccount)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            _account.AddAuxAccount(vmAuxAccount);
 
             return Ok(ResMessage.Success());
         }

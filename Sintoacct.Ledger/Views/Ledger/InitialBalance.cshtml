@@ -63,7 +63,7 @@
             </div>
             <div class="easyui-panel" id="divBalanceQ" data-options="fit:true,border:false">
                 <table class="easyui-datagrid" id="dgBalanceQ"
-                       data-options="singleSelect:true,toolbar: '#tbBalanceQ',fitColumns:true,idField:'accId',pagination:true,fit:true,pageList:[10,50,100],pageSize:100,onClickCell: onClickCellExt">
+                       data-options="singleSelect:true,toolbar: '#tbBalanceQ',fitColumns:true,idField:'AccId',pagination:true,fit:true,pageList:[10,50,100],pageSize:100,onClickCell: onClickCellExt">
                     <thead>
                         <tr>
                             <th rowspan="2" data-options="field:'AccCode',width:150,formatter:formatterAccCode">编码</th>
@@ -153,6 +153,7 @@
                     <a id="btnYes" href="#" class="easyui-linkbutton" onclick="addAuxItem()" data-options="width:80">确定</a>
                     <a id="btnNo" href="#" class="easyui-linkbutton" onclick="closeAuxItem()" data-options="width:80">取消</a>
                 </div>
+                @Html.AntiForgeryToken()
             </form>
         </div>
     </div>
@@ -171,7 +172,7 @@
     function init()
     {
         $("#auxForm").form({
-            url: "/api/a/AddAuxItem/",
+            url: "/api/acctbook/addAuxAccount/",
             onSubmit: formOnSubmit,
             success: formSuccess
         });
@@ -194,20 +195,23 @@
             var change = dgWrapper.dg.datagrid("getChanges");
             $.each(change, function (i, row) {
                 changeDatas.push({
-                    AccId: row.accId,
-                    InitialQuantity: row.initialQuantity,
-                    InitialBalance: row.initialBalance,
-                    YtdDebitQuantity: row.ytdDebitQuantity,
-                    YtdDebit: row.ytdDebit,
-                    YtdCreditQuantity: row.ytdCreditQuantity,
-                    YtdCredit: row.ytdCredit,
-                    YtdBeginBalanceQuantity: row.ytdBeginBalanceQuantity,
-                    YtdBeginBalance: row.ytdBeginBalance
+                    AccId: row.AccId,
+                    AccCode: row.AccCode,
+                    AccName: row.AccName,
+                    Direction:row.Direction,
+                    InitialQuantity: row.InitialQuantity,
+                    InitialBalance: row.InitialBalance,
+                    YtdDebitQuantity: row.YtdDebitQuantity,
+                    YtdDebit: row.YtdDebit,
+                    YtdCreditQuantity: row.YtdCreditQuantity,
+                    YtdCredit: row.YtdCredit,
+                    YtdBeginBalanceQuantity: row.YtdBeginBalanceQuantity,
+                    YtdBeginBalance: row.YtdBeginBalance
                 });
             });
 
-            $.post("/api/a/SaveInitData/", { accounts: changeDatas }, function (data) {
-                if(formSuccessHandle(data))
+            $.post("/api/acctbook/saveAccountInit/", { Accounts: changeDatas }, function (data) {
+                if (responseHandle(data))
                 {
                     var cateId = $("#dataCache").data("AccCate");
                     $("#dataCache").removeData("account" + cateId);
@@ -239,7 +243,7 @@
 
         if(dgCache == undefined)
         {
-            $.get("/api/a/GetAccounts/",{cateid : cateId},function(data){
+            $.get("/api/acctbook/accountofcate/", { acctCateId: cateId }, function (data) {
                 dgWrapper.dg.datagrid("loadData", data);
                 $("#dataCache").data("account" + cateId, data);
             });
@@ -253,7 +257,7 @@
 
     function formatterAccCode(value,row,index)
     {
-        if (row.accCode.length > 4)
+        if (row.AccCode.length > 4)
         {
             return '<p style="text-indent:12px;margin: 0;padding: 0;">' + value + '</p>';
         }
@@ -263,7 +267,7 @@
     }
 
     function formatterAccName(value, row, index) {
-        if (row.accCode.length > 4) {
+        if (row.AccCode.length > 4) {
             value = '<p style="text-indent:12px;display: inline-block;margin: 0;padding: 0;">' + value + '</p>';
         }
         else
@@ -271,12 +275,12 @@
             value = '<p style="display: inline-block;margin: 0;padding: 0;">' + value + '</p>';
         }
 
-        if (row.isAuxiliary == "on") {
-            value = value + '<a  title="增加明细" href="javascript:addDetail(' + row.accId + ',\'' + row.accCode + "  " + row.accName + '\');" style="font-size:16pt;float:right;">+</a>';
+        if (row.IsAuxiliary == "on") {
+            value = value + '<a  title="增加明细" href="javascript:addDetail(' + row.AccId + ',\'' + row.AccCode + "  " + row.AccName + '\');" style="font-size:16pt;float:right;">+</a>';
         }
-        else if(row.accName.indexOf("_")>-1)
+        else if(row.AccName.indexOf("_")>-1)
         {
-            value = value + '<a  title="删除明细" href="javascript:delDetail(' + row.accId + ');" style="font-size:14pt;float:right;">X</a>';
+            value = value + '<a  title="删除明细" href="javascript:delDetail(' + row.AccId + ');" style="font-size:14pt;float:right;">X</a>';
         }
 
         return value;
@@ -346,7 +350,7 @@
 
     function delDetail(accId)
     {
-        $.post("/api/a/DelAuxItem/", { accId: accId }, function (data) {
+        $.post("/api/acctbook/delAccount/", { AccId: accId }, function (data) {
             if (formSuccessHandle(data)) {
                 var cateId = $("#dataCache").data("AccCate");
                 $("#dataCache").removeData("account" + cateId);

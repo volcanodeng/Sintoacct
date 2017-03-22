@@ -14,16 +14,19 @@ namespace Sintoacct.Ledger.Services
         private readonly ICacheHelper _cache;
         private readonly IAccountBookHelper _acctBook;
         private readonly HttpContextBase _context;
+        private readonly IAuxiliaryHelper _auxiliary;
 
         public AccountHelper(LedgerContext ledger, 
                              ICacheHelper cache, 
                              IAccountBookHelper acctBook, 
-                             HttpContextBase context)
+                             HttpContextBase context,
+                             IAuxiliaryHelper auxiliary)
         {
             _ledger = ledger;
             _cache = cache;
             _acctBook = acctBook;
             _context = context;
+            _auxiliary = auxiliary;
         }
 
         #region AccountCategory
@@ -143,19 +146,22 @@ namespace Sintoacct.Ledger.Services
             _cache.ClearAccountCache(_cache.GetUserCache().AccountBookID);
         }
 
-        public void SaveAccountInitial(AccountViewModel vmAccount)
+        public void SaveAccountInitial(List<AccountViewModel> vmAccounts)
         {
-            Account acct = GetAccount(vmAccount.AccId);
-            if (acct == null) throw new ArgumentNullException("找不到科目");
+            foreach (AccountViewModel acc in vmAccounts)
+            {
+                Account acct = GetAccount(acc.AccId);
+                if (acct == null) throw new ArgumentNullException("找不到科目");
 
-            acct.InitialQuantity = vmAccount.InitialQuantity;
-            acct.InitialBalance = vmAccount.InitialBalance;
-            acct.YtdDebitQuantity = vmAccount.YtdDebitQuantity;
-            acct.YtdDebit = vmAccount.YtdDebit;
-            acct.YtdCreditQuantity = vmAccount.YtdCreditQuantity;
-            acct.YtdCredit = vmAccount.YtdCredit;
-            acct.YtdBeginBalanceQuantity = vmAccount.YtdBeginBalanceQuantity;
-            acct.YtdBeginBalance = vmAccount.YtdBeginBalance;
+                acct.InitialQuantity = acc.InitialQuantity;
+                acct.InitialBalance = acc.InitialBalance;
+                acct.YtdDebitQuantity = acc.YtdDebitQuantity;
+                acct.YtdDebit = acc.YtdDebit;
+                acct.YtdCreditQuantity = acc.YtdCreditQuantity;
+                acct.YtdCredit = acc.YtdCredit;
+                acct.YtdBeginBalanceQuantity = acc.YtdBeginBalanceQuantity;
+                acct.YtdBeginBalance = acc.YtdBeginBalance;
+            }
 
             _ledger.SaveChanges();
 
@@ -173,13 +179,48 @@ namespace Sintoacct.Ledger.Services
             _cache.ClearAccountCache(_cache.GetUserCache().AccountBookID);
         }
 
-        public void SaveAuxAccount(AuxiliaryAccountViewModel vmAuxAccount)
+        public void AddAuxAccount(AuxiliaryAccountViewModel vmAuxAccount)
         {
             Account auxAccount = this.GetAccount(vmAuxAccount.AccId);
+            _ledger.Entry(auxAccount).State = System.Data.Entity.EntityState.Detached;
             auxAccount.AccId = 0;
-            _ledger.Entry(auxAccount).State = System.Data.Entity.EntityState.Unchanged;
-            
 
+            List<Auxiliary> auxList = new List<Auxiliary>();
+            if(vmAuxAccount.Custom.HasValue && vmAuxAccount.Custom.Value>0)
+            {
+                auxList.Add(_auxiliary.GetAuxiliary(vmAuxAccount.Custom.Value));
+            }
+            if (vmAuxAccount.Suppliers.HasValue && vmAuxAccount.Suppliers.Value > 0)
+            {
+                auxList.Add(_auxiliary.GetAuxiliary(vmAuxAccount.Suppliers.Value));
+            }
+            if (vmAuxAccount.Employee.HasValue && vmAuxAccount.Employee.Value > 0)
+            {
+                auxList.Add(_auxiliary.GetAuxiliary(vmAuxAccount.Employee.Value));
+            }
+            if (vmAuxAccount.Project.HasValue && vmAuxAccount.Project.Value > 0)
+            {
+                auxList.Add(_auxiliary.GetAuxiliary(vmAuxAccount.Project.Value));
+            }
+            if (vmAuxAccount.Sector.HasValue && vmAuxAccount.Sector.Value > 0)
+            {
+                auxList.Add(_auxiliary.GetAuxiliary(vmAuxAccount.Sector.Value));
+            }
+            if (vmAuxAccount.Inventory.HasValue && vmAuxAccount.Inventory.Value > 0)
+            {
+                auxList.Add(_auxiliary.GetAuxiliary(vmAuxAccount.Inventory.Value));
+            }
+
+            foreach(Auxiliary aux in auxList)
+            {
+                auxAccount.AccCode += "_" + aux.AuxCode;
+                auxAccount.AccName += "_" + aux.AuxName;
+            }
+
+            _ledger.Accounts.Add(auxAccount);
+            _ledger.SaveChanges();
+
+            _cache.ClearAccountCache(_cache.GetUserCache().AccountBookID);
         }
 
         #endregion
@@ -204,8 +245,10 @@ namespace Sintoacct.Ledger.Services
 
         void SaveAccount(AccountViewModel vmAccount);
 
-        void SaveAccountInitial(AccountViewModel vmAccount);
+        void SaveAccountInitial(List<AccountViewModel> vmAccounts);
 
         void DeleteAccount(long acctId);
+
+        void AddAuxAccount(AuxiliaryAccountViewModel vmAuxAccount);
     }
 }
