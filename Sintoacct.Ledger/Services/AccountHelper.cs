@@ -159,8 +159,8 @@ namespace Sintoacct.Ledger.Services
                 acct.YtdDebit = acc.YtdDebit;
                 acct.YtdCreditQuantity = acc.YtdCreditQuantity;
                 acct.YtdCredit = acc.YtdCredit;
-                acct.YtdBeginBalanceQuantity = acc.YtdBeginBalanceQuantity;
-                acct.YtdBeginBalance = acc.YtdBeginBalance;
+                acct.YtdBeginBalanceQuantity = acct.InitialQuantity - acct.YtdDebitQuantity + acct.YtdCreditQuantity;
+                acct.YtdBeginBalance = acct.InitialBalance - acct.YtdDebit - acct.YtdCredit;
             }
 
             _ledger.SaveChanges();
@@ -223,6 +223,32 @@ namespace Sintoacct.Ledger.Services
             _cache.ClearAccountCache(_cache.GetUserCache().AccountBookID);
         }
 
+        /// <summary>
+        /// 科目期初试算平衡
+        /// </summary>
+        public List<TrialBalanceViewModel> TrialBalance()
+        {
+            List<Account> accounts = GetAccountsWithAcctBookId();
+
+            var initBal = from a in accounts
+                          group a by a.Direction into g
+                          select new { g.Key, InitialBalance = g.Sum(a => a.InitialBalance) };
+
+            TrialBalanceViewModel tbInit = new TrialBalanceViewModel();
+            tbInit.ItemName = "期初余额";
+            tbInit.DebitBalance = initBal.Where(a => a.Key == "借").FirstOrDefault().InitialBalance ?? 0;
+            tbInit.CreditBalance = initBal.Where(a => a.Key == "贷").FirstOrDefault().InitialBalance ?? 0;
+            tbInit.Imbalance = tbInit.DebitBalance - tbInit.CreditBalance;
+
+            TrialBalanceViewModel tbYtd = new TrialBalanceViewModel();
+            tbYtd.ItemName = "累计发生额";
+            tbYtd.DebitBalance = accounts.Sum(a => a.YtdDebit) ?? 0;
+            tbYtd.CreditBalance = accounts.Sum(a => a.YtdCredit) ?? 0;
+            tbYtd.Imbalance = tbYtd.DebitBalance - tbYtd.CreditBalance;
+
+            return new List<TrialBalanceViewModel>() { tbInit, tbYtd };
+        }
+
         #endregion
     }
 
@@ -250,5 +276,7 @@ namespace Sintoacct.Ledger.Services
         void DeleteAccount(long acctId);
 
         void AddAuxAccount(AuxiliaryAccountViewModel vmAuxAccount);
+
+        List<TrialBalanceViewModel> TrialBalance();
     }
 }

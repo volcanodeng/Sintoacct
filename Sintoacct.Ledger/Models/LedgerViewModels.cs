@@ -332,6 +332,9 @@ namespace Sintoacct.Ledger.Models
 
     }
 
+    /// <summary>
+    /// 辅助核算明细保存
+    /// </summary>
     public class AuxiliaryAccountViewModel
     {
         public long AccId
@@ -368,5 +371,31 @@ namespace Sintoacct.Ledger.Models
         {
             get; set;
         }
+    }
+
+    /// <summary>
+    /// 平衡试算表
+    /// </summary>
+    public class TrialBalanceViewModel
+    {
+        /// <summary>
+        /// 项目名称。如：期初余额、累计发生额
+        /// </summary>
+        public string ItemName { get; set; }
+
+        /// <summary>
+        /// 借方金额
+        /// </summary>
+        public decimal DebitBalance { get; set; }
+
+        /// <summary>
+        /// 贷方金额
+        /// </summary>
+        public decimal CreditBalance { get; set; }
+
+        /// <summary>
+        /// 差额
+        /// </summary>
+        public decimal Imbalance { get; set; }
     }
 }

@@ -315,5 +315,22 @@ namespace Sintoacct.Ledger.Controllers.Api
             return Ok(ResMessage.Success());
         }
 
+
+        [ClaimsAuthorize("role", "accountant")]
+        [HttpGet, Route("api/acctbook/TrialBalance")]
+        public IHttpActionResult GetTrialBalance()
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            DatagridViewModels<TrialBalanceViewModel> TrialBalance = new DatagridViewModels<TrialBalanceViewModel>();
+            TrialBalance.rows = _account.TrialBalance();
+
+            return Ok(TrialBalance);
+        }
+
     }
 }

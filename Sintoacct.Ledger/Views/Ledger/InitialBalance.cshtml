@@ -157,6 +157,31 @@
         </div>
     </div>
 
+    <div id="dialogTrial" class="easyui-dialog" title="试算平衡检查" style="width:550px;height:200px;"
+         data-options="resizable:false,modal:true,closed:true">
+        <div class="easyui-layout" data-options="fit:true" id="divTrial">
+            <div data-options="region:'center',border:false" style="padding:10px;">
+                <div class="easyui-panel"  data-options="fit:true,border:false">
+                    <table class="easyui-datagrid" id="dgTrial" data-options="singleSelect:true,fitColumns:true,fit:true,url:'/api/acctbook/TrialBalance/',method:'GET',onLoadSuccess:trialOnLoadSuccess">
+                        <thead>
+                            <tr>
+                                <th data-options="field:'ItemName',align:'center',width:150">项目名称</th>
+                                <th data-options="field:'DebitBalance',align:'center',width:150">借方金额</th>
+                                <th data-options="field:'CreditBalance',align:'center',width:150">贷方金额</th>
+                                <th data-options="field:'Imbalance',align:'center',width:150">差额</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    
+                </div>
+            </div>
+            <div data-options="region:'south',border:false,closed:true" style="padding:10px;color:red;" >
+            您录入的初始余额不平衡，请仔细核对
+                <a>「资产负债表」</a>与<a>「利润表」</a>！
+            </div>
+            </div>
+    </div>
+
     @Scripts.Render("~/bundles/jquery")
 
     <script type="text/javascript">
@@ -358,6 +383,23 @@
 
                 closeAuxItem();
             }
+        });
+    }
+
+    function balance()
+    {
+        $("#dialogTrial").dialog("open");
+        $("#dgTrial").datagrid("reload");
+    }
+
+    function trialOnLoadSuccess(data)
+    {
+        $.each(data.rows, function (i, n) {
+            if(Math.abs(parseFloat(n.Imbalance))>0)
+            {
+                $("#divTrial").layout("panel", "south").panel("open");
+            }
+            
         });
     }
 
