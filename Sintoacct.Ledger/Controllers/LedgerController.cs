@@ -102,5 +102,11 @@ namespace Sintoacct.Ledger.Controllers
             account.AuxInventory = Mapper.Map<List<AuxiliaryViewModel>>(_auxiliary.GetAuxiliaryOfType(6));
             return View(account);
         }
+
+        [ClaimsAuthorize("role", "accountant")]
+        public ActionResult Voucher()
+        {
+            return View();
+        }
     }
 }

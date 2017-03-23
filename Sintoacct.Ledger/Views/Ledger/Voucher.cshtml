@@ -1,11 +1,13 @@
-﻿
+﻿@{
+    Layout = null;
+}
 
 <!DOCTYPE html>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    @Html.Partial("ResourcePartial")
+    @Styles.Render("~/Content/easyui")
 
    <style type="text/css">
        .mod-toolbar-top:after{content:".";display:block;clear:both;height:0;overflow:hidden;}
@@ -44,17 +46,17 @@
         <div class="easyui-panel" style="padding:20px;" data-options="fit:true">
             <div class="mod-toolbar-top">
                 <div class="left">
-                    <a class="button primaryAction" id="add" onclick="addVoucher()">新增</a>
-                    <a class="button" id="edit" onclick="saveVoucher()">保存</a>
-                    <a class="button" id="print">打印</a>
-                    <a class="button" id="audit" onclick="reviewVoucher()">审核</a>
-                    <a class="button" id="copy">复制</a>
-                    <a class="button" id="delete">删除</a>
+                    <a class="easyui-linkbutton" id="add" onclick="addVoucher()">新增</a>
+                    <a class="easyui-linkbutton" id="edit" onclick="saveVoucher()">保存</a>
+                    <a class="easyui-linkbutton" id="print">打印</a>
+                    <a class="easyui-linkbutton" id="audit" onclick="reviewVoucher()">审核</a>
+                    <a class="easyui-linkbutton" id="copy">复制</a>
+                    <a class="easyui-linkbutton" id="delete">删除</a>
                 </div>
 
                 <div class="right">
-                    <a class="button" id="prev" title="上一张" href="javascript:prevClick()">&lt;</a>
-                    <a class="button" id="next" title="下一张" href="javascript:nextClick()">&gt;</a>
+                    <a class="easyui-linkbutton" id="prev" title="上一张" href="javascript:prevClick()">&lt;</a>
+                    <a class="easyui-linkbutton" id="next" title="下一张" href="javascript:nextClick()">&gt;</a>
                 </div>
             </div>
             <div class="voucher_wrap">
@@ -84,8 +86,8 @@
                     <thead>
                         <tr>
 
-                            <th data-options="field:'abstracts',width:180,editor:{type:'textbox',options:{buttonText:'摘要',onClickButton:absClickButton}}" rowspan="2">摘要</th>
-                            <th data-options="field:'subjectCode',formatter:scFormatter,width:120,editor:{type:'combotree',options:{url:'/api/s/GetComSubjectsForTree'}}" rowspan="2">会计科目</th>
+                            <th data-options="field:'abstracts',width:280,editor:{type:'textbox',options:{buttonText:'摘要',onClickButton:absClickButton}}" rowspan="2">摘要</th>
+                            <th data-options="field:'subjectCode',formatter:scFormatter,width:280,editor:{type:'combotree',options:{url:'/api/s/GetComSubjectsForTree'}}" rowspan="2">会计科目</th>
                             <th>借方金额</th>
                             <th>贷方金额</th>
                         </tr>
@@ -129,6 +131,8 @@
 
             <div id="mydata"></div>
         </div>
+
+    @Scripts.Render("~/bundles/jquery")
 
     <script type="text/javascript">
 
