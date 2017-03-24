@@ -398,4 +398,17 @@ namespace Sintoacct.Ledger.Models
         /// </summary>
         public decimal Imbalance { get; set; }
     }
+
+    public class VoucherViewModel
+    {
+        public long VId { get; set; }
+
+        public string CertWord { get; set; }
+
+        public int CertWordSN { get; set; }
+
+        public DateTime VoucherDate { get; set; }
+
+        public string PaymentTerms { get; set; }
+    }
 }

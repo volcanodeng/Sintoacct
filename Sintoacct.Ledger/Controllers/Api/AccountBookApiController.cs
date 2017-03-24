@@ -280,7 +280,7 @@ namespace Sintoacct.Ledger.Controllers.Api
 
             TreeViewModel<AccountViewModel> accountTree = _account.GetAccountTreeOfCategory(acctCateId);
 
-            return Ok(accountTree);
+            return Ok(accountTree.children);
         }
 
 

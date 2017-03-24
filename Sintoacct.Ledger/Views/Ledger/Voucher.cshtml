@@ -55,15 +55,15 @@
                 </div>
 
                 <div class="right">
-                    <a class="easyui-linkbutton" id="prev" title="上一张" href="javascript:prevClick()">&lt;</a>
-                    <a class="easyui-linkbutton" id="next" title="下一张" href="javascript:nextClick()">&gt;</a>
+                    <a class="easyui-linkbutton" id="prev" title="上一张" href="javascript:prevClick()">&lt;&lt;</a>
+                    <a class="easyui-linkbutton" id="next" title="下一张" href="javascript:nextClick()">&gt;&gt;</a>
                 </div>
             </div>
             <div class="voucher_wrap">
                 <div class="voucher_top">
                     <div class="mark_wrap">
                         <span class="txt">凭证字</span>
-                        <input id="cw" class="easyui-combobox" data-options="valueField:'CwId',textField:'CertWord',url:'/api/acctbook/MyCertWordArray',width:60,height:30,method:'GET'">
+                        <input id="cw" class="easyui-combobox" data-options="valueField:'CwId',textField:'CertWord',url:'/api/acctbook/MyCertWordArray',width:60,height:30,method:'GET',editable:false,onLoadSuccess:cwOnLoadSuccess">
                         <input id="ss" class="easyui-numberspinner" data-options="min:1,max:999,width:60,height:30" value="1">
                         <span class="txt">号</span>
                         <span class="date_wrap">
@@ -102,7 +102,6 @@
                             </th>
                         </tr>
                     </thead>
-
                 </table>
 
             </div>
@@ -296,6 +295,11 @@
 
             if (globVar.voucherIndex < globVar.voucher.length - 1) globVar.voucherIndex++;
             binding(globVar.voucher[globVar.voucherIndex]);
+        }
+
+        function cwOnLoadSuccess()
+        {
+            $(this).combobox("select", $(this).combobox("getData")[0].CwId);
         }
         //=========事件响应=====
 
