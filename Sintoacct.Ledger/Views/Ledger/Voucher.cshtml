@@ -29,7 +29,7 @@
        .datagrid-cell .money_unit span { float: left; display: inline; width: 19px; height: 100%; margin-right: 1px; background-color: #fff; }
        .datagrid-cell .money_unit .last { margin-right: 0; width:18px;}
 
-       .datagrid-btable td[field="debit"] .col_debite,.datagrid-btable td[field="credit"] .col_credit, .datagrid-htable td[field="debit"] .money_unit, .datagrid-htable td[field="credit"] .money_unit { background-image: url('/modules/xintuo.accounts/styles/images/money_rp.png'); background-repeat: repeat-y; }
+       .datagrid-btable td[field="debit"] .col_debite,.datagrid-btable td[field="credit"] .col_credit, .datagrid-htable td[field="debit"] .money_unit, .datagrid-htable td[field="credit"] .money_unit { background-image: url('/Content/images/money_rp.png'); background-repeat: repeat-y; }
        .datagrid-cell .col_debite, .datagrid-cell .col_credit, .datagrid-cell .col_money { width: 218px; }
        .datagrid-cell .col_debite .cell_val, .datagrid-cell .col_credit .cell_val { overflow: hidden; font-family: 'tahoma'; font-weight: bold; font-size: 14px; letter-spacing: 11px; overflow: hidden; position: relative; right: -5px; *right: 4px;.datagrid-cell .col_debite, .datagrid-cell .col_credit, .datagrid-cell .col_money { width: 218px; }
        .datagrid-cell .col_debite .cell_val, .datagrid-cell .col_credit .cell_val { overflow: hidden; font-family: 'tahoma'; font-weight: bold; font-size: 14px; letter-spacing: 11px; overflow: hidden; position: relative; right: -5px;text-align: right; }
@@ -63,8 +63,8 @@
                 <div class="voucher_top">
                     <div class="mark_wrap">
                         <span class="txt">凭证字</span>
-                        <input id="cw" class="easyui-combobox" data-options="valueField:'certificateWord',textField:'certificateWord',url:'/api/v/GetCertWords',width:60,height:30">
-                        <input id="ss" class="easyui-numberspinner" data-options="min:1,max:999,width:60,height:30">
+                        <input id="cw" class="easyui-combobox" data-options="valueField:'CwId',textField:'CertWord',url:'/api/acctbook/MyCertWordArray',width:60,height:30,method:'GET'">
+                        <input id="ss" class="easyui-numberspinner" data-options="min:1,max:999,width:60,height:30" value="1">
                         <span class="txt">号</span>
                         <span class="date_wrap">
                             <span class="txt">日期</span>
@@ -87,7 +87,7 @@
                         <tr>
 
                             <th data-options="field:'abstracts',width:280,editor:{type:'textbox',options:{buttonText:'摘要',onClickButton:absClickButton}}" rowspan="2">摘要</th>
-                            <th data-options="field:'subjectCode',formatter:scFormatter,width:280,editor:{type:'combotree',options:{url:'/api/s/GetComSubjectsForTree'}}" rowspan="2">会计科目</th>
+                            <th data-options="field:'subjectCode',formatter:scFormatter,width:280,editor:{type:'combotree',options:{url:'/api/acctbook/accTreeOfCate'}}" rowspan="2">会计科目</th>
                             <th>借方金额</th>
                             <th>贷方金额</th>
                         </tr>

@@ -5,6 +5,7 @@ using System.Web;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity;
 using Sintoacct.Ledger.Models;
+using AutoMapper;
 
 namespace Sintoacct.Ledger.Services
 {
@@ -28,6 +29,24 @@ namespace Sintoacct.Ledger.Services
             _context = context;
             _auxiliary = auxiliary;
         }
+
+        private void Recursion(List<Account> accounts,TreeViewModel<AccountViewModel> tree)
+        {
+            foreach(Account a in accounts)
+            {
+                TreeViewModel<AccountViewModel> accNode = new TreeViewModel<AccountViewModel>();
+                accNode.id = a.AccId.ToString();
+                accNode.text = a.AccName;
+                accNode.state = "open";
+                accNode.@checked = false;
+                accNode.attributes = Mapper.Map<AccountViewModel>(a);
+                tree.children.Add(accNode);
+
+                Recursion(accounts.Where(acc => acc.ParentAccCode == a.AccCode).ToList(), accNode);
+            }
+
+        }
+
 
         #region AccountCategory
         public List<AccountCategory> GetMainAccountCategory()
@@ -89,6 +108,15 @@ namespace Sintoacct.Ledger.Services
             List<Account> accounts = this.GetAccountsWithAcctBookId();
 
             return accounts.Where(a => a.AccountCategory.ParentAcId == acctCateId || a.AccountCategory.AcId == acctCateId).OrderBy(a=>a.AccCode).ToList();
+        }
+
+        public TreeViewModel<AccountViewModel> GetAccountTreeOfCategory(int acctCateId)
+        {
+            List<Account> cAccount = GetAccountsOfCategory(acctCateId);
+            TreeViewModel<AccountViewModel> tree = new TreeViewModel<AccountViewModel>();
+
+            this.Recursion(cAccount.Where(a => a.ParentAccCode == null || a.ParentAccCode == string.Empty).ToList(), tree);
+            return tree;
         }
 
         public void SaveAccount(AccountViewModel vmAccount)
@@ -257,6 +285,8 @@ namespace Sintoacct.Ledger.Services
         List<AccountCategory> GetMainAccountCategory();
 
         List<AccountCategory> GetSubAccountCategory(int mainCateId);
+
+        TreeViewModel<AccountViewModel> GetAccountTreeOfCategory(int acctCateId);
 
         AccountCategory GetAccountCategory(int acId);
 

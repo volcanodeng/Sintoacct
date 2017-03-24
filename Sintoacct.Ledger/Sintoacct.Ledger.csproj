@@ -271,6 +271,7 @@
     <Content Include="Content\icons\tip.png" />
     <Content Include="Content\icons\undo.png" />
     <Content Include="Content\images\accordion_arrows.png" />
+    <Content Include="Content\images\audit.png" />
     <Content Include="Content\images\blank.gif" />
     <Content Include="Content\images\calendar_arrows.png" />
     <Content Include="Content\images\combo_arrow.png" />
@@ -281,6 +282,8 @@
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\menu_arrows.png" />
     <Content Include="Content\images\messager_icons.png" />
+    <Content Include="Content\images\money_rp.png" />
+    <Content Include="Content\images\page_spr_icons.png" />
     <Content Include="Content\images\pagination_icons.png" />
     <Content Include="Content\images\panel_tools.png" />
     <Content Include="Content\images\passwordbox_close.png" />

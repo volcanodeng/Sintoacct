@@ -34,7 +34,7 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, Route("api/acctbook/MyAcctBook")]
         public IHttpActionResult GetMyAccountBook()
         {
-            DatagridViewModels<AcctBookListViewModels> data = new DatagridViewModels<AcctBookListViewModels>();
+            DatagridViewModel<AcctBookListViewModels> data = new DatagridViewModel<AcctBookListViewModels>();
             data.rows = Mapper.Map<List<AcctBookListViewModels>>(_acctBook.GetBooksOfUser());
             return Ok(data);
         }
@@ -78,9 +78,17 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, Route("api/acctbook/MyCertWord")]
         public IHttpActionResult GetCertWord()
         {
-            DatagridViewModels<CertWordViewModel> data = new DatagridViewModels<CertWordViewModel>();
+            DatagridViewModel<CertWordViewModel> data = new DatagridViewModel<CertWordViewModel>();
             data.rows = Mapper.Map<List<CertWordViewModel>>(_certWord.GetCertWordInAccountBook());
             return Ok(data);
+        }
+
+        [ClaimsAuthorize("role", "accountant")]
+        [HttpGet, Route("api/acctbook/MyCertWordArray")]
+        public IHttpActionResult GetCertWordArray()
+        {
+            List<CertWordViewModel> certWords = Mapper.Map<List<CertWordViewModel>>(_certWord.GetCertWordInAccountBook());
+            return Ok(certWords);
         }
 
         [ClaimsAuthorize("role", "accountant-edit")]
@@ -205,7 +213,7 @@ namespace Sintoacct.Ledger.Controllers.Api
 
             List<Auxiliary> auxList = _auxType.GetAuxiliaryOfType(auxTypeId);
 
-            DatagridViewModels<AuxiliaryViewModel> auxDg = new DatagridViewModels<AuxiliaryViewModel>();
+            DatagridViewModel<AuxiliaryViewModel> auxDg = new DatagridViewModel<AuxiliaryViewModel>();
             auxDg.rows = Mapper.Map<List<AuxiliaryViewModel>>(auxList);
 
             return Ok(auxDg);
@@ -254,10 +262,25 @@ namespace Sintoacct.Ledger.Controllers.Api
 
             List<Account> accList = _account.GetAccountsOfCategory(acctCateId);
 
-            DatagridViewModels<AccountViewModel> accDg = new DatagridViewModels<AccountViewModel>();
+            DatagridViewModel<AccountViewModel> accDg = new DatagridViewModel<AccountViewModel>();
             accDg.rows = Mapper.Map<List<AccountViewModel>>(accList);
 
             return Ok(accDg);
+        }
+
+        [ClaimsAuthorize("role", "accountant")]
+        [HttpGet, Route("api/acctbook/accTreeOfCate")]
+        public IHttpActionResult GetAccountTreeOfCategory(int acctCateId)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            TreeViewModel<AccountViewModel> accountTree = _account.GetAccountTreeOfCategory(acctCateId);
+
+            return Ok(accountTree);
         }
 
 
@@ -273,7 +296,7 @@ namespace Sintoacct.Ledger.Controllers.Api
 
             List<AccountCategory> accCateList = _account.GetSubAccountCategory(mainCateId);
 
-            DatagridViewModels<AccountCategoryViewModel> accDg = new DatagridViewModels<AccountCategoryViewModel>();
+            DatagridViewModel<AccountCategoryViewModel> accDg = new DatagridViewModel<AccountCategoryViewModel>();
             accDg.rows = Mapper.Map<List<AccountCategoryViewModel>>(accCateList);
 
             return Ok(accDg.rows);
@@ -326,7 +349,7 @@ namespace Sintoacct.Ledger.Controllers.Api
                 return BadRequest(err);
             }
 
-            DatagridViewModels<TrialBalanceViewModel> TrialBalance = new DatagridViewModels<TrialBalanceViewModel>();
+            DatagridViewModel<TrialBalanceViewModel> TrialBalance = new DatagridViewModel<TrialBalanceViewModel>();
             TrialBalance.rows = _account.TrialBalance();
 
             return Ok(TrialBalance);
