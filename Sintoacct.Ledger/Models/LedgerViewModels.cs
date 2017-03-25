@@ -399,9 +399,19 @@ namespace Sintoacct.Ledger.Models
         public decimal Imbalance { get; set; }
     }
 
+    /// <summary>
+    /// 凭证主信息
+    /// </summary>
     public class VoucherViewModel
     {
+        public VoucherViewModel()
+        {
+            VoucherDetails = new List<VoucherDetailViewModel>();
+        }
+
         public long VId { get; set; }
+
+        public int CwId { get; set; }
 
         public string CertWord { get; set; }
 
@@ -410,5 +420,51 @@ namespace Sintoacct.Ledger.Models
         public DateTime VoucherDate { get; set; }
 
         public string PaymentTerms { get; set; }
+
+        public int InvoiceCount { get; set; }
+
+        public int State { get; set; }
+
+        public string Creator { get; set; }
+
+        public DateTime CreateTime { get; set; }
+
+        public string Review { get; set; }
+
+        public DateTime? ReviewTime { get; set; }
+
+        public ICollection<VoucherDetailViewModel> VoucherDetails { get; set; }
+    }
+
+    /// <summary>
+    /// 凭证明细
+    /// </summary>
+    public class VoucherDetailViewModel
+    {
+        public long VdId { get; set; }
+
+        public string Abstract { get; set; }
+
+        public long AccId { get; set; }
+
+        public string AccountCode { get; set; }
+
+        public string AccountName { get; set; }
+
+        public decimal? Quantity { get; set; }
+
+        public decimal? Price { get; set; }
+
+        public decimal Debit { get; set; }
+
+        public decimal Credit { get; set; }
+    }
+
+    /// <summary>
+    /// 凭证查询、删除、审核
+    /// </summary>
+    public class VoucherIdViewModel
+    {
+        public long VId { get; set; }
     }
 }

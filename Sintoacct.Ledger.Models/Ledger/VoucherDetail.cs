@@ -34,9 +34,9 @@ namespace Sintoacct.Ledger.Models
         [Required,MaxLength(200)]
         public string Abstract { get; set; }
 
-        ///// <summary>
-        ///// 会计科目
-        ///// </summary>
+        /// <summary>
+        /// 会计科目
+        /// </summary>
         public Account Account { get; set; }
 
         /// <summary>
