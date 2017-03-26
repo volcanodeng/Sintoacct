@@ -34,7 +34,7 @@
        .datagrid-cell .col_debite .cell_val, .datagrid-cell .col_credit .cell_val { overflow: hidden; font-family: 'tahoma'; font-weight: bold; font-size: 14px; letter-spacing: 11px; overflow: hidden; position: relative; right: -5px; *right: 4px;.datagrid-cell .col_debite, .datagrid-cell .col_credit, .datagrid-cell .col_money { width: 218px; }
        .datagrid-cell .col_debite .cell_val, .datagrid-cell .col_credit .cell_val { overflow: hidden; font-family: 'tahoma'; font-weight: bold; font-size: 14px; letter-spacing: 11px; overflow: hidden; position: relative; right: -5px;text-align: right; }
 
-       .datagrid-header-row td {
+       .datagrid-header-row td,.datagrid-cell-c1-Abstract,.datagrid-cell-c1-AccId {
             text-align:center;
             font-weight:bold;
         }
@@ -86,24 +86,29 @@
                     <thead>
                         <tr>
 
-                            <th data-options="field:'abstracts',width:280,editor:{type:'textbox',options:{buttonText:'摘要',onClickButton:absClickButton}}" rowspan="2">摘要</th>
-                            <th data-options="field:'subjectCode',formatter:scFormatter,width:280,editor:{type:'combotree',options:{url:'/api/acctbook/accTreeOfCate'}}" rowspan="2">会计科目</th>
+                            <th data-options="field:'Abstract',width:280,editor:{type:'textbox',options:{buttonText:'摘要',onClickButton:absClickButton}}" rowspan="2">摘要</th>
+                            <th data-options="field:'AccId',formatter:scFormatter,width:280,editor:{type:'combotree',options:{url:'/api/acctbook/accTreeOfCate'}}" rowspan="2">会计科目</th>
                             <th>借方金额</th>
                             <th>贷方金额</th>
                         </tr>
                         <tr>
-                            <th data-options="field:'debit',align:'center',width:230,formatter:debiteFormatter,editor:{type:'numberbox'}">
+                            <th data-options="field:'Debit',align:'center',width:230,formatter:debiteFormatter,editor:{type:'numberbox'}">
 
                                 <div class="money_unit"><span>亿</span> <span>千</span> <span>百</span> <span>十</span> <span>万</span> <span>千</span> <span>百</span> <span>十</span> <span>元</span> <span>角</span> <span class="last">分</span> </div>
                             </th>
-                            <th data-options="field:'credit',align:'center',width:230,formatter:creditFormatter,editor:{type:'numberbox'}">
+                            <th data-options="field:'Credit',align:'center',width:230,formatter:creditFormatter,editor:{type:'numberbox'}">
 
                                 <div class="money_unit"><span>亿</span> <span>千</span> <span>百</span> <span>十</span> <span>万</span> <span>千</span> <span>百</span> <span>十</span> <span>元</span> <span>角</span> <span class="last">分</span> </div>
                             </th>
                         </tr>
                     </thead>
+                    <tbody>
+                        <tr><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td></tr>
+                    </tbody>
                 </table>
-
             </div>
 
             <div id="abstractsWin" class="easyui-dialog" title="摘要选择" style="width:400px;height:500px;" data-options="modal:true,closed: true">
@@ -137,17 +142,17 @@
 
         //全局定义
         var globVar = {
-            voucher: [],             //凭证数据集合
+            voucher: null,             //凭证数据
             voucherIndex: -1         //当前凭证实例在集合中的索引
         };
 
         //======初始化=======
         $(function () {
-            loadVoucher();
+            //loadVoucher();
         });
 
         function loadVoucher() {
-            $.get('/api/v/GetComVouchers', function (data) {
+            $.get('/api/voucher/myVoucher', function (data) {
                 globVar.voucher = data;
                 if (data && data.length > 0) {
                     if (globVar.voucherIndex == -1) globVar.voucherIndex = data.length - 1;
@@ -191,7 +196,8 @@
             return '<div class="col_credit"><div class="cell_val credit_val">' + value + '</div></div>';
         }
         function scFormatter(value, row, index) {
-            return value + " " + row.subjectName;
+            if(row != null)
+            return value + " " + row.AccountName;
         }
         function absClickButton() {
             $("#abstractsWin").dialog("open");

@@ -22,11 +22,26 @@ namespace Sintoacct.Ledger.Controllers.Api
 
 
         [ClaimsAuthorize("role", "accountant")]
-        [HttpGet, Route("api/acctbook/myVoucher")]
+        [HttpGet, Route("api/voucher/myVoucher")]
         public IHttpActionResult GetMyVoucher(VoucherIdViewModel voucherId)
         {
             VoucherViewModel voucher = Mapper.Map<VoucherViewModel>(_voucher.GetMyVoucher(voucherId.VId));
             return Ok(voucher);
+        }
+
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/voucher/saveVoucher"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult SaveVoucher(VoucherViewModel voucher)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            _voucher.Save(voucher);
+
+            return Ok(ResMessage.Success());
         }
     }
 }

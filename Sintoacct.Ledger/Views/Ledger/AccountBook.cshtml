@@ -1,7 +1,7 @@
 ﻿
 <div class="easyui-panel" data-options="fit:true,border:false" style="padding:10px;">
     <table id="acctBook" class="easyui-datagrid"
-           data-options="fitColumns:true,singleSelect:true,emptyMsg:'（无记录）',toolbar:'#tbAcctBook',idField:'AbId',onSelect:dg_onSelect">
+           data-options="fitColumns:true,singleSelect:true,emptyMsg:'（无记录）',toolbar:'#tbAcctBook',idField:'AbId',onDblClickRow:dg_onDblClickRow">
         <thead>
             <tr>
                 <th data-options="field:'CompanyName',width:100,align:'center'">公司名称</th>
@@ -119,7 +119,13 @@
         }
         function form_Success(data)
         {
-            responseHandle(data);
+            if(responseHandle(data))
+            {
+                $(obj.cache).removeData("MyAcctBook");
+                dg_load();
+
+                $(obj.bookWin).dialog("close");
+            }
         }
 
         function append()
@@ -134,7 +140,10 @@
                 $.messager.confirm('删除', '您确定要删除该账套吗？', function (r) {
                     if (r) {
                         $.post("/api/acctbook/del/", { AbId: row.AbId }, function (data) {
-                            responseHandle(data);
+                            if (responseHandle(data)) {
+                                $(obj.cache).removeData("MyAcctBook");
+                                dg_load();
+                            }
                         });
                     }
                 });
@@ -157,7 +166,7 @@
             }
         }
 
-        function dg_onSelect(index, row)
+        function dg_onDblClickRow(index, row)
         {
             location.replace("/Ledger/LedgerFrame?abid="+row.AbId);
         }

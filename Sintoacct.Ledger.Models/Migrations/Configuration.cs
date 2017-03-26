@@ -27,7 +27,7 @@ namespace Sintoacct.Ledger.Models.Migrations
                 }
             }
 
-            //context.Database.ExecuteSqlCommand(sqlInit);
+            context.Database.ExecuteSqlCommand(sqlInit);
         }
     }
 }

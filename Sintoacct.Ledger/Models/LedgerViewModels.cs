@@ -116,6 +116,14 @@ namespace Sintoacct.Ledger.Models
     }
 
     /// <summary>
+    /// 账套删除
+    /// </summary>
+    public class AcctBookDelViewModel
+    {
+        public string AbId { get; set; }
+    }
+
+    /// <summary>
     /// 凭证字保存
     /// </summary>
     public class CertWordViewModel

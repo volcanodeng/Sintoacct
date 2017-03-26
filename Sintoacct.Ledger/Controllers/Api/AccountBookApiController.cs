@@ -61,7 +61,7 @@ namespace Sintoacct.Ledger.Controllers.Api
 
         [ClaimsAuthorize("role", "accountant-edit")]
         [HttpPost, Route("api/acctbook/del"), System.Web.Mvc.ValidateAntiForgeryToken]
-        public IHttpActionResult DeleteAccountBook(AcctBookViewModels acctBook)
+        public IHttpActionResult DeleteAccountBook(AcctBookDelViewModel acctBook)
         {
             string err;
             if (!_modelValid.Valid(ModelState, out err))

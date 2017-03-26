@@ -49,7 +49,8 @@ namespace Sintoacct.Ledger.Services
                 newWord.PrintTitle = certWord.PrintTitle;
                 newWord.IsDefault = false;
 
-                newWord.AccountBook = _ledger.AccountBooks.Where(ab => ab.AbId == _cache.GetUserCache().AccountBookID).FirstOrDefault();
+                Guid abid = _cache.GetUserCache().AccountBookID;
+                newWord.AccountBook = _ledger.AccountBooks.Where(ab => ab.AbId == abid).FirstOrDefault();
 
                 _ledger.CertificateWords.Add(newWord);
             }

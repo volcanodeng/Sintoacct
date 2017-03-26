@@ -15,16 +15,22 @@ namespace Sintoacct.Ledger.Services
         private readonly ClaimsIdentity _identity;
         private readonly LedgerContext _ledger;
         private readonly ICacheHelper _cache;
+        private readonly ICertificateWordHelper _certWord;
 
-        public AccountBookHelper(HttpContextBase context, LedgerContext ledger, ICacheHelper cache)
+        public AccountBookHelper(HttpContextBase context, 
+                                 LedgerContext ledger, 
+                                 ICacheHelper cache,
+                                 ICertificateWordHelper certWord)
         {
             _identity = context.User.Identity as ClaimsIdentity;
             _ledger = ledger;
             _cache = cache;
+            _certWord = certWord;
         }
 
-        private int AccountBookInitData(Guid newAbId)
+        private void AccountBookInitData(Guid newAbId)
         {
+            //添加初始科目
             Guid abid = new Guid("00000000-0000-0000-0000-000000000000");
 
             List<Account> baseAccounts = _ledger.Accounts.Where(a => a.AbId == abid).ToList();
@@ -47,7 +53,16 @@ namespace Sintoacct.Ledger.Services
                 _ledger.Accounts.Add(newAccount);
             }
 
-            return _ledger.SaveChanges();
+            //添加初始凭证字
+            CertificateWord defCertWord = new CertificateWord();
+            defCertWord.CertWord = "记";
+            defCertWord.PrintTitle = "记";
+            defCertWord.AbId = newAbId;
+            defCertWord.IsDefault = true;
+            _ledger.CertificateWords.Add(defCertWord);
+
+            //保存初始数据
+            _ledger.SaveChanges();
 
         }
 
@@ -58,12 +73,12 @@ namespace Sintoacct.Ledger.Services
                                           .Include(ub => ub.AccountBook)
                                           .Include(ub => ub.AccountBook.Company).ToList();
 
-            return books.Select(ub => ub.AccountBook).ToList();
+            return books.Where(ub=>ub.AccountBook.State== AccountBookState.Normal).Select(ub => ub.AccountBook).ToList();
         }
 
         public AccountBook GetAccountBook(Guid abid)
         {
-            return _ledger.AccountBooks.Where(ab => ab.AbId == abid).Include("Accounts.AccountCategory").FirstOrDefault();
+            return _ledger.AccountBooks.Where(ab => ab.AbId == abid && ab.State== AccountBookState.Normal).Include("Accounts.AccountCategory").FirstOrDefault();
         }
 
         public AccountBook GetCurrentBook()
@@ -126,7 +141,9 @@ namespace Sintoacct.Ledger.Services
 
         public void Delete(string abId)
         {
-            AccountBook book = _ledger.AccountBooks.Where(ab => ab.AbId == Guid.Parse(abId)).FirstOrDefault();
+            Guid delId;
+            if (!Guid.TryParse(abId, out delId)) throw new ArgumentNullException("账套编号无效");
+            AccountBook book = _ledger.AccountBooks.Where(ab => ab.AbId == delId).FirstOrDefault();
             if(book!= null)
             {
                 book.State = AccountBookState.Deleted;
