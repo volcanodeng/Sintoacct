@@ -278,7 +278,7 @@ namespace Sintoacct.Ledger.Controllers.Api
                 return BadRequest(err);
             }
 
-            TreeViewModel<AccountViewModel> accountTree = _account.GetAccountTreeOfCategory(acctCateId);
+            TreeViewModel<AccountViewModel> accountTree = acctCateId>0 ? _account.GetAccountTreeOfCategory(acctCateId) : _account.GetAccountTree();
 
             return Ok(accountTree.children);
         }

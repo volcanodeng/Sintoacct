@@ -29,9 +29,20 @@
        .datagrid-cell .money_unit span { float: left; display: inline; width: 19px; height: 100%; margin-right: 1px; background-color: #fff; }
        .datagrid-cell .money_unit .last { margin-right: 0; width:18px;}
 
-       .datagrid-btable td[field="debit"] .col_debite,.datagrid-btable td[field="credit"] .col_credit, .datagrid-htable td[field="debit"] .money_unit, .datagrid-htable td[field="credit"] .money_unit { background-image: url('/Content/images/money_rp.png'); background-repeat: repeat-y; }
+       .datagrid-btable td[field="Debit"] .col_debite,.datagrid-btable td[field="Credit"] .col_credit, .datagrid-htable td[field="Debit"] .money_unit, .datagrid-htable td[field="Credit"] .money_unit { background-image: url('/Content/images/money_rp.png'); background-repeat: repeat-y; }
        .datagrid-cell .col_debite, .datagrid-cell .col_credit, .datagrid-cell .col_money { width: 218px; }
-       .datagrid-cell .col_debite .cell_val, .datagrid-cell .col_credit .cell_val { overflow: hidden; font-family: 'tahoma'; font-weight: bold; font-size: 14px; letter-spacing: 11px; overflow: hidden; position: relative; right: -5px; *right: 4px;.datagrid-cell .col_debite, .datagrid-cell .col_credit, .datagrid-cell .col_money { width: 218px; }
+           .datagrid-cell .col_debite .cell_val, .datagrid-cell .col_credit .cell_val {
+               overflow: hidden;
+               font-family: 'tahoma';
+               font-weight: bold;
+               font-size: 14px;
+               letter-spacing: 11px;
+               overflow: hidden;
+               position: relative;
+               right: -5px;
+               *right: 4px;
+           }
+       .datagrid-cell .col_debite, .datagrid-cell .col_credit, .datagrid-cell .col_money { width: 218px; }
        .datagrid-cell .col_debite .cell_val, .datagrid-cell .col_credit .cell_val { overflow: hidden; font-family: 'tahoma'; font-weight: bold; font-size: 14px; letter-spacing: 11px; overflow: hidden; position: relative; right: -5px;text-align: right; }
 
        .datagrid-header-row td,.datagrid-cell-c1-Abstract,.datagrid-cell-c1-AccId {
@@ -82,32 +93,26 @@
                     </span>
                 </div>
 
-                <table class="easyui-datagrid" id="voucherTab" data-options="singleSelect: true">
+                <table class="easyui-datagrid" id="voucherTab" data-options="singleSelect: true,idField:'VdId',onClickCell: onClickCell,onEndEdit: endEditing">
                     <thead>
                         <tr>
 
                             <th data-options="field:'Abstract',width:280,editor:{type:'textbox',options:{buttonText:'摘要',onClickButton:absClickButton}}" rowspan="2">摘要</th>
-                            <th data-options="field:'AccId',formatter:scFormatter,width:280,editor:{type:'combotree',options:{url:'/api/acctbook/accTreeOfCate'}}" rowspan="2">会计科目</th>
+                            <th data-options="field:'AccId',formatter:scFormatter,width:280,editor:{type:'combotree',options:{url:'/api/acctbook/accTreeOfCate',queryParams:{acctCateId:0},method:'GET'},onSelect:treeOnSelect}" rowspan="2">会计科目</th>
                             <th>借方金额</th>
                             <th>贷方金额</th>
                         </tr>
                         <tr>
-                            <th data-options="field:'Debit',align:'center',width:230,formatter:debiteFormatter,editor:{type:'numberbox'}">
+                            <th data-options="field:'Debit',width:230,formatter:debiteFormatter,editor:{type:'numberbox'}">
 
                                 <div class="money_unit"><span>亿</span> <span>千</span> <span>百</span> <span>十</span> <span>万</span> <span>千</span> <span>百</span> <span>十</span> <span>元</span> <span>角</span> <span class="last">分</span> </div>
                             </th>
-                            <th data-options="field:'Credit',align:'center',width:230,formatter:creditFormatter,editor:{type:'numberbox'}">
+                            <th data-options="field:'Credit',width:230,formatter:creditFormatter,editor:{type:'numberbox'}">
 
                                 <div class="money_unit"><span>亿</span> <span>千</span> <span>百</span> <span>十</span> <span>万</span> <span>千</span> <span>百</span> <span>十</span> <span>元</span> <span>角</span> <span class="last">分</span> </div>
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td></tr>
-                    </tbody>
                 </table>
             </div>
 
@@ -143,14 +148,18 @@
         //全局定义
         var globVar = {
             voucher: null,             //凭证数据
-            voucherIndex: -1         //当前凭证实例在集合中的索引
+            voucherIndex: -1,         //当前凭证实例在集合中的索引
+            vTable: "#voucherTab"        //凭证列表名称
         };
 
         //======初始化=======
         $(function () {
             //loadVoucher();
+
+            initData();
         });
 
+        /*
         function loadVoucher() {
             $.get('/api/voucher/myVoucher', function (data) {
                 globVar.voucher = data;
@@ -162,6 +171,12 @@
                     $("#voucherTab").datagrid("enableCellEditing");
                 }
             });
+        }
+        */
+
+        function initData()
+        {
+            for (var i = 0; i < 4; i++) $(globVar.vTable).datagrid('appendRow', { VId: 0, Abstract: "", AccId: 0, AccountCode: "", Quantity: 0, Price:0, AccountName: "", Debit: 0, Credit: 0 });
         }
 
         function binding(voucher) {
@@ -196,8 +211,10 @@
             return '<div class="col_credit"><div class="cell_val credit_val">' + value + '</div></div>';
         }
         function scFormatter(value, row, index) {
-            if(row != null)
-            return value + " " + row.AccountName;
+            if (value > 0 )
+                return row.AccountCode + " " + row.AccountName;
+            else
+                return "";
         }
         function absClickButton() {
             $("#abstractsWin").dialog("open");
@@ -306,6 +323,11 @@
         function cwOnLoadSuccess()
         {
             $(this).combobox("select", $(this).combobox("getData")[0].CwId);
+        }
+
+        function treeOnSelect(node)
+        {
+
         }
         //=========事件响应=====
 

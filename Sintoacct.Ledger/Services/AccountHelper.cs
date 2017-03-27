@@ -32,7 +32,8 @@ namespace Sintoacct.Ledger.Services
 
         private void Recursion(List<Account> accounts,TreeViewModel<AccountViewModel> tree)
         {
-            foreach(Account a in accounts)
+            List<Account> subAccounts = accounts.Where(a => a.ParentAccCode == tree.attributes.AccCode).ToList();
+            foreach(Account a in subAccounts)
             {
                 TreeViewModel<AccountViewModel> accNode = new TreeViewModel<AccountViewModel>();
                 accNode.id = a.AccId.ToString();
@@ -112,10 +113,28 @@ namespace Sintoacct.Ledger.Services
 
         public TreeViewModel<AccountViewModel> GetAccountTreeOfCategory(int acctCateId)
         {
+            AccountCategory ac = this.GetAccountCategory(acctCateId);
             List<Account> cAccount = GetAccountsOfCategory(acctCateId);
             TreeViewModel<AccountViewModel> tree = new TreeViewModel<AccountViewModel>();
+            tree.attributes = new AccountViewModel();
+            tree.id = ac.AcId.ToString();
+            tree.text = ac.CategoryName;
+            tree.state = "closed";
 
-            this.Recursion(cAccount.Where(a => a.ParentAccCode == null || a.ParentAccCode == string.Empty).ToList(), tree);
+            this.Recursion(cAccount, tree);
+            return tree;
+        }
+
+        public TreeViewModel<AccountViewModel> GetAccountTree()
+        {
+            TreeViewModel<AccountViewModel> tree = new TreeViewModel<AccountViewModel>();
+
+            List<AccountCategory> mainCates = this.GetMainAccountCategory();
+            foreach(AccountCategory ac in mainCates)
+            {
+                tree.children.Add(this.GetAccountTreeOfCategory(ac.AcId));
+            }
+
             return tree;
         }
 
@@ -286,8 +305,6 @@ namespace Sintoacct.Ledger.Services
 
         List<AccountCategory> GetSubAccountCategory(int mainCateId);
 
-        TreeViewModel<AccountViewModel> GetAccountTreeOfCategory(int acctCateId);
-
         AccountCategory GetAccountCategory(int acId);
 
         List<int> GetAccountCategoriesWithQuantity();
@@ -298,6 +315,10 @@ namespace Sintoacct.Ledger.Services
         Account GetAccount(long acctId);
 
         List<Account> GetAccountsOfCategory(int acctCateId);
+
+        TreeViewModel<AccountViewModel> GetAccountTreeOfCategory(int acctCateId);
+
+        TreeViewModel<AccountViewModel> GetAccountTree();
 
         void SaveAccount(AccountViewModel vmAccount);
 
