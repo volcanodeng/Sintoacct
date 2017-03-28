@@ -93,12 +93,12 @@
                     </span>
                 </div>
 
-                <table class="easyui-datagrid" id="voucherTab" data-options="singleSelect: true,idField:'VdId',onClickCell: onClickCell,onEndEdit: endEditing">
+                <table class="easyui-datagrid" id="voucherTab" data-options="singleSelect: true,idField:'VdId',onClickCell: onClickCell,onEndEdit: endEditing,onBeginEdit:dgOnBeginEdit">
                     <thead>
                         <tr>
 
                             <th data-options="field:'Abstract',width:280,editor:{type:'textbox',options:{buttonText:'摘要',onClickButton:absClickButton}}" rowspan="2">摘要</th>
-                            <th data-options="field:'AccId',formatter:scFormatter,width:280,editor:{type:'combotree',options:{url:'/api/acctbook/accTreeOfCate',queryParams:{acctCateId:0},method:'GET'},onSelect:treeOnSelect}" rowspan="2">会计科目</th>
+                            <th data-options="field:'AccId',formatter:scFormatter,width:280,editor:{type:'combotree',onSelect:treeOnSelect}" rowspan="2">会计科目</th>
                             <th>借方金额</th>
                             <th>贷方金额</th>
                         </tr>
@@ -117,29 +117,29 @@
             </div>
 
             <div id="abstractsWin" class="easyui-dialog" title="摘要选择" style="width:400px;height:500px;" data-options="modal:true,closed: true">
-                <div class="wrap">
-                    <p><label for="">摘要内容：</label></p>
-                    <input class="easyui-textbox" data-options="multiline:true" style="width:355px;height:60px;">
-                    <p class="footBtn">
-                        <a class="button" id="absSave">保 存</a>
-                        <a class="button" id="cancel" onclick="absClose()">取 消</a>
-                    </p>
-
-                    <table class="easyui-datagrid" id="absList" data-options="singleSelect: true" style="width:355px;">
-                        <thead>
-                            <tr>
-                                <th data-options="field:'abstracts',width:240,align:'center'">摘要</th>
-                                <th data-options="field:'aId',width:100,align:'center'">操作</th>
-                            </tr>
-                        </thead>
-                    </table>
+                <div class="easyui-layout" data-options="fit:true">
+                    <div data-options="region:'north',split:false" style="padding:5px;background:#eee;height:150px;">
+                        <input class="easyui-textbox" id="absContent" data-options="multiline:true,label:'摘要内容',labelPosition:'top'" style="width:100%;height:80px;">
+                        <div style="float:right;margin-top:10px;">
+                            <a class="easyui-linkbutton" onclick="absSave()">保 存</a>
+                            <a class="easyui-linkbutton" onclick="absClose()">取 消</a>
+                        </div>
+                    </div>
+                    <div data-options="region:'center'" >
+                        <table class="easyui-datagrid" id="absList" data-options="fit:true,singleSelect: true,fitColumns:true,idField:'AbsId',emptyMsg:'无记录'" >
+                            <thead>
+                                <tr>
+                                    <th data-options="field:'Abstract',width:240,align:'center'">摘要</th>
+                                    <th data-options="field:'AbsId',width:100,align:'center',formatter:fmtAbstract">操作</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
             </div>
-
-            <div id="auditMark" class="has-audit"></div>
-
-            <div id="mydata"></div>
         </div>
+    <div id="auditMark" class="has-audit"></div>
+    <div id="dataCache"></div>
 
     @Scripts.Render("~/bundles/jquery")
 
@@ -149,7 +149,10 @@
         var globVar = {
             voucher: null,             //凭证数据
             voucherIndex: -1,         //当前凭证实例在集合中的索引
-            vTable: "#voucherTab"        //凭证列表名称
+            vTable: "#voucherTab",        //凭证列表名称
+            cache: "#dataCache",         //缓存div容器
+            abstractData: null,           //摘要数据
+            accountData:null               //科目数据
         };
 
         //======初始化=======
@@ -176,7 +179,15 @@
 
         function initData()
         {
-            for (var i = 0; i < 4; i++) $(globVar.vTable).datagrid('appendRow', { VId: 0, Abstract: "", AccId: 0, AccountCode: "", Quantity: 0, Price:0, AccountName: "", Debit: 0, Credit: 0 });
+            for (var i = 0; i < 4; i++) $(globVar.vTable).datagrid('appendRow', { VId: 0, Abstract: "", AccId: 0, AccountCode: "", Quantity: 0, Price: 0, AccountName: "", Debit: 0, Credit: 0 });
+
+            $.get("/api/voucher/myAbstracts/", null, function (data) {
+                globVar.abstractData = data;
+            });
+
+            $.get("/api/acctbook/accTreeOfCate", { acctCateId: 0 }, function (data) {
+                globVar.accountData = data;
+            });
         }
 
         function binding(voucher) {
@@ -217,11 +228,29 @@
                 return "";
         }
         function absClickButton() {
+            $("#absList").datagrid("loadData",globVar.abstractData);
             $("#abstractsWin").dialog("open");
         }
         function absClose() {
             $("#abstractsWin").dialog("close");
         }
+        function absSave()
+        {
+            var absId = 0;
+            var selAbs = $("#absList").datagrid("getSelected");
+            if(selAbs)
+            {
+                absId = selAbs.AbsId;
+            }
+
+            $.post("/api/voucher/saveAbstract/", { AbsId: absId, Abstract: $("#absContent").textbox("getText") }, function (data) {
+                if(responseHandle(data))
+                {
+                    $("#absList").datagrid("reload");
+                }
+            });
+        }
+
         function onDateChange(newValue, oldValue) {
             var dArr = newValue.split('-');
             if (dArr.length == 3) {
@@ -328,6 +357,20 @@
         function treeOnSelect(node)
         {
 
+        }
+
+        function fmtAbstract(value, row, index)
+        {
+            var btnModAbs = '<a class="easyui-linkbutton" onclick="modAbs(' + row.AbsId + ',\'' + row.Abstract + '\')">修改</a> ';
+            var btnDelAbs = '<a class="easyui-linkbutton" onclick="delAbs(' + row.AbsId + ')">删除</a> ';
+
+            return btnModAbs + btnDelAbs;
+        }
+
+        function dgOnBeginEdit(ind, row)
+        {
+            var ed = $(globVar.vTable).datagrid('getEditor', { index: ind, field: 'AccId' });
+            $(ed.target).combotree("loadData", globVar.accountData);
         }
         //=========事件响应=====
 

@@ -43,5 +43,29 @@ namespace Sintoacct.Ledger.Controllers.Api
 
             return Ok(ResMessage.Success());
         }
+
+
+        [ClaimsAuthorize("role", "accountant")]
+        [HttpGet, Route("api/voucher/myAbstracts")]
+        public IHttpActionResult GetMyAbstracts()
+        {
+            var abstracts = Mapper.Map<List<AbstractViewModel>>(_voucher.GetMyAbstracts());
+            return Ok(abstracts);
+        }
+
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/voucher/saveAbstract"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult SaveAbstract(AbstractViewModel abs)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            _voucher.SaveAbstract(abs);
+
+            return Ok(ResMessage.Success());
+        }
     }
 }

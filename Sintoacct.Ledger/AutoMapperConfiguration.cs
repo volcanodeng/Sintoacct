@@ -31,6 +31,8 @@ namespace Sintoacct.Ledger
                 .ForMember(dest=>dest.CertWord,opt=>opt.MapFrom(src=>src.CertificateWord.CertWord));
                 cfg.CreateMap<VoucherDetail, VoucherDetailViewModel>()
                 .ForMember(dest => dest.AccId, opt => opt.MapFrom(src => src.Account.AccId));
+
+                cfg.CreateMap<AbstractTemp, AbstractViewModel>();
             });
         }
     }

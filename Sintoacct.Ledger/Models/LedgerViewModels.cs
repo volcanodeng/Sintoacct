@@ -475,4 +475,14 @@ namespace Sintoacct.Ledger.Models
     {
         public long VId { get; set; }
     }
+
+    /// <summary>
+    /// 摘要。保存、删除。
+    /// </summary>
+    public class AbstractViewModel
+    {
+        public int AbsId { get; set; }
+
+        public string Abstract { get; set; }
+    }
 }

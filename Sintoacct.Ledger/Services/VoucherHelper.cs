@@ -140,6 +140,44 @@ namespace Sintoacct.Ledger.Services
 
             return vmVoucher;
         }
+
+        public AbstractTemp SaveAbstract(AbstractViewModel abs)
+        {
+            AbstractTemp absTemp = new AbstractTemp();
+            if(abs.AbsId>0)
+            {
+                absTemp = _ledger.AbstractTemps.Where(ab => ab.AbsId == abs.AbsId).FirstOrDefault();
+            }
+            else
+            {
+                absTemp.AbId = _cache.GetUserCache().AccountBookID;
+                _ledger.AbstractTemps.Add(absTemp);
+            }
+            absTemp.Abstract = abs.Abstract;
+            
+            if(_ledger.SaveChanges()>0)
+            {
+                return absTemp;
+            }
+
+            return null;
+        }
+
+        public List<AbstractTemp> GetMyAbstracts()
+        {
+            Guid abid = _cache.GetUserCache().AccountBookID;
+
+            return _ledger.AbstractTemps.Where(ab => ab.AbId == abid).ToList();
+        }
+
+        public void DeleteAbstract(int absId)
+        {
+            var absTemp = _ledger.AbstractTemps.Where(abs => abs.AbsId == absId).FirstOrDefault();
+
+            _ledger.AbstractTemps.Remove(absTemp);
+
+            _ledger.SaveChanges();
+        }
     }
 
     public interface IVoucherHelper : IDependency
@@ -153,5 +191,11 @@ namespace Sintoacct.Ledger.Services
         void Audit(long vid);
 
         VoucherViewModel CopyNew(long vid);
+
+        AbstractTemp SaveAbstract(AbstractViewModel abs);
+
+        List<AbstractTemp> GetMyAbstracts();
+
+        void DeleteAbstract(int absId);
     }
 }
