@@ -45,7 +45,7 @@
        .datagrid-cell .col_debite, .datagrid-cell .col_credit, .datagrid-cell .col_money { width: 218px; }
        .datagrid-cell .col_debite .cell_val, .datagrid-cell .col_credit .cell_val { overflow: hidden; font-family: 'tahoma'; font-weight: bold; font-size: 14px; letter-spacing: 11px; overflow: hidden; position: relative; right: -5px;text-align: right; }
 
-       .datagrid-header-row td,.datagrid-cell-c1-Abstract,.datagrid-cell-c1-AccId {
+       .datagrid-header-row td {
             text-align:center;
             font-weight:bold;
         }
@@ -91,14 +91,15 @@
                         <input type="text" id="attCw" class="easyui-numberbox" value="0" data-options="min:0,width:60,height:30">
                         张
                     </span>
+                    <input type="hidden" id="VId" value="0"/>
                 </div>
 
-                <table class="easyui-datagrid" id="voucherTab" data-options="singleSelect: true,idField:'VdId',onClickCell: onClickCell,onEndEdit: endEditing,onBeginEdit:dgOnBeginEdit">
+                <table class="easyui-datagrid" id="voucherTab" data-options="singleSelect: true,idField:'VdId',onClickCell: onClickCell,onBeginEdit:dgOnBeginEdit">
                     <thead>
                         <tr>
 
                             <th data-options="field:'Abstract',width:280,editor:{type:'textbox',options:{buttonText:'摘要',onClickButton:absClickButton}}" rowspan="2">摘要</th>
-                            <th data-options="field:'AccId',formatter:scFormatter,width:280,editor:{type:'combotree',onSelect:treeOnSelect}" rowspan="2">会计科目</th>
+                            <th data-options="field:'AccId',formatter:scFormatter,width:280,editor:{type:'combotree'}" rowspan="2">会计科目</th>
                             <th>借方金额</th>
                             <th>贷方金额</th>
                         </tr>
@@ -179,7 +180,9 @@
 
         function initData()
         {
-            for (var i = 0; i < 4; i++) $(globVar.vTable).datagrid('appendRow', { VId: 0, Abstract: "", AccId: 0, AccountCode: "", Quantity: 0, Price: 0, AccountName: "", Debit: 0, Credit: 0 });
+            for (var i = 0; i < 4; i++) $(globVar.vTable).datagrid('appendRow', { VId: 0, Abstract: "", AccId: "", AccountCode: "", Quantity: 0, Price: 0, AccountName: "", Debit: 0, Credit: 0 });
+
+            $(globVar.vTable).datagrid('acceptChanges');
 
             $.get("/api/voucher/myAbstracts/", null, function (data) {
                 globVar.abstractData = data;
@@ -260,15 +263,14 @@
             }
         }
         function datagridEndEdit() {
-            var dg = $("#voucherTab");
-            var editInd = dg.datagrid('options').editIndex;
-            if (editInd == undefined) return true;
+            
+            if (dgWrapper.editIndex == undefined) return true;
 
-            if (dg.datagrid('validateRow', editInd)) {
+            if (dgWrapper.dg.datagrid('validateRow', dgWrapper.editIndex)) {
                 if (typeof (fieldSettingFun) == "function") fieldSettingFun(editInd);
 
-                dg.datagrid('endEdit', editInd);
-                dg.datagrid('options').editIndex = undefined;
+                dgWrapper.dg.datagrid('endEdit', dgWrapper.editIndex);
+                dgWrapper.editIndex = undefined;
 
                 return true;
             }
@@ -278,37 +280,32 @@
         }
 
         function saveVoucher() {
-            if (datagridEndEdit()) {
+            if (endEditing()) {
                 var voucherDetails = [];
-                var changeRows = $("#voucherTab").datagrid("getChanges");
+                var changeRows = dgWrapper.dg.datagrid("getChanges");
                 if (changeRows.length == 0) {
                     $.messager.show({ title: '保存', msg: '没有修改内容' });
                     return;
                 }
 
-                $.post("/api/v/SaveVoucher",
+                $.post("/api/voucher/saveVoucher",
                     {
-                        VId: globVar.voucher[globVar.voucherIndex].vId,
-                        CertWord: $("#cw").combobox("getValue"),
+                        CwId: $("#cw").combobox("getValue"),
                         CertWordSn: $("#ss").numberspinner('getValue'),
-                        AttachedInvoices: $("#attCw").numberbox('getValue'),
-                        VoucherTime: $("#dd").datebox("getValue"),
+                        InvoiceCount: $("#attCw").numberbox('getValue'),
+                        VoucherDate: $("#dd").datebox("getValue"),
                         VoucherDetails: changeRows
                     },
                     function (data) {
-                        if (data >= 1) {
+                        if (responseHandle(data)) {
                             $.messager.show({ title: '保存', msg: '保存操作成功完成' });
-                        }
-                        else {
-                            $.messager.alert('保存', '保存失败，请联系管理员处理', 'warning');
                         }
                     });
             }
         }
         function addVoucher() {
-            if (datagridEndEdit()) {
-                var dg = $("#voucherTab");
-                dg.datagrid('appendRow', { vId: globVar.voucher[globVar.voucherIndex].vId, abstracts: '', subjectCode: '', subjectName: '', debit: 0, credit: 0 });
+            if (endEditing()) {
+                $(globVar.vTable).datagrid('appendRow', { VId: 0, Abstract: "", AccId: "", AccountCode: "", Quantity: 0, Price: 0, AccountName: "", Debit: 0, Credit: 0 });
 
             }
         }
@@ -327,14 +324,14 @@
                 });
         }
 
-        function fieldSettingFun(editIndex) {
-            var ed = $('#voucherTab').datagrid('getEditor', { index: editIndex, field: 'subjectCode' });
-            if (!ed) return;
+        //function fieldSettingFun(editIndex) {
+        //    var ed = $('#voucherTab').datagrid('getEditor', { index: editIndex, field: 'subjectCode' });
+        //    if (!ed) return;
 
-            var subjectName = $(ed.target).combotree('getText');
-            var sNames = subjectName.split(" ");
-            if (sNames.length > 1) $('#voucherTab').datagrid('getRows')[editIndex]['subjectName'] = sNames[1];
-        }
+        //    var subjectName = $(ed.target).combotree('getText');
+        //    var sNames = subjectName.split(" ");
+        //    if (sNames.length > 1) $('#voucherTab').datagrid('getRows')[editIndex]['subjectName'] = sNames[1];
+        //}
         function prevClick() {
             if (globVar.voucherIndex == 0) { $.messager.alert("前一项", "已到达第一项", "info"); return; }
 
@@ -356,8 +353,10 @@
 
         function treeOnSelect(node)
         {
-
+            $(globVar.vTable).datagrid('getRows')[dgWrapper.editIndex]['AccountCode'] = node.attributes.AccCode;
+            $(globVar.vTable).datagrid('getRows')[dgWrapper.editIndex]['AccountName'] = node.attributes.AccName;
         }
+
 
         function fmtAbstract(value, row, index)
         {
@@ -370,6 +369,9 @@
         function dgOnBeginEdit(ind, row)
         {
             var ed = $(globVar.vTable).datagrid('getEditor', { index: ind, field: 'AccId' });
+            var t = $(ed.target).combotree("tree");
+            t.tree({ onSelect: treeOnSelect });
+
             $(ed.target).combotree("loadData", globVar.accountData);
         }
         //=========事件响应=====

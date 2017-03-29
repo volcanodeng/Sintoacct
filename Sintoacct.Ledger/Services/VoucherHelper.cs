@@ -78,6 +78,7 @@ namespace Sintoacct.Ledger.Services
                 voucher.AccountBook = _acctBook.GetCurrentBook();
                 voucher.Creator = ((ClaimsIdentity)_context.User.Identity).GetUserName();
                 voucher.CreateTime = DateTime.Now;
+                voucher.VoucherDetails = new List<VoucherDetail>();
 
                 foreach (VoucherDetailViewModel vd in vmVoucher.VoucherDetails)
                 {
