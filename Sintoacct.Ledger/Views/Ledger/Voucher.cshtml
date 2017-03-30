@@ -66,8 +66,8 @@
                 </div>
 
                 <div class="right">
-                    <a class="easyui-linkbutton" id="prev" title="上一张" href="javascript:prevClick()">&lt;&lt;</a>
-                    <a class="easyui-linkbutton" id="next" title="下一张" href="javascript:nextClick()">&gt;&gt;</a>
+                    <a class="easyui-linkbutton" id="prev" title="上一张" onclick="prevClick()">&lt;&lt;</a>
+                    <a class="easyui-linkbutton" id="next" title="下一张" onclick="nextClick()">&gt;&gt;</a>
                 </div>
             </div>
             <div class="voucher_wrap">
@@ -163,20 +163,13 @@
             initData();
         });
 
-        /*
-        function loadVoucher() {
-            $.get('/api/voucher/myVoucher', function (data) {
-                globVar.voucher = data;
-                if (data && data.length > 0) {
-                    if (globVar.voucherIndex == -1) globVar.voucherIndex = data.length - 1;
-
-                    binding(data[globVar.voucherIndex]);
-
-                    $("#voucherTab").datagrid("enableCellEditing");
-                }
+        
+        function loadVoucher(vid) {
+            $.get('/api/voucher/myVoucher?vid=' + vid, function (data) {
+                binding(data);
             });
         }
-        */
+        
 
         function initData()
         {
@@ -194,15 +187,16 @@
         }
 
         function binding(voucher) {
-            $("#cw").combobox("setValue", voucher.certWord);
-            $("#ss").numberspinner("setValue", voucher.certWordSn);
-            $("#dd").datebox("setValue", voucher.voucherTime.substr(0, voucher.voucherTime.indexOf("T")));
+            $("#VId").val(voucher.VId);
+            $("#cw").combobox("setValue", voucher.CwId);
+            $("#ss").numberspinner("setValue", voucher.CertWordSN);
+            $("#dd").datebox("setValue", voucher.VoucherDate.substr(0, voucher.VoucherDate.indexOf("T")));
             onDateChange($("#dd").datebox("getValue"));
 
-            $("#attCw").numberbox("setValue", voucher.attachedInvoices);
+            $("#attCw").numberbox("setValue", voucher.InvoiceCount);
             if (voucher.status == 2) $("#auditMark").show(); else $("#auditMark").hide();
 
-            $("#voucherTab").datagrid("loadData", globVar.voucher[globVar.voucherIndex].voucherDetails);
+            $(globVar.vTable).datagrid("loadData", voucher.VoucherDetails);
         }
 
         //=========初始化=======
@@ -262,22 +256,23 @@
                 $("#vch_period").text(m);
             }
         }
-        function datagridEndEdit() {
+
+        //function datagridEndEdit() {
             
-            if (dgWrapper.editIndex == undefined) return true;
+        //    if (dgWrapper.editIndex == undefined) return true;
 
-            if (dgWrapper.dg.datagrid('validateRow', dgWrapper.editIndex)) {
-                if (typeof (fieldSettingFun) == "function") fieldSettingFun(editInd);
+        //    if (dgWrapper.dg.datagrid('validateRow', dgWrapper.editIndex)) {
+        //        if (typeof (fieldSettingFun) == "function") fieldSettingFun(editInd);
 
-                dgWrapper.dg.datagrid('endEdit', dgWrapper.editIndex);
-                dgWrapper.editIndex = undefined;
+        //        dgWrapper.dg.datagrid('endEdit', dgWrapper.editIndex);
+        //        dgWrapper.editIndex = undefined;
 
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
+        //        return true;
+        //    }
+        //    else {
+        //        return false;
+        //    }
+        //}
 
         function saveVoucher() {
             if (endEditing()) {
@@ -298,6 +293,7 @@
                     },
                     function (data) {
                         if (responseHandle(data)) {
+                            loadVoucher(data.State.VId);
                             $.messager.show({ title: '保存', msg: '保存操作成功完成' });
                         }
                     });
@@ -333,10 +329,12 @@
         //    if (sNames.length > 1) $('#voucherTab').datagrid('getRows')[editIndex]['subjectName'] = sNames[1];
         //}
         function prevClick() {
-            if (globVar.voucherIndex == 0) { $.messager.alert("前一项", "已到达第一项", "info"); return; }
+            loadVoucher(3);
 
-            if (globVar.voucherIndex > 0) globVar.voucherIndex--;
-            binding(globVar.voucher[globVar.voucherIndex]);
+            //if (globVar.voucherIndex == 0) { $.messager.alert("前一项", "已到达第一项", "info"); return; }
+
+            //if (globVar.voucherIndex > 0) globVar.voucherIndex--;
+            //binding(globVar.voucher[globVar.voucherIndex]);
         }
         function nextClick() {
 

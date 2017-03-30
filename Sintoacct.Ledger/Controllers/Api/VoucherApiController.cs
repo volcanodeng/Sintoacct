@@ -23,9 +23,15 @@ namespace Sintoacct.Ledger.Controllers.Api
 
         [ClaimsAuthorize("role", "accountant")]
         [HttpGet, Route("api/voucher/myVoucher")]
-        public IHttpActionResult GetMyVoucher(VoucherIdViewModel voucherId)
+        public IHttpActionResult GetMyVoucher(long vid)
         {
-            VoucherViewModel voucher = Mapper.Map<VoucherViewModel>(_voucher.GetMyVoucher(voucherId.VId));
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            VoucherViewModel voucher = Mapper.Map<VoucherViewModel>(_voucher.GetMyVoucher(vid));
             return Ok(voucher);
         }
 
@@ -39,9 +45,12 @@ namespace Sintoacct.Ledger.Controllers.Api
                 return BadRequest(err);
             }
 
-            _voucher.Save(voucher);
+            Voucher v = _voucher.Save(voucher);
 
-            return Ok(ResMessage.Success());
+            ResMessageContent rmContent = ResMessage.Success();
+            rmContent.State = Mapper.Map<VoucherViewModel>(v);
+
+            return Ok(rmContent);
         }
 
 

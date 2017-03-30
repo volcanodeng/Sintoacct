@@ -67,6 +67,7 @@ namespace Sintoacct.Ledger.Models
     {
         public bool IsSuccess { get; set; }
         public string message { get; set; }
+        public object State { get; set; }
     }
 
     /// <summary>
@@ -463,9 +464,9 @@ namespace Sintoacct.Ledger.Models
 
         public decimal? Price { get; set; }
 
-        public decimal Debit { get; set; }
+        public double Debit { get; set; }
 
-        public decimal Credit { get; set; }
+        public double Credit { get; set; }
     }
 
     /// <summary>
