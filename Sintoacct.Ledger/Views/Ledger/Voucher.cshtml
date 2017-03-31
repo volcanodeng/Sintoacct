@@ -158,8 +158,6 @@
 
         //======初始化=======
         $(function () {
-            //loadVoucher();
-
             initData();
         });
 
@@ -184,11 +182,33 @@
             $.get("/api/acctbook/accTreeOfCate", { acctCateId: 0 }, function (data) {
                 globVar.accountData = data;
             });
+
+            $.get("/api/voucher/myVouchers", null, function (data) {
+                globVar.voucher = data;
+            });
+        }
+
+        function newVoucher()
+        {
+            $("#VId").val(0);
+            $("#cw").combobox("reload");
+            $("#ss").numberspinner("setValue", 1);
+            $("#dd").datebox("setValue", (new Date()).toLocaleDateString());
+            onDateChange($("#dd").datebox("getValue"));
+
+            $("#attCw").numberbox("setValue", 0);
+            $("#auditMark").hide();
+
+            $(globVar.vTable).datagrid("loadData", []);
+
+            for (var i = 0; i < 4; i++) $(globVar.vTable).datagrid('appendRow', { VId: 0, Abstract: "", AccId: "", AccountCode: "", Quantity: 0, Price: 0, AccountName: "", Debit: 0, Credit: 0 });
+
+            $(globVar.vTable).datagrid('acceptChanges');
         }
 
         function binding(voucher) {
             $("#VId").val(voucher.VId);
-            $("#cw").combobox("setValue", voucher.CwId);
+            $("#cw").combobox("select", voucher.CwId);
             $("#ss").numberspinner("setValue", voucher.CertWordSN);
             $("#dd").datebox("setValue", voucher.VoucherDate.substr(0, voucher.VoucherDate.indexOf("T")));
             onDateChange($("#dd").datebox("getValue"));
@@ -257,22 +277,6 @@
             }
         }
 
-        //function datagridEndEdit() {
-            
-        //    if (dgWrapper.editIndex == undefined) return true;
-
-        //    if (dgWrapper.dg.datagrid('validateRow', dgWrapper.editIndex)) {
-        //        if (typeof (fieldSettingFun) == "function") fieldSettingFun(editInd);
-
-        //        dgWrapper.dg.datagrid('endEdit', dgWrapper.editIndex);
-        //        dgWrapper.editIndex = undefined;
-
-        //        return true;
-        //    }
-        //    else {
-        //        return false;
-        //    }
-        //}
 
         function saveVoucher() {
             if (endEditing()) {
@@ -285,6 +289,7 @@
 
                 $.post("/api/voucher/saveVoucher",
                     {
+                        VId:$("#VId").val(),
                         CwId: $("#cw").combobox("getValue"),
                         CertWordSn: $("#ss").numberspinner('getValue'),
                         InvoiceCount: $("#attCw").numberbox('getValue'),
@@ -301,7 +306,7 @@
         }
         function addVoucher() {
             if (endEditing()) {
-                $(globVar.vTable).datagrid('appendRow', { VId: 0, Abstract: "", AccId: "", AccountCode: "", Quantity: 0, Price: 0, AccountName: "", Debit: 0, Credit: 0 });
+                $(globVar.vTable).datagrid('appendRow', { VId: $("#VId").val(), VdId:0, Abstract: "", AccId: "", AccountCode: "", Quantity: 0, Price: 0, AccountName: "", Debit: 0, Credit: 0 });
 
             }
         }
@@ -320,21 +325,13 @@
                 });
         }
 
-        //function fieldSettingFun(editIndex) {
-        //    var ed = $('#voucherTab').datagrid('getEditor', { index: editIndex, field: 'subjectCode' });
-        //    if (!ed) return;
-
-        //    var subjectName = $(ed.target).combotree('getText');
-        //    var sNames = subjectName.split(" ");
-        //    if (sNames.length > 1) $('#voucherTab').datagrid('getRows')[editIndex]['subjectName'] = sNames[1];
-        //}
+        
         function prevClick() {
-            loadVoucher(3);
 
-            //if (globVar.voucherIndex == 0) { $.messager.alert("前一项", "已到达第一项", "info"); return; }
+            if (globVar.voucherIndex == 0) { $.messager.alert("前一项", "已到达第一项", "info"); return; }
 
-            //if (globVar.voucherIndex > 0) globVar.voucherIndex--;
-            //binding(globVar.voucher[globVar.voucherIndex]);
+            if (globVar.voucherIndex > 0) globVar.voucherIndex--;
+            binding(globVar.voucher[globVar.voucherIndex]);
         }
         function nextClick() {
 

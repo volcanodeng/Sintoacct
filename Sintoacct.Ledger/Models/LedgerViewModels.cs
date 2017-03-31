@@ -464,9 +464,9 @@ namespace Sintoacct.Ledger.Models
 
         public decimal? Price { get; set; }
 
-        public double Debit { get; set; }
+        public decimal Debit { get; set; }
 
-        public double Credit { get; set; }
+        public decimal Credit { get; set; }
     }
 
     /// <summary>

@@ -35,15 +35,31 @@ namespace Sintoacct.Ledger.Services
         {
             Guid abid = _cache.GetUserCache().AccountBookID;
 
-            return _ledger.Vouchers.Where(v => v.AbId == abid && v.VId == vid).Include(v=>v.VoucherDetails).FirstOrDefault();
+            return _ledger.Vouchers.Where(v => v.AbId == abid && v.VId == vid)
+                                   .Include(v => v.VoucherDetails)
+                                   .Include(v => v.CertificateWord)
+                                   .FirstOrDefault();
+        }
+
+        public List<Voucher> GetMyVouchers()
+        {
+            Guid abid = _cache.GetUserCache().AccountBookID;
+
+            //仅返回最新的10个未审核的凭证
+            return _ledger.Vouchers.Where(v => v.AbId == abid && v.State == VoucherState.PaddingAudit)
+                                   .OrderByDescending(v => v.VId)
+                                   .Include(v => v.VoucherDetails)
+                                   .Include(v => v.CertificateWord)
+                                   .Take(10)
+                                   .ToList();
         }
 
         public Voucher Save(VoucherViewModel vmVoucher)
         {
             Voucher voucher = new Voucher();
-            if (voucher.VId > 0)
+            if (vmVoucher.VId > 0)
             {
-                voucher = this.GetMyVoucher(voucher.VId);
+                voucher = this.GetMyVoucher(vmVoucher.VId);
                 if (voucher == null) return null;
 
                 voucher.CertificateWord = _ledger.CertificateWords.Where(cw => cw.CwId == vmVoucher.CwId).FirstOrDefault();
@@ -54,17 +70,20 @@ namespace Sintoacct.Ledger.Services
 
                 foreach (VoucherDetailViewModel vd in vmVoucher.VoucherDetails)
                 {
-                    VoucherDetail vDetail = voucher.VoucherDetails.Where(d => d.VdId == vd.VdId).FirstOrDefault();
-                    if (vDetail == null) continue;
+                    VoucherDetail vDetail = new VoucherDetail();
+
+                    if (vd.VdId > 0) vDetail = voucher.VoucherDetails.Where(d => d.VdId == vd.VdId).FirstOrDefault();
+                    else
+                        voucher.VoucherDetails.Add(vDetail);
 
                     vDetail.Abstract = vd.Abstract;
                     vDetail.Account = _account.GetAccount(vd.AccId);
                     vDetail.AccountCode = vDetail.Account.AccCode;
                     vDetail.AccountName = vDetail.Account.AccName;
-                    vDetail.Quantity = vDetail.Quantity;
-                    vDetail.Price = vDetail.Price;
-                    vDetail.Debit = vDetail.Debit;
-                    vDetail.Credit = vDetail.Credit;
+                    vDetail.Quantity = vd.Quantity;
+                    vDetail.Price = vd.Price;
+                    vDetail.Debit = vd.Debit;
+                    vDetail.Credit = vd.Credit;
                 }
             }
             else
@@ -87,10 +106,10 @@ namespace Sintoacct.Ledger.Services
                     vDetail.Account = _account.GetAccount(vd.AccId);
                     vDetail.AccountCode = vDetail.Account.AccCode;
                     vDetail.AccountName = vDetail.Account.AccName;
-                    vDetail.Quantity = vDetail.Quantity;
-                    vDetail.Price = vDetail.Price;
-                    vDetail.Debit = vDetail.Debit;
-                    vDetail.Credit = vDetail.Credit;
+                    vDetail.Quantity = vd.Quantity;
+                    vDetail.Price = vd.Price;
+                    vDetail.Debit = vd.Debit;
+                    vDetail.Credit = vd.Credit;
 
                     voucher.VoucherDetails.Add(vDetail);
                 }
@@ -184,6 +203,8 @@ namespace Sintoacct.Ledger.Services
     public interface IVoucherHelper : IDependency
     {
         Voucher GetMyVoucher(long vid);
+
+        List<Voucher> GetMyVouchers();
 
         Voucher Save(VoucherViewModel vmVoucher);
 

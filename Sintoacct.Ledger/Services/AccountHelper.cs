@@ -52,7 +52,7 @@ namespace Sintoacct.Ledger.Services
         #region AccountCategory
         public List<AccountCategory> GetMainAccountCategory()
         {
-            return _ledger.AccountCategories.Where(ac => !ac.ParentAcId.HasValue).ToList();
+            return _ledger.AccountCategories.Where(ac => ac.ParentAcId==null).ToList();
         }
 
         public List<AccountCategory> GetSubAccountCategory(int mainCateId)
