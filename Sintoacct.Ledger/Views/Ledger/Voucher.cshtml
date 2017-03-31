@@ -44,6 +44,7 @@
            }
        .datagrid-cell .col_debite, .datagrid-cell .col_credit, .datagrid-cell .col_money { width: 218px; }
        .datagrid-cell .col_debite .cell_val, .datagrid-cell .col_credit .cell_val { overflow: hidden; font-family: 'tahoma'; font-weight: bold; font-size: 14px; letter-spacing: 11px; overflow: hidden; position: relative; right: -5px;text-align: right; }
+       .has-audit, .has-checkout { width: 150px; height: 74px; background: url(/Content/images/audit.png) 0 0 no-repeat; position: absolute; left: 770px; top: 100px; }
 
        .datagrid-header-row td {
             text-align:center;
@@ -139,7 +140,7 @@
                 </div>
             </div>
         </div>
-    <div id="auditMark" class="has-audit"></div>
+    <div id="auditMark" class="has-audit" ></div>
     <div id="dataCache"></div>
 
     @Scripts.Render("~/bundles/jquery")
@@ -214,7 +215,7 @@
             onDateChange($("#dd").datebox("getValue"));
 
             $("#attCw").numberbox("setValue", voucher.InvoiceCount);
-            if (voucher.status == 2) $("#auditMark").show(); else $("#auditMark").hide();
+            if (voucher.State == 2) $("#auditMark").show(); else $("#auditMark").hide();
 
             $(globVar.vTable).datagrid("loadData", voucher.VoucherDetails);
         }
@@ -311,16 +312,10 @@
             }
         }
         function reviewVoucher() {
-            $.post("/api/v/ReviewVoucher", { vid: globVar.voucher[globVar.voucherIndex].vId },
+            $.post("/api/voucher/audit", { VId: $("#VId").val() },
                 function (data) {
-                    if (data >= 1) {
-                        loadVoucher();
-                        binding(globVar.voucher[globVar.voucherIndex]);
-
-                        $.messager.show({ title: '审核', msg: '审核完成' });
-                    }
-                    else {
-                        $.messager.alert('审核', '审核失败，请联系管理员处理', 'warning');
+                    if (responseHandle(data)) {
+                        loadVoucher($("#VId").val());
                     }
                 });
         }

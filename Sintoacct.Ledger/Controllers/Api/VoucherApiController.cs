@@ -67,6 +67,27 @@ namespace Sintoacct.Ledger.Controllers.Api
             return Ok(rmContent);
         }
 
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/voucher/audit"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult Audit(VoucherIdViewModel voucher)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                return BadRequest(err);
+            }
+
+            try
+            {
+                _voucher.Audit(voucher.VId);
+            }
+            catch(Exception e)
+            {
+                ResMessage.Fail(e.Message);
+            }
+
+            return Ok(ResMessage.Success());
+        }
 
         [ClaimsAuthorize("role", "accountant")]
         [HttpGet, Route("api/voucher/myAbstracts")]
