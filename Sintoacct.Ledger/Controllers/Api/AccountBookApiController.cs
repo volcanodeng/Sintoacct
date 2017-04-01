@@ -46,7 +46,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             if(!_modelValid.ValidAccountBookCreate(acctBook,out err))
@@ -66,7 +66,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             _acctBook.Delete(acctBook.AbId);
@@ -98,7 +98,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             _certWord.Save(certWord);
@@ -113,7 +113,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             if(certWord == null)
@@ -133,7 +133,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             _certWord.SetDefault(certWord.CwId);
@@ -148,7 +148,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             _auxType.Add(auxType.AuxType);
@@ -163,7 +163,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             _auxType.Delete(auxType.AtId);
@@ -178,7 +178,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             _auxType.SaveAuxiliary(vmAux);
@@ -193,7 +193,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             _auxType.DeleteAuxiliary(delAux.AuxId);
@@ -208,7 +208,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             List<Auxiliary> auxList = _auxType.GetAuxiliaryOfType(auxTypeId);
@@ -227,7 +227,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             _account.SaveAccount(vmAccount);
@@ -242,7 +242,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             _account.SaveAccountInitial(vmAccount.Accounts);
@@ -257,7 +257,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             List<Account> accList = _account.GetAccountsOfCategory(acctCateId);
@@ -275,7 +275,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             TreeViewModel<AccountViewModel> accountTree = acctCateId>0 ? _account.GetAccountTreeOfCategory(acctCateId) : _account.GetAccountTree();
@@ -291,7 +291,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             List<AccountCategory> accCateList = _account.GetSubAccountCategory(mainCateId);
@@ -310,7 +310,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             if(vmAccount==null)
@@ -330,7 +330,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             _account.AddAuxAccount(vmAuxAccount);
@@ -346,7 +346,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             DatagridViewModel<TrialBalanceViewModel> TrialBalance = new DatagridViewModel<TrialBalanceViewModel>();

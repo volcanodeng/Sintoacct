@@ -28,7 +28,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             VoucherViewModel voucher = Mapper.Map<VoucherViewModel>(_voucher.GetMyVoucher(vid));
@@ -42,7 +42,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             var voucher = Mapper.Map<List<VoucherViewModel>>(_voucher.GetMyVouchers());
@@ -56,7 +56,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             Voucher v = _voucher.Save(voucher);
@@ -74,7 +74,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             try
@@ -82,6 +82,28 @@ namespace Sintoacct.Ledger.Controllers.Api
                 _voucher.Audit(voucher.VId);
             }
             catch(Exception e)
+            {
+                ResMessage.Fail(e.Message);
+            }
+
+            return Ok(ResMessage.Success());
+        }
+
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/voucher/del"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult DeleteVoucher(VoucherIdViewModel voucher)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                ResMessage.Fail(err);
+            }
+
+            try
+            {
+                _voucher.Delete(voucher.VId);
+            }
+            catch (Exception e)
             {
                 ResMessage.Fail(e.Message);
             }
@@ -104,10 +126,25 @@ namespace Sintoacct.Ledger.Controllers.Api
             string err;
             if (!_modelValid.Valid(ModelState, out err))
             {
-                return BadRequest(err);
+                ResMessage.Fail(err);
             }
 
             _voucher.SaveAbstract(abs);
+
+            return Ok(ResMessage.Success());
+        }
+
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/voucher/delAbstract"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult DeleteAbstract(AbstractViewModel abs)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                ResMessage.Fail(err);
+            }
+
+            _voucher.DeleteAbstract(abs.AbsId);
 
             return Ok(ResMessage.Success());
         }

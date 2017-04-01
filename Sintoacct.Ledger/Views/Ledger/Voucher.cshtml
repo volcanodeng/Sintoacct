@@ -63,7 +63,7 @@
                     <a class="easyui-linkbutton" id="print">打印</a>
                     <a class="easyui-linkbutton" id="audit" onclick="reviewVoucher()">审核</a>
                     <a class="easyui-linkbutton" id="copy">复制</a>
-                    <a class="easyui-linkbutton" id="delete">删除</a>
+                    <a class="easyui-linkbutton" id="delete" onclick="delVoucher()">删除</a>
                 </div>
 
                 <div class="right">
@@ -88,7 +88,7 @@
                         <span id="vch_year"></span>年第<span id="vch_period"></span>期
                     </div>
                     <span class="attach_wrap">
-                        附单据
+                        <a href="#">附单据</a>
                         <input type="text" id="attCw" class="easyui-numberbox" value="0" data-options="min:0,width:60,height:30">
                         张
                     </span>
@@ -128,7 +128,7 @@
                         </div>
                     </div>
                     <div data-options="region:'center'" >
-                        <table class="easyui-datagrid" id="absList" data-options="fit:true,singleSelect: true,fitColumns:true,idField:'AbsId',emptyMsg:'无记录'" >
+                        <table class="easyui-datagrid" id="absList" data-options="fit:true,singleSelect: true,fitColumns:true,idField:'AbsId',emptyMsg:'无记录',onDblClickRow:dgOnDblClickRow" >
                             <thead>
                                 <tr>
                                     <th data-options="field:'Abstract',width:240,align:'center'">摘要</th>
@@ -140,7 +140,7 @@
                 </div>
             </div>
         </div>
-    <div id="auditMark" class="has-audit" ></div>
+    <div id="auditMark" class="has-audit" style="display:none;"></div>
     <div id="dataCache"></div>
 
     @Scripts.Render("~/bundles/jquery")
@@ -172,6 +172,8 @@
 
         function initData()
         {
+            $("#dd").datebox("setValue", (new Date()).toLocaleDateString());
+
             for (var i = 0; i < 4; i++) $(globVar.vTable).datagrid('appendRow', { VId: 0, Abstract: "", AccId: "", AccountCode: "", Quantity: 0, Price: 0, AccountName: "", Debit: 0, Credit: 0 });
 
             $(globVar.vTable).datagrid('acceptChanges');
@@ -264,9 +266,29 @@
             $.post("/api/voucher/saveAbstract/", { AbsId: absId, Abstract: $("#absContent").textbox("getText") }, function (data) {
                 if(responseHandle(data))
                 {
-                    $("#absList").datagrid("reload");
+                    $.get("/api/voucher/myAbstracts/", null, function (data) {
+                        globVar.abstractData = data;
+                        $("#absList").datagrid("loadData", globVar.abstractData);
+                    });
                 }
             });
+        }
+        function absDel(absid)
+        {
+            $.messager.confirm('摘要', '您确定要删除该摘要吗？', function (r) {
+                if (r) {
+                    $.post("/api/voucher/delAbstract", { AbsId: absid }, function (data) {
+                        if(responseHandle(data))
+                        {
+                            $.get("/api/voucher/myAbstracts/", null, function (data) {
+                                globVar.abstractData = data;
+                                $("#absList").datagrid("loadData", globVar.abstractData);
+                            });
+                        }
+                    });
+                }
+            });
+            
         }
 
         function onDateChange(newValue, oldValue) {
@@ -319,6 +341,15 @@
                     }
                 });
         }
+        function delVoucher()
+        {
+            $.post("/api/voucher/del", { VId: $("#VId").val() },
+                function (data) {
+                    if (responseHandle(data)) {
+                        newVoucher();
+                    }
+                });
+        }
 
         
         function prevClick() {
@@ -350,10 +381,10 @@
 
         function fmtAbstract(value, row, index)
         {
-            var btnModAbs = '<a class="easyui-linkbutton" onclick="modAbs(' + row.AbsId + ',\'' + row.Abstract + '\')">修改</a> ';
-            var btnDelAbs = '<a class="easyui-linkbutton" onclick="delAbs(' + row.AbsId + ')">删除</a> ';
+            //var btnModAbs = '<a class="easyui-linkbutton" onclick="modAbs(' + row.AbsId + ',\'' + row.Abstract + '\')">修改</a> ';
+            var btnDelAbs = '<a class="easyui-linkbutton" onclick="absDel(' + row.AbsId + ')">删除</a> ';
 
-            return btnModAbs + btnDelAbs;
+            return  btnDelAbs;
         }
 
         function dgOnBeginEdit(ind, row)
@@ -364,6 +395,15 @@
 
             $(ed.target).combotree("loadData", globVar.accountData);
         }
+
+        function dgOnDblClickRow(index, row)
+        {
+            var ed = dgWrapper.dg.datagrid('getEditor', { index: dgWrapper.editIndex, field: 'Abstract' });
+            $(ed.target).textbox('setValue', row.Abstract);
+            $("#abstractsWin").dialog("close");
+        }
+
+        
         //=========事件响应=====
 
     </script>

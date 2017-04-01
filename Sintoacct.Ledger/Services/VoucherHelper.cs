@@ -128,6 +128,11 @@ namespace Sintoacct.Ledger.Services
         public void Delete(long vid)
         {
             Voucher delVoucher = GetMyVoucher(vid);
+
+            if (delVoucher == null) throw new ArgumentNullException("找不到要删除的凭证");
+
+            if (delVoucher.State == VoucherState.Audited) throw new InvalidOperationException("凭证已审核，若要删除请先弃审");
+
             _ledger.Vouchers.Remove(delVoucher);
         }
 
