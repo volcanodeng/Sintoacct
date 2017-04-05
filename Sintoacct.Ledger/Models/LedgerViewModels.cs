@@ -157,7 +157,7 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 核算类型名称
         /// </summary>
-        [MaxLength(20),Required]
+        [MaxLength(20), Required]
         public string AuxType { get; set; }
     }
 
@@ -176,7 +176,7 @@ namespace Sintoacct.Ledger.Models
     /// </summary>
     public class AuxiliaryViewModel
     {
-        
+
         /// <summary>
         /// 辅助核算编号
         /// </summary>
@@ -485,5 +485,53 @@ namespace Sintoacct.Ledger.Models
         public int AbsId { get; set; }
 
         public string Abstract { get; set; }
+    }
+
+    /// <summary>
+    /// 查凭证的搜索条件
+    /// </summary>
+    public class SearchConditionViewModel
+    {
+        public string StartPeriod { get; set; }
+
+        public string EndPeriod { get; set; }
+
+        public string CertWord { get; set; }
+
+        public string CertWordSN { get; set; }
+
+        public int? VoucherState { get; set; }
+
+        public string Abstract { get; set; }
+
+        public string Account { get; set; }
+
+        public int? Auxiliary { get; set; }
+
+        public string AuxiliaryValue { get; set; }
+    }
+
+    /// <summary>
+    /// 查凭证的结果
+    /// </summary>
+    public class SearchVoucherViewModel
+    {
+        public DateTime VoucherDate { get; set; }
+
+        public string CertWord { get; set; }
+
+        public string Abstract { get; set; }
+
+        public string AccCode { get; set; }
+
+        public string AccName { get; set; }
+
+        public decimal Debit { get; set; }
+
+        public decimal Credit { get; set; }
+
+        public string Creator { get; set; }
+
+        public string Review { get; set; }
     }
 }

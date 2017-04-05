@@ -360,6 +360,7 @@
     <Content Include="Views\Ledger\InitialBalance.cshtml" />
     <Content Include="Views\Ledger\Voucher.cshtml" />
     <Content Include="Views\Ledger\LedgerFrame.cshtml" />
+    <Content Include="Views\Ledger\ViewVoucher.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,62 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/easyui")
+</head>
+<body>
+    <div class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'north',split:false,border:false" style="padding:10px;overflow:hidden;background-color:#F2F2F2;">
+            <div>查凭证</div>
+        </div>
+        <div data-options="region:'center',border:false" style="padding:10px;">
+        </div>
+    </div>
+
+    <div id="searchPanel">
+        <form id="sForm" method="post">
+            <div>会计期间：<input class="easyui-combobox" data-options="valueField:'id',textField:'text',url:'get_data.php'" />至<input class="easyui-combobox" data-options="valueField:'id',textField:'text',url:'get_data.php'" /></div>
+
+            <div>凭证字：<input class="easyui-combobox" data-options="valueField:'CwId',textField:'CertWord',url:'/api/acctbook/MyCertWordArray',width:60,height:30,method:'GET',editable:false" /></div>
+
+            <div>凭证号：<input class="easyui-textbox" /></div>
+
+        </form>
+    </div>
+
+
+    @Scripts.Render("~/bundles/jquery")
+
+    <script type="text/javascript">
+
+
+    $(function () {
+        init();
+    });
+
+    function init()
+    {
+        $("#sForm").form({
+            url: "/api/voucher/viewVoucher/",
+            onSubmit: formOnSubmit,
+            success: formSuccess
+        });
+    }
+
+    function formOnSubmit() {
+        return $(this).form('validate');
+    }
+
+    function formSuccess(data) {
+        if (responseHandle(data)) {
+            
+        }
+    }
+    </script>
+</body>
+</html>

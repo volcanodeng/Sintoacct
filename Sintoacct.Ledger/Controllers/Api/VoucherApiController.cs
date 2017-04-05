@@ -148,5 +148,20 @@ namespace Sintoacct.Ledger.Controllers.Api
 
             return Ok(ResMessage.Success());
         }
+
+
+        [ClaimsAuthorize("role", "accountant")]
+        [HttpGet, Route("api/voucher/viewVoucher")]
+        public IHttpActionResult ViewVoucher(SearchConditionViewModel condition)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                ResMessage.Fail(err);
+            }
+
+            var voucher = Mapper.Map<List<VoucherViewModel>>(_voucher.SearchVoucher(condition));
+            return Ok(voucher);
+        }
     }
 }

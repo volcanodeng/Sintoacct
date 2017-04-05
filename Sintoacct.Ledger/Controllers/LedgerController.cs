@@ -108,5 +108,11 @@ namespace Sintoacct.Ledger.Controllers
         {
             return View();
         }
+
+        [ClaimsAuthorize("role", "accountant")]
+        public ActionResult ViewVoucher()
+        {
+            return View();
+        }
     }
 }

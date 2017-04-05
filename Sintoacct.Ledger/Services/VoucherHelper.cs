@@ -203,6 +203,13 @@ namespace Sintoacct.Ledger.Services
 
             _ledger.SaveChanges();
         }
+
+        public List<Voucher> SearchVoucher(SearchConditionViewModel condition)
+        {
+            List<Voucher> vouchers = GetMyVouchers();
+
+            return vouchers;
+        }
     }
 
     public interface IVoucherHelper : IDependency
@@ -224,5 +231,7 @@ namespace Sintoacct.Ledger.Services
         List<AbstractTemp> GetMyAbstracts();
 
         void DeleteAbstract(int absId);
+
+        List<Voucher> SearchVoucher(SearchConditionViewModel condition);
     }
 }
