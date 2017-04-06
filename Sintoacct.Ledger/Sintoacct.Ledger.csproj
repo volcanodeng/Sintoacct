@@ -207,9 +207,11 @@
     <Compile Include="ClaimsAuthorizeAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\AccountBookApiController.cs" />
+    <Compile Include="Controllers\Api\LedgerSheetApiController.cs" />
     <Compile Include="Controllers\Api\VoucherApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LedgerController.cs" />
+    <Compile Include="Controllers\LedgerSheetController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ModelValidation.cs" />
     <Compile Include="Global.asax.cs">
@@ -232,6 +234,7 @@
     <Compile Include="Services\CompanyHelper.cs" />
     <Compile Include="Services\Constants.cs" />
     <Compile Include="Services\IDependency.cs" />
+    <Compile Include="Services\LedgerSheet.cs" />
     <Compile Include="Services\VoucherHelper.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="TraceExceptionHandle.cs" />
@@ -361,6 +364,7 @@
     <Content Include="Views\Ledger\Voucher.cshtml" />
     <Content Include="Views\Ledger\LedgerFrame.cshtml" />
     <Content Include="Views\Ledger\ViewVoucher.cshtml" />
+    <Content Include="Views\LedgerSheet\DetailAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
