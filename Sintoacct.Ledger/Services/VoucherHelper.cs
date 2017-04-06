@@ -41,16 +41,16 @@ namespace Sintoacct.Ledger.Services
                                    .FirstOrDefault();
         }
 
-        public List<Voucher> GetMyVouchers()
+        public List<Voucher> GetMyUnauditVouchers(int pageSize)
         {
             Guid abid = _cache.GetUserCache().AccountBookID;
 
-            //仅返回最新的10个未审核的凭证
+            //仅返回最新的pageSize个未审核的凭证
             return _ledger.Vouchers.Where(v => v.AbId == abid && v.State == VoucherState.PaddingAudit)
                                    .OrderByDescending(v => v.VId)
                                    .Include(v => v.VoucherDetails)
                                    .Include(v => v.CertificateWord)
-                                   .Take(10)
+                                   .Take(pageSize)
                                    .ToList();
         }
 
@@ -206,9 +206,60 @@ namespace Sintoacct.Ledger.Services
 
         public List<Voucher> SearchVoucher(SearchConditionViewModel condition)
         {
-            List<Voucher> vouchers = GetMyVouchers();
+            Guid abid = _cache.GetUserCache().AccountBookID;
 
-            return vouchers;
+            //生成可查询的凭证集合
+            var vouchers = _ledger.Vouchers.Where(v => v.AbId == abid);
+
+            if (!string.IsNullOrEmpty(condition.StartPeriod))
+            {
+                vouchers = vouchers.Where(v => v.PaymentTerms.CompareTo(condition.StartPeriod) > 0);
+            }
+            if (!string.IsNullOrEmpty(condition.EndPeriod))
+            {
+                vouchers = vouchers.Where(v => v.PaymentTerms.CompareTo(condition.EndPeriod) < 0);
+            }
+
+            if (!string.IsNullOrEmpty(condition.CertWord))
+            {
+                vouchers = vouchers.Where(v => v.CertificateWord.CertWord == condition.CertWord);
+            }
+
+            vouchers = vouchers.OrderByDescending(v => v.VId)
+                                .Include(v => v.VoucherDetails)
+                                .Include(v => v.CertificateWord)
+                                .Include("VoucherDetails.Account");
+
+            return vouchers.ToList();
+        }
+
+        public List<SearchVoucherViewModel> VoucherToSearchVoucherViewModel(List<Voucher> vouchers)
+        {
+            List<SearchVoucherViewModel> searchVouchers = new List<SearchVoucherViewModel>();
+            int i = 0, j = 0;
+            foreach (Voucher v in vouchers)
+            {
+                j = i;
+                foreach(VoucherDetail vd in v.VoucherDetails)
+                {
+                    SearchVoucherViewModel sv = new SearchVoucherViewModel();
+                    sv.VId = v.VId;
+                    sv.VoucherDate = v.VoucherDate;
+                    sv.CertWord = string.Format("{0}-{1}", v.CertificateWord.CertWord, v.CertWordSN);
+                    sv.Abstract = vd.Abstract;
+                    sv.Account = string.Format("{0}  {1}", vd.Account.AccCode, vd.Account.AccName); 
+                    sv.Debit = vd.Debit;
+                    sv.Credit = vd.Credit;
+                    sv.Creator = v.Creator;
+                    sv.Review = v.Review;
+                    sv.MergeIndex = j;
+                    searchVouchers.Add(sv);
+                    i++;
+                }
+                searchVouchers[j].RowSpan = i - j;
+            }
+
+            return searchVouchers;
         }
     }
 
@@ -216,7 +267,7 @@ namespace Sintoacct.Ledger.Services
     {
         Voucher GetMyVoucher(long vid);
 
-        List<Voucher> GetMyVouchers();
+        List<Voucher> GetMyUnauditVouchers(int pageSize);
 
         Voucher Save(VoucherViewModel vmVoucher);
 
@@ -233,5 +284,7 @@ namespace Sintoacct.Ledger.Services
         void DeleteAbstract(int absId);
 
         List<Voucher> SearchVoucher(SearchConditionViewModel condition);
+
+        List<SearchVoucherViewModel> VoucherToSearchVoucherViewModel(List<Voucher> vouchers);
     }
 }

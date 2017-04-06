@@ -516,15 +516,15 @@ namespace Sintoacct.Ledger.Models
     /// </summary>
     public class SearchVoucherViewModel
     {
+        public long VId { get; set; }
+
         public DateTime VoucherDate { get; set; }
 
         public string CertWord { get; set; }
 
         public string Abstract { get; set; }
 
-        public string AccCode { get; set; }
-
-        public string AccName { get; set; }
+        public string Account { get; set; }
 
         public decimal Debit { get; set; }
 
@@ -533,5 +533,15 @@ namespace Sintoacct.Ledger.Models
         public string Creator { get; set; }
 
         public string Review { get; set; }
+
+        /// <summary>
+        /// 用于合并行的行索引
+        /// </summary>
+        public int MergeIndex { get; set; }
+
+        /// <summary>
+        /// 合并行的行数
+        /// </summary>
+        public int RowSpan { get; set; }
     }
 }

@@ -45,7 +45,7 @@ namespace Sintoacct.Ledger.Controllers.Api
                 ResMessage.Fail(err);
             }
 
-            var voucher = Mapper.Map<List<VoucherViewModel>>(_voucher.GetMyVouchers());
+            var voucher = Mapper.Map<List<VoucherViewModel>>(_voucher.GetMyUnauditVouchers(10));
             return Ok(voucher);
         }
 
@@ -151,7 +151,7 @@ namespace Sintoacct.Ledger.Controllers.Api
 
 
         [ClaimsAuthorize("role", "accountant")]
-        [HttpGet, Route("api/voucher/viewVoucher")]
+        [HttpPost, Route("api/voucher/viewVoucher")]
         public IHttpActionResult ViewVoucher(SearchConditionViewModel condition)
         {
             string err;
@@ -160,8 +160,10 @@ namespace Sintoacct.Ledger.Controllers.Api
                 ResMessage.Fail(err);
             }
 
-            var voucher = Mapper.Map<List<VoucherViewModel>>(_voucher.SearchVoucher(condition));
-            return Ok(voucher);
+            var voucher = _voucher.VoucherToSearchVoucherViewModel(_voucher.SearchVoucher(condition));
+            DatagridViewModel<SearchVoucherViewModel> dgsv = new DatagridViewModel<SearchVoucherViewModel>();
+            dgsv.rows = voucher;
+            return Ok(dgsv);
         }
     }
 }

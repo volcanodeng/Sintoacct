@@ -10,7 +10,7 @@ namespace Sintoacct.Ledger.Models
 {
     public class LedgerContext : DbContext
     {
-        public LedgerContext() : base("name=DefaultConnection") { }
+        public LedgerContext() : base("name=DefaultConnection") {}
 
         public DbSet<AccountBook> AccountBooks { get; set; }
 

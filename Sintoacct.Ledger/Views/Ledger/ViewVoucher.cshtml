@@ -8,24 +8,47 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     @Styles.Render("~/Content/easyui")
+
+    <style type="text/css">
+        form div {
+            padding:5px;
+        }
+    </style>
 </head>
 <body>
     <div class="easyui-layout" data-options="fit:true">
         <div data-options="region:'north',split:false,border:false" style="padding:10px;overflow:hidden;background-color:#F2F2F2;">
-            <div>查凭证</div>
+            <input id="sv" label="查凭证" panelWidth="350" panelHeight="400" />
         </div>
         <div data-options="region:'center',border:false" style="padding:10px;">
+            <table class="easyui-datagrid"  id="vvList"
+                   data-options="fit:true,singleSelect:true,onLoadSuccess:onLoadSuccess,fitColumns:true">
+                <thead>
+                    <tr>
+                        <th data-options="field:'VoucherDate',width:100,align:'center'">日期</th>
+                        <th data-options="field:'CertWord',width:80">凭证字号</th>
+                        <th data-options="field:'Abstract',width:80">摘要</th>
+                        <th data-options="field:'Account',width:80">科目</th>
+                        <th data-options="field:'Debit',width:80,align:'right'">借方金额</th>
+                        <th data-options="field:'Credit',width:80,align:'right'">贷方金额</th>
+                        <th data-options="field:'Creator',width:80,align:'center'">制单人</th>
+                        <th data-options="field:'Review',width:80,align:'center'">审核人</th>
+                        <th data-options="field:'VId',width:80,align:'center'">操作</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
 
-    <div id="searchPanel">
+    <div id="searchPanel" style="padding:10px;">
         <form id="sForm" method="post">
-            <div>会计期间：<input class="easyui-combobox" data-options="valueField:'id',textField:'text',url:'get_data.php'" />至<input class="easyui-combobox" data-options="valueField:'id',textField:'text',url:'get_data.php'" /></div>
+            <div>会计期间：<input class="easyui-combobox" name="StartPeriod" data-options="valueField:'id',textField:'text',url:'get_data.php',height:30" style="width:100px;" /> 至 <input class="easyui-combobox" name="EndPeriod" data-options="valueField:'id',textField:'text',url:'get_data.php',height:30" style="width:100px;"/></div>
 
-            <div>凭证字：<input class="easyui-combobox" data-options="valueField:'CwId',textField:'CertWord',url:'/api/acctbook/MyCertWordArray',width:60,height:30,method:'GET',editable:false" /></div>
+            <div>凭证字：<input class="easyui-combobox" name="CertWord" data-options="valueField:'CwId',textField:'CertWord',url:'/api/acctbook/MyCertWordArray',width:60,height:30,method:'GET',editable:false" /></div>
 
-            <div>凭证号：<input class="easyui-textbox" /></div>
+            <div>凭证号：<input class="easyui-textbox" name="CertWordSN" data-options="width:80,height:30" /></div>
 
+            <div><a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#sForm').submit();">查询</a></div>
         </form>
     </div>
 
@@ -46,6 +69,9 @@
             onSubmit: formOnSubmit,
             success: formSuccess
         });
+
+        $("#sv").combo();
+        $('#searchPanel').appendTo($('#sv').combo('panel'));
     }
 
     function formOnSubmit() {
@@ -53,8 +79,25 @@
     }
 
     function formSuccess(data) {
-        if (responseHandle(data)) {
-            
+        
+        $("#vvList").datagrid("loadData", JSON.parse(data));
+        
+    }
+
+    function onLoadSuccess(data) {
+        
+        for (var i = 0; i < data.rows.length; i++) {
+            $(this).datagrid('mergeCells', {
+                index: data.rows[i].MergeIndex,
+                field: 'VoucherDate',
+                rowspan: data.rows[i].RowSpan
+            });
+
+            $(this).datagrid('mergeCells', {
+                index: data.rows[i].MergeIndex,
+                field: 'CertWord',
+                rowspan: data.rows[i].RowSpan
+            });
         }
     }
     </script>
