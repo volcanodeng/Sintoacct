@@ -21,7 +21,16 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, Route("api/LedgerSheet/GetMyPaymentTerms")]
         public IHttpActionResult GetMyPaymentTerms()
         {
-            return Ok(_sheet.GetPaymentTerms());
+            List<ComboboxViewModel> cb = new List<ComboboxViewModel>();
+            var pt = _sheet.GetPaymentTerms();
+            foreach(string s in pt)
+            {
+                ComboboxViewModel cbvm = new ComboboxViewModel();
+                cbvm.val = s;
+                cbvm.text = s;
+                cb.Add(cbvm);
+            }
+            return Ok(cb);
         }
     }
 }

@@ -47,13 +47,15 @@
 
     <div id="searchPanel" style="padding:10px;">
         <form id="sForm" method="post">
-            <div>会计期间：<input class="easyui-combobox" name="StartPeriod" data-options="url:'/api/LedgerSheet/GetMyPaymentTerms',height:30,method:'GET',valueField:0,textField:0" style="width:100px;" /> 至 <input class="easyui-combobox" name="EndPeriod" data-options="url:'/api/LedgerSheet/GetMyPaymentTerms',height:30,method:'GET',valueField:0,textField:0" style="width:100px;"/></div>
+            <div>会计期间：<input class="easyui-combobox" id="StartPeriod" name="StartPeriod" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /> 至 <input class="easyui-combobox" id="EndPeriod" name="EndPeriod" data-options="valueField:'val',textField:'text'"   style="width:100px;height:30px;"/></div>
 
-            <div>凭证字：<input class="easyui-combobox" name="CertWord" data-options="valueField:'CertWord',textField:'CertWord',url:'/api/acctbook/MyCertWordArray',width:60,height:30,method:'GET',editable:false" /></div>
+            <div><span>凭证字：</span><input class="easyui-combobox" name="CertWord" data-options="valueField:'CertWord',textField:'CertWord',url:'/api/acctbook/MyCertWordArray',width:80,height:30,method:'GET'" /></div>
 
-            <div>凭证号：<input class="easyui-textbox" name="CertWordSN" data-options="width:80,height:30" /></div>
+            <div><span>凭证号：</span><input class="easyui-textbox" name="CertWordSN" data-options="width:220,height:30,prompt:'请输入凭证号或凭证号范围'" /></div>
 
-            <div><a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#sForm').submit();">查询</a></div>
+            <div><span>状态：</span><input class="easyui-combobox" name="VoucherState" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;"/></div>
+
+            <div><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#sForm').submit();">查询</a></div>
         </form>
     </div>
 
@@ -75,6 +77,11 @@
             success: formSuccess
         });
 
+        $.get("/api/LedgerSheet/GetMyPaymentTerms", null, function (data) {
+            $("#StartPeriod").combobox("loadData", data);
+            $("#EndPeriod").combobox("loadData", data);
+        });
+
         $("#sv").combo();
         $('#searchPanel').appendTo($('#sv').combo('panel'));
     }
@@ -87,6 +94,11 @@
         
         $("#vvList").datagrid("loadData", JSON.parse(data));
         
+    }
+
+    function search()
+    {
+
     }
 
     function onLoadSuccess(data) {

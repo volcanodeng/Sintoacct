@@ -50,4 +50,11 @@ namespace Sintoacct.Ledger.Models
         public List<TreeViewModel<T>> children { get; set; }
 
     }
+
+    public class ComboboxViewModel
+    {
+        public string val { get; set; }
+
+        public string text { get; set; }
+    }
 }

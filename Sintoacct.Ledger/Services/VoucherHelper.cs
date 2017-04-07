@@ -213,11 +213,11 @@ namespace Sintoacct.Ledger.Services
 
             if (!string.IsNullOrEmpty(condition.StartPeriod))
             {
-                vouchers = vouchers.Where(v => v.PaymentTerms.CompareTo(condition.StartPeriod) > 0);
+                vouchers = vouchers.Where(v => v.PaymentTerms.CompareTo(condition.StartPeriod) >= 0);
             }
             if (!string.IsNullOrEmpty(condition.EndPeriod))
             {
-                vouchers = vouchers.Where(v => v.PaymentTerms.CompareTo(condition.EndPeriod) < 0);
+                vouchers = vouchers.Where(v => v.PaymentTerms.CompareTo(condition.EndPeriod) <= 0);
             }
 
             if (!string.IsNullOrEmpty(condition.CertWord))
