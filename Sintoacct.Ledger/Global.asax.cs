@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Web;
+using System.Data.Entity;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -57,10 +58,12 @@ namespace Sintoacct.Ledger
             builder.RegisterAssemblyTypes(assembly)
                    .Where(t => t.GetInterface("Sintoacct.Ledger.IDependency") != null)
                    .AsImplementedInterfaces();
+
             //注入Ledger上下文
             var ledger = new LedgerContext();
-#warning 输出SQL
-            ledger.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
+            ledger.Database.Initialize(false);
+//#warning 输出SQL
+//            ledger.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
             builder.RegisterInstance(ledger).As<LedgerContext>();
 
             // WebAPI - Register your Web API controllers
