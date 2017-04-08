@@ -8,11 +8,17 @@ namespace Sintoacct.Ledger
         // 有关绑定的详细信息，请访问 http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js",
-                        "~/Scripts/jquery.easyui.min.js",
+            bundles.Add(new ScriptBundle("~/bundles/jquery").Include("~/Scripts/jquery-{version}.js"));
+
+            Bundle easyui = new ScriptBundle("~/bundles/easyui").Include(
+                "~/Scripts/jquery.easyui.min.js",
                       "~/Scripts/easyui-lang-zh_CN.js",
-                      "~/Scripts/easyui.extend.js"));
+                      "~/Scripts/easyui.extend.js"
+                );
+            //阻止eayui的压缩
+            easyui.Transforms.Clear();
+            bundles.Add(easyui);
+            
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
