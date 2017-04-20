@@ -33,5 +33,7 @@ namespace Sintoacct.Ledger.Models
         public DbSet<Company> Companys { get; set; }
 
         public DbSet<Region> Regions { get; set; }
+
+        public DbSet<SourceDocument> SourceDocument { get; set; }
     }
 }

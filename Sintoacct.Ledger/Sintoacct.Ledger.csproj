@@ -237,6 +237,7 @@
     <Compile Include="Services\Constants.cs" />
     <Compile Include="Services\IDependency.cs" />
     <Compile Include="Services\LedgerSheet.cs" />
+    <Compile Include="Services\SourceDocumentHelper.cs" />
     <Compile Include="Services\VoucherHelper.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="TraceExceptionHandle.cs" />
