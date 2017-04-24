@@ -19,6 +19,7 @@ public class filemanager : IHttpHandler
     public long size = 0L;
     public int files = 0;
     public int folders = 0;
+    public string RootPath = "/RichFilemanager/userfiles/";
 
     //===================================================================
     //========================== END EDIT ===============================
@@ -325,7 +326,6 @@ public class filemanager : IHttpHandler
 
     private string Initiate()
     {
-        
         return "{\"data\":{\"id\":\"/\",\"type\":\"initiate\",\"attributes\":{\"config\":{\"options\":{\"capabilities\":false,\"allowFolderDownload\":false},\"security\":{\"allowNoExtension\":false,\"editRestrictions\":[\"txt\",\"csv\",\"md\"]},\"upload\":{\"fileSizeLimit\":16000000,\"policy\":\"DISALLOW_ALL\",\"restrictions\":[\"jpg\",\"jpe\",\"jpeg\",\"gif\",\"png\",\"svg\",\"txt\",\"pdf\",\"odp\",\"ods\",\"odt\",\"rtf\",\"doc\",\"docx\",\"xls\",\"xlsx\",\"ppt\",\"pptx\",\"csv\",\"ogv\",\"avi\",\"mkv\",\"mp4\",\"webm\",\"m4v\",\"ogg\",\"mp3\",\"wav\",\"zip\",\"rar\",\"md\"]}}}}}";
     }
 
@@ -347,67 +347,65 @@ public class filemanager : IHttpHandler
         context.Response.ClearContent();
         context.Response.Clear();
 
-        string filePath = "/RichFilemanager/userfiles/";
-
         switch (context.Request["mode"])
         {
             case "initiate":
-                context.Response.ContentType = "application/json";
+                context.Response.ContentType = "plain/text";
                 context.Response.ContentEncoding = Encoding.UTF8;
                 context.Response.Write(Initiate());
                 break;
             case "getfolder":
-                context.Response.ContentType = "application/json";
+                context.Response.ContentType = "plain/text";
                 context.Response.ContentEncoding = Encoding.UTF8;
-                context.Response.Write(getInfo(filePath));
+                context.Response.Write(getInfo(RootPath));
                 break;
             case "rename":
-                context.Response.ContentType = "application/json";
+                context.Response.ContentType = "plain/text";
                 context.Response.ContentEncoding = Encoding.UTF8;
                 context.Response.Write(Rename(context.Request["old"], context.Request["new"]));
                 break;
             case "delete":
-                context.Response.ContentType = "application/json";
+                context.Response.ContentType = "plain/text";
                 context.Response.ContentEncoding = Encoding.UTF8;
-                context.Response.Write(Delete(filePath));
+                context.Response.Write(Delete(context.Request["path"]));
                 break;
             case "addfolder":
-                context.Response.ContentType = "application/json";
+                context.Response.ContentType = "plain/text";
                 context.Response.ContentEncoding = Encoding.UTF8;
-                context.Response.Write(AddFolder(filePath, context.Request["name"]));
+                context.Response.Write(AddFolder(RootPath, context.Request["name"]));
                 break;
             case "upload":
                 context.Response.Cache.SetCacheability(HttpCacheability.NoCache);
                 context.Response.ContentType = "text/html";
                 context.Response.ContentEncoding = Encoding.UTF8;
-                context.Response.Write(HandleUpload(filePath, context.Request.Files));
+                context.Response.Write(HandleUpload(context.Request["path"], context.Request.Files));
                 break;
             case "move":
-                context.Response.ContentType = "application/json";
+                context.Response.ContentType = "plain/text";
                 context.Response.ContentEncoding = Encoding.UTF8;
                 context.Response.Write(Move(context.Request["old"], context.Request["new"]));
                 break;
             case "getimage":
                 NoCache();
                 //context.Response.Write(Preview(context.Request["thumbnail"] == "true"));	
-                fi = new FileInfo(context.Server.MapPath(filePath));
+                fi = new FileInfo(context.Server.MapPath(context.Request["path"]));
                 context.Response.AddHeader("Content-Disposition", "attachment; filename=" + context.Server.UrlPathEncode(fi.Name));
                 context.Response.AddHeader("Content-Length", fi.Length.ToString());
                 context.Response.ContentType = System.Web.MimeMapping.GetMimeMapping(fi.Name);
                 context.Response.TransmitFile(fi.FullName);
                 break;
             case "replace":
-                context.Response.ContentType = "application/json";
+                context.Response.ContentType = "plain/text";
                 context.Response.ContentEncoding = Encoding.UTF8;
-                context.Response.Write(Replace(filePath, context.Request.Files));
+                context.Response.Write(Replace(context.Request["path"], context.Request.Files));
                 break;
             case "summarize":
-                context.Response.ContentType = "application/json";
+                context.Response.ContentType = "plain/text";
                 context.Response.ContentEncoding = Encoding.UTF8;
                 context.Response.Write(Summarize());
                 break;
             case "download": //call in window.open
-                fi = new FileInfo(context.Server.MapPath(filePath));
+                fi = new FileInfo(context.Server.MapPath(context.Request["path"]));
 
                 System.Web.HttpResponse response = System.Web.HttpContext.Current.Response;
                 response.Clear();
