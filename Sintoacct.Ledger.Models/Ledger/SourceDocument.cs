@@ -26,8 +26,8 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 服务器上保存的文件全名（包含绝对路径）
         /// </summary>
-        [Required,MaxLength(255)]
-        public string FullFileName { get; set; }
+        //[Required,MaxLength(255)]
+        //public string FullFileName { get; set; }
 
         /// <summary>
         /// 服务器上的相对地址

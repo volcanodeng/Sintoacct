@@ -56,20 +56,15 @@
     <Compile Include="Ledger\AuxiliaryType.cs" />
     <Compile Include="Ledger\Auxiliary.cs" />
     <Compile Include="Ledger\CertificateWord.cs" />
-    <Compile Include="Ledger\SourceDocument.cs" />
     <Compile Include="Ledger\Voucher.cs" />
     <Compile Include="Ledger\VoucherDetail.cs" />
     <Compile Include="Ledger\VoucherDetailTemplate.cs" />
     <Compile Include="Company.cs" />
     <Compile Include="Ledger\UserBook.cs" />
     <Compile Include="LedgerContext.cs" />
-    <Compile Include="Migrations\201703260544339_InitialCreate.cs" />
-    <Compile Include="Migrations\201703260544339_InitialCreate.Designer.cs">
-      <DependentUpon>201703260544339_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704240257257_AddSourceDocument.cs" />
-    <Compile Include="Migrations\201704240257257_AddSourceDocument.Designer.cs">
-      <DependentUpon>201704240257257_AddSourceDocument.cs</DependentUpon>
+    <Compile Include="Migrations\201704271037599_InitialCreate.cs" />
+    <Compile Include="Migrations\201704271037599_InitialCreate.Designer.cs">
+      <DependentUpon>201704271037599_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -80,11 +75,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201703260544339_InitialCreate.resx">
-      <DependentUpon>201703260544339_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704240257257_AddSourceDocument.resx">
-      <DependentUpon>201704240257257_AddSourceDocument.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201704271037599_InitialCreate.resx">
+      <DependentUpon>201704271037599_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SQL\InitData.sql" />
   </ItemGroup>

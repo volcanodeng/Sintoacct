@@ -432,6 +432,8 @@ namespace Sintoacct.Ledger.Models
 
         public int InvoiceCount { get; set; }
 
+        public string InvoicePath { get; set; }
+
         public int State { get; set; }
 
         public string Creator { get; set; }
@@ -475,6 +477,16 @@ namespace Sintoacct.Ledger.Models
     public class VoucherIdViewModel
     {
         public long VId { get; set; }
+    }
+
+    /// <summary>
+    /// 附加单据路径
+    /// </summary>
+    public class VoucherInvoicePathModel
+    {
+        public long VId { get; set; }
+
+        public string InvoicePath { get; set; }
     }
 
     /// <summary>

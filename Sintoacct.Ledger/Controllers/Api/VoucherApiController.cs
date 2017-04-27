@@ -111,6 +111,29 @@ namespace Sintoacct.Ledger.Controllers.Api
             return Ok(ResMessage.Success());
         }
 
+
+        [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/voucher/SetInvoice"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult SetInvoicePath(VoucherInvoicePathModel invoice)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                ResMessage.Fail(err);
+            }
+
+            try
+            {
+                _voucher.SetInvoicePath(invoice.VId, invoice.InvoicePath);
+            }
+            catch (Exception e)
+            {
+                ResMessage.Fail(e.Message);
+            }
+
+            return Ok(ResMessage.Success());
+        }
+
         [ClaimsAuthorize("role", "accountant")]
         [HttpGet, Route("api/voucher/myAbstracts")]
         public IHttpActionResult GetMyAbstracts()

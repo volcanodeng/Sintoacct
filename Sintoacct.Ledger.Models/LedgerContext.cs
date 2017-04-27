@@ -34,6 +34,6 @@ namespace Sintoacct.Ledger.Models
 
         public DbSet<Region> Regions { get; set; }
 
-        public DbSet<SourceDocument> SourceDocument { get; set; }
+        //public DbSet<SourceDocument> SourceDocument { get; set; }
     }
 }

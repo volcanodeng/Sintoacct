@@ -261,6 +261,22 @@ namespace Sintoacct.Ledger.Services
 
             return searchVouchers;
         }
+
+        public void SetInvoicePath(long vid,string path)
+        {
+            Voucher voucher = this.GetMyVoucher(vid);
+            if (voucher != null && System.IO.Directory.Exists(System.Web.HttpContext.Current.Server.MapPath(path)))
+            {
+
+                voucher.InvoicePath = path;
+
+                _ledger.SaveChanges();
+            }
+            else
+            {
+                throw new ArgumentNullException("地址不存在或保存失败");
+            }
+        }
     }
 
     public interface IVoucherHelper : IDependency
@@ -278,6 +294,8 @@ namespace Sintoacct.Ledger.Services
         VoucherViewModel CopyNew(long vid);
 
         AbstractTemp SaveAbstract(AbstractViewModel abs);
+
+        void SetInvoicePath(long vid, string path);
 
         List<AbstractTemp> GetMyAbstracts();
 

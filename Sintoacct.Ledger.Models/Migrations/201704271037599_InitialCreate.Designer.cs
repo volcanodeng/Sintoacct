@@ -7,13 +7,13 @@ namespace Sintoacct.Ledger.Models.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddSourceDocument : IMigrationMetadata
+    public sealed partial class InitialCreate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddSourceDocument));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201704240257257_AddSourceDocument"; }
+            get { return "201704271037599_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

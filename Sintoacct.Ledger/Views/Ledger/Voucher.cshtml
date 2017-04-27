@@ -88,7 +88,7 @@
                         <span id="vch_year"></span>年第<span id="vch_period"></span>期
                     </div>
                     <span class="attach_wrap">
-                        <a href="#">附单据</a>
+                        <a href="javascript:invoiceFile()">附单据</a>
                         <input type="text" id="attCw" class="easyui-numberbox" value="0" data-options="min:0,width:60,height:30">
                         张
                     </span>
@@ -150,12 +150,12 @@
 
         //全局定义
         var globVar = {
-            voucher: null,             //凭证数据
-            voucherIndex: -1,         //当前凭证实例在集合中的索引
-            vTable: "#voucherTab",        //凭证列表名称
-            cache: "#dataCache",         //缓存div容器
-            abstractData: null,           //摘要数据
-            accountData:null               //科目数据
+            voucher: null,                  //凭证数据
+            voucherIndex: -1,               //当前凭证实例在集合中的索引
+            vTable: "#voucherTab",          //凭证列表名称
+            cache: "#dataCache",            //缓存div容器
+            abstractData: null,             //摘要数据
+            accountData: null               //科目数据
         };
 
         //======初始化=======
@@ -404,6 +404,14 @@
             $("#abstractsWin").dialog("close");
         }
 
+
+        function invoiceFile()
+        {
+            if (globVar.voucherIndex>=0)
+                top.AddTabIframe('上传原始凭证', '/RichFilemanager/index.html?expandedFolder=' + globVar.voucher[globVar.voucherIndex].InvoicePath);
+            else
+                top.AddTabIframe('上传原始凭证', '/RichFilemanager/index.html');
+        }
         
         //=========事件响应=====
 

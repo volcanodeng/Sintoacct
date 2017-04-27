@@ -45,6 +45,12 @@ namespace Sintoacct.Ledger.Models
         public int InvoiceCount { get; set; }
 
         /// <summary>
+        /// 附加单据的文件路径
+        /// </summary>
+        [MaxLength(255)]
+        public string InvoicePath { get; set; }
+
+        /// <summary>
         /// 凭证状态
         /// </summary>
         public VoucherState State { get; set; }
