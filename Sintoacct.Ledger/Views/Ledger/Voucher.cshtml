@@ -408,7 +408,7 @@
         function invoiceFile()
         {
             if (globVar.voucherIndex>=0)
-                top.AddTabIframe('上传原始凭证', '/RichFilemanager/index.html?expandedFolder=' + globVar.voucher[globVar.voucherIndex].InvoicePath);
+                top.AddTabIframe('上传原始凭证', '/RichFilemanager/index.html?expandedFolder=' + globVar.voucher[globVar.voucherIndex].InvoicePath + '&vid=' + globVar.voucher[globVar.voucherIndex].VId);
             else
                 top.AddTabIframe('上传原始凭证', '/RichFilemanager/index.html');
         }
