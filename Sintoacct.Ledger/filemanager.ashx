@@ -347,6 +347,9 @@ public class filemanager : IHttpHandler
         context.Response.ClearContent();
         context.Response.Clear();
 
+        System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex(RootPath);
+        string validPath = !string.IsNullOrEmpty(context.Request["path"]) && reg.Match(context.Request["path"]).Success ? context.Request["path"] : RootPath;
+
         switch (context.Request["mode"])
         {
             case "initiate":
@@ -357,7 +360,7 @@ public class filemanager : IHttpHandler
             case "getfolder":
                 context.Response.ContentType = "plain/text";
                 context.Response.ContentEncoding = Encoding.UTF8;
-                context.Response.Write(getInfo(RootPath));
+                context.Response.Write(getInfo(validPath));
                 break;
             case "rename":
                 context.Response.ContentType = "plain/text";
@@ -367,12 +370,12 @@ public class filemanager : IHttpHandler
             case "delete":
                 context.Response.ContentType = "plain/text";
                 context.Response.ContentEncoding = Encoding.UTF8;
-                context.Response.Write(Delete(context.Request["path"]));
+                context.Response.Write(Delete(validPath));
                 break;
             case "addfolder":
                 context.Response.ContentType = "plain/text";
                 context.Response.ContentEncoding = Encoding.UTF8;
-                context.Response.Write(AddFolder(RootPath, context.Request["name"]));
+                context.Response.Write(AddFolder(validPath, context.Request["name"]));
                 break;
             case "upload":
                 context.Response.Cache.SetCacheability(HttpCacheability.NoCache);
