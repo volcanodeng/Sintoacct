@@ -14,7 +14,7 @@ namespace Sintoacct.Ledger.Models
         /// 文件唯一编号。
         /// 用于服务端文件名。
         /// </summary>
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid FileId { get; set; }
 
         /// <summary>
@@ -22,12 +22,6 @@ namespace Sintoacct.Ledger.Models
         /// </summary>
         [Required,MaxLength(255)]
         public string SourceFileName { get; set; }
-
-        /// <summary>
-        /// 服务器上保存的文件全名（包含绝对路径）
-        /// </summary>
-        //[Required,MaxLength(255)]
-        //public string FullFileName { get; set; }
 
         /// <summary>
         /// 服务器上的相对地址
@@ -44,7 +38,7 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 文件大小
         /// </summary>
-        public int FileSize { get; set; }
+        public long FileSize { get; set; }
 
         /// <summary>
         /// 凭证id

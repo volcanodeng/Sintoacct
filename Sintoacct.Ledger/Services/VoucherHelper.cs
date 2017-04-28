@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Sintoacct.Ledger.Models;
 using AutoMapper;
 using System.Data.Entity;
+using System.IO;
 
 namespace Sintoacct.Ledger.Services
 {
@@ -265,10 +266,21 @@ namespace Sintoacct.Ledger.Services
         public void SetInvoicePath(long vid,string path)
         {
             Voucher voucher = this.GetMyVoucher(vid);
-            if (voucher != null && System.IO.Directory.Exists(System.Web.HttpContext.Current.Server.MapPath(path)))
+            if (voucher != null && File.Exists(System.Web.HttpContext.Current.Server.MapPath(path)))
             {
+                FileInfo fi = new FileInfo(System.Web.HttpContext.Current.Server.MapPath(path));
 
-                voucher.InvoicePath = path;
+                SourceDocument invoice = _ledger.SourceDocument.Where(sd => sd.SourceFileName == fi.FullName).FirstOrDefault();
+                if (invoice != null) return;
+
+                invoice = new SourceDocument();
+                invoice.SourceFileName = fi.FullName;
+                invoice.RelateFileName = path;
+                invoice.RelatePath = path.Replace(fi.Name, "");
+                invoice.FileSize = fi.Length;
+                voucher.Invoices.Add(invoice);
+
+                voucher.InvoicePath = path.Replace(fi.Name,"");
 
                 _ledger.SaveChanges();
             }

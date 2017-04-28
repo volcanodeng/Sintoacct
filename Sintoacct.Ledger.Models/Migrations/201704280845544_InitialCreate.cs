@@ -233,10 +233,26 @@ namespace Sintoacct.Ledger.Models.Migrations
                 .Index(t => t.VId)
                 .Index(t => t.Account_AccId);
             
+            CreateTable(
+                "dbo.T_Source_Document",
+                c => new
+                    {
+                        FileId = c.Guid(nullable: false),
+                        SourceFileName = c.String(nullable: false, maxLength: 255),
+                        RelateFileName = c.String(nullable: false, maxLength: 255),
+                        RelatePath = c.String(nullable: false, maxLength: 255),
+                        FileSize = c.Int(nullable: false),
+                        VId = c.Long(),
+                    })
+                .PrimaryKey(t => t.FileId)
+                .ForeignKey("dbo.T_Voucher", t => t.VId)
+                .Index(t => t.VId);
+            
         }
         
         public override void Down()
         {
+            DropForeignKey("dbo.T_Source_Document", "VId", "dbo.T_Voucher");
             DropForeignKey("dbo.T_Abstract_Temp", "AbId", "dbo.T_Account_Book");
             DropForeignKey("dbo.T_Voucher_Detail", "VId", "dbo.T_Voucher");
             DropForeignKey("dbo.T_Voucher_Detail", "Account_AccId", "dbo.T_Account");
@@ -252,6 +268,7 @@ namespace Sintoacct.Ledger.Models.Migrations
             DropForeignKey("dbo.T_Auxiliary", "AbId", "dbo.T_Account_Book");
             DropForeignKey("dbo.T_Account", "AcId", "dbo.T_Account_Category");
             DropForeignKey("dbo.T_Account", "AbId", "dbo.T_Account_Book");
+            DropIndex("dbo.T_Source_Document", new[] { "VId" });
             DropIndex("dbo.T_Voucher_Detail", new[] { "Account_AccId" });
             DropIndex("dbo.T_Voucher_Detail", new[] { "VId" });
             DropIndex("dbo.T_Certificate_Word", new[] { "AbId" });
@@ -268,6 +285,7 @@ namespace Sintoacct.Ledger.Models.Migrations
             DropIndex("dbo.T_Account", new[] { "AcId" });
             DropIndex("dbo.T_Account_Book", new[] { "ComId" });
             DropIndex("dbo.T_Abstract_Temp", new[] { "AbId" });
+            DropTable("dbo.T_Source_Document");
             DropTable("dbo.T_Voucher_Detail");
             DropTable("dbo.T_Certificate_Word");
             DropTable("dbo.T_Voucher");

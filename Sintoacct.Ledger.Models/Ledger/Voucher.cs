@@ -90,6 +90,11 @@ namespace Sintoacct.Ledger.Models
         /// 凭证明细
         /// </summary>
         public virtual ICollection<VoucherDetail> VoucherDetails { get; set; }
+
+        /// <summary>
+        /// 原始凭证文件
+        /// </summary>
+        public virtual ICollection<SourceDocument> Invoices { get; set; }
     }
 
     public enum VoucherState
