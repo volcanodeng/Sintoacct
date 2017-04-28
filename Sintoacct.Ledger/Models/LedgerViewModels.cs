@@ -471,6 +471,10 @@ namespace Sintoacct.Ledger.Models
         public decimal Credit { get; set; }
     }
 
+    public class VoucherInvoiceViewModel {
+        public string RelateFileName { get; set; }
+    }
+
     /// <summary>
     /// 凭证查询、删除、审核
     /// </summary>

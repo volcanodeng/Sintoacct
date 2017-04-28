@@ -51,6 +51,7 @@ namespace Sintoacct.Ledger.Services
                                    .OrderByDescending(v => v.VId)
                                    .Include(v => v.VoucherDetails)
                                    .Include(v => v.CertificateWord)
+                                   .Include(v => v.Invoices)
                                    .Take(pageSize)
                                    .ToList();
         }
