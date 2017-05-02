@@ -253,7 +253,7 @@ namespace Sintoacct.Ledger.Services
                     sv.Debit = vd.Debit;
                     sv.Credit = vd.Credit;
                     sv.Creator = v.Creator;
-                    sv.Review = v.Review;
+                    sv.Review = string.IsNullOrEmpty(v.Review) ? "<未审核>" : v.Review;
                     sv.MergeIndex = j;
                     searchVouchers.Add(sv);
                     i++;
