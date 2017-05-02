@@ -30,15 +30,15 @@
                    data-options="fit:true,singleSelect:true,onLoadSuccess:onLoadSuccess,fitColumns:true">
                 <thead>
                     <tr>
-                        <th data-options="field:'VoucherDate',width:100,align:'center'">日期</th>
-                        <th data-options="field:'CertWord',width:80">凭证字号</th>
-                        <th data-options="field:'Abstract',width:80">摘要</th>
-                        <th data-options="field:'Account',width:80">科目</th>
-                        <th data-options="field:'Debit',width:80">借方金额</th>
-                        <th data-options="field:'Credit',width:80">贷方金额</th>
-                        <th data-options="field:'Creator',width:80,align:'center'">制单人</th>
-                        <th data-options="field:'Review',width:80,align:'center'">审核人</th>
-                        <th data-options="field:'VId',width:80,align:'center',formatter: fmtOperate">操作</th>
+                        <th data-options="field:'VoucherDate',width:60,align:'center',formatter: fmtDate">日期</th>
+                        <th data-options="field:'CertWord',width:30">凭证字号</th>
+                        <th data-options="field:'Abstract',width:250">摘要</th>
+                        <th data-options="field:'Account',width:250">科目</th>
+                        <th data-options="field:'Debit',width:50">借方金额</th>
+                        <th data-options="field:'Credit',width:50">贷方金额</th>
+                        <th data-options="field:'Creator',width:30,align:'center'">制单人</th>
+                        <th data-options="field:'Review',width:30,align:'center'">审核人</th>
+                        <th data-options="field:'VId',width:40,align:'center',formatter: fmtOperate">操作</th>
                     </tr>
                 </thead>
             </table>
@@ -139,6 +139,11 @@
         aBtn += '<br/><a href="javascript:delVoucher(' + value + ')">删除</a>';
 
         return aBtn;
+    }
+
+    function fmtDate(value, row, index)
+    {
+        return value.replace(/T00:00:00/,"");
     }
 
     function modVoucher(vid)
