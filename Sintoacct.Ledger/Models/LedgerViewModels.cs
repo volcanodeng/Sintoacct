@@ -445,6 +445,8 @@ namespace Sintoacct.Ledger.Models
         public DateTime? ReviewTime { get; set; }
 
         public ICollection<VoucherDetailViewModel> VoucherDetails { get; set; }
+
+        public ICollection<VoucherInvoiceViewModel> Invoices { get; set; }
     }
 
     /// <summary>
@@ -471,7 +473,19 @@ namespace Sintoacct.Ledger.Models
         public decimal Credit { get; set; }
     }
 
+    /// <summary>
+    /// 原始凭证文件
+    /// </summary>
     public class VoucherInvoiceViewModel {
+
+        /// <summary>
+        /// 原始文件名
+        /// </summary>
+        public string SourceFileName { get; set; }
+
+        /// <summary>
+        /// 相对文件名
+        /// </summary>
         public string RelateFileName { get; set; }
     }
 

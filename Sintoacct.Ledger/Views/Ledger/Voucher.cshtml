@@ -50,6 +50,11 @@
             text-align:center;
             font-weight:bold;
         }
+
+       li {
+           list-style:none;
+           display:inline;
+       }
    </style>
 </head>
 <body >
@@ -136,7 +141,17 @@
             </div>
             </div>
         <div data-options="region:'east',title:'原始凭证'" style="width:300px;">
-
+            <ul id="invList">
+                @*<li>
+                    <a href="" target="_blank"><img src="~/RichFilemanager/userfiles/444/333/call9me.jpg" style="width:200px;height:150px;"/> </a>
+                </li>
+                <li>
+                    <a href="" target="_blank"><img src="~/RichFilemanager/userfiles/444/333/call9me.jpg" style="width:200px;height:150px;" /> </a>
+                </li>
+                <li>
+                    <a href="" target="_blank"><img src="~/RichFilemanager/userfiles/444/333/call9me.jpg" style="width:200px;height:150px;" /> </a>
+                </li>*@
+            </ul>
         </div>
         </div>
     <div id="auditMark" class="has-audit" style="display:none;"></div>
@@ -220,6 +235,18 @@
             if (voucher.State == 2) $("#auditMark").show(); else $("#auditMark").hide();
 
             $(globVar.vTable).datagrid("loadData", voucher.VoucherDetails);
+
+            invoiceBind(voucher);
+        }
+
+        function invoiceBind(voucher) {
+            if (voucher == null) return;
+
+            $("#invList").empty();
+            $.each(voucher.Invoices, function (i, n) {
+                var a = '<a href="' + n.RelateFileName + '" target="_blank" title="' + n.SourceFileName + '"><img src="' + n.RelateFileName + '" style="width:200px;height:150px;" /> </a>';
+                $("#invList").append($(a).wrap("<li></li>"));
+            });
         }
 
         //=========初始化=======
