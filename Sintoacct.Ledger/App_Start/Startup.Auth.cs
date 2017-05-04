@@ -26,7 +26,7 @@ namespace Sintoacct.Ledger
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
-                CookieSecure = CookieSecureOption.Never,
+                //CookieSecure = CookieSecureOption.Never,
                 Provider = new CookieAuthenticationProvider
                 {
                     // 当用户登录时使应用程序可以验证安全戳。
