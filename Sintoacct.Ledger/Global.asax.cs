@@ -60,11 +60,12 @@ namespace Sintoacct.Ledger
                    .AsImplementedInterfaces();
 
             //注入Ledger上下文
-            var ledger = new LedgerContext();
-            ledger.Database.Initialize(false);
+            //var ledger = new LedgerContext();
+            //ledger.Database.Initialize(false);
             //#warning 输出SQL
-            //            ledger.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
-            builder.RegisterInstance(ledger).As<LedgerContext>();
+            //ledger.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
+            //builder.RegisterInstance(ledger).As<LedgerContext>();
+            builder.RegisterType<LedgerContext>();
 
             // WebAPI - Register your Web API controllers
             builder.RegisterApiControllers(assembly);

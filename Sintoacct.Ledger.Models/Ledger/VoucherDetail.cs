@@ -35,6 +35,12 @@ namespace Sintoacct.Ledger.Models
         public string Abstract { get; set; }
 
         /// <summary>
+        /// 会计科目id
+        /// </summary>
+        [ForeignKey("Account")]
+        public long AccId { get; set; }
+
+        /// <summary>
         /// 会计科目
         /// </summary>
         public Account Account { get; set; }

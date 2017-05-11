@@ -148,6 +148,11 @@ namespace Sintoacct.Ledger.Models
         [Required]
         public DateTime CreateTime { get; set; }
 
+        /// <summary>
+        /// 凭证明细
+        /// </summary>
+        public virtual ICollection<VoucherDetail> VoucherDetails { get; set; }
+
     }
 
     public enum AccountState

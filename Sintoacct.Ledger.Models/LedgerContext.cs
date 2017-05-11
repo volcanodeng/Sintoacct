@@ -35,5 +35,14 @@ namespace Sintoacct.Ledger.Models
         public DbSet<Region> Regions { get; set; }
 
         public DbSet<SourceDocument> SourceDocument { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            Database.SetInitializer(new CreateDatabaseIfNotExists<LedgerContext>());
+
+            modelBuilder.Entity<Account>().HasMany(t => t.VoucherDetails).WithRequired(p => p.Account).WillCascadeOnDelete(false);
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
