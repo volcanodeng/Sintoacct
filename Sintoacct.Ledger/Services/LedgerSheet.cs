@@ -25,6 +25,11 @@ namespace Sintoacct.Ledger.Services
             var terms = _ledger.Database.SqlQuery<string>("select [PaymentTerms] from [T_Voucher] where [AbId]=@abid group by [PaymentTerms]", new System.Data.SqlClient.SqlParameter("@abid", abid)).ToList();
             return terms;
         }
+
+        public List<Account> GetMyAccountsInVoucher()
+        {
+            return new List<Account>();
+        }
     }
 
     public interface ILedgerSheet : IDependency
