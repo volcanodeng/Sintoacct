@@ -30,24 +30,6 @@ namespace Sintoacct.Ledger.Services
             _auxiliary = auxiliary;
         }
 
-        private void Recursion(List<Account> accounts,TreeViewModel<AccountViewModel> tree)
-        {
-            List<Account> subAccounts = accounts.Where(a => a.ParentAccCode == tree.attributes.AccCode).ToList();
-            foreach(Account a in subAccounts)
-            {
-                TreeViewModel<AccountViewModel> accNode = new TreeViewModel<AccountViewModel>();
-                accNode.id = a.AccId.ToString();
-                accNode.text = a.AccName;
-                accNode.state = "open";
-                accNode.@checked = false;
-                accNode.attributes = Mapper.Map<AccountViewModel>(a);
-                tree.children.Add(accNode);
-
-                Recursion(accounts.Where(acc => acc.ParentAccCode == a.AccCode).ToList(), accNode);
-            }
-
-        }
-
 
         #region AccountCategory
         public List<AccountCategory> GetMainAccountCategory()
@@ -121,7 +103,7 @@ namespace Sintoacct.Ledger.Services
             tree.text = ac.CategoryName;
             tree.state = "closed";
 
-            this.Recursion(cAccount, tree);
+            Utility.AccountRecursion(cAccount, tree);
             return tree;
         }
 
