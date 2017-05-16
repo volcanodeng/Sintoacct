@@ -56,6 +56,11 @@ namespace Sintoacct.Ledger.Services
             return tree;
         }
 
+        public List<DetailSheetViewModels> GetDetailSheet(long accid)
+        {
+
+        }
+
         #endregion
     }
 

@@ -33,16 +33,16 @@
                         <th data-options="field:'VoucherDate',width:100,align:'center'">日期</th>
                         <th data-options="field:'CertWord',width:80">凭证字号</th>
                         <th data-options="field:'Abstract',width:80">摘要</th>
-                        <th data-options="field:'Debit',width:80">借方金额</th>
-                        <th data-options="field:'Credit',width:80">贷方金额</th>
-                        <th data-options="field:'Creator',width:80,align:'center'">方向</th>
-                        <th data-options="field:'Review',width:80,align:'center'">余额</th>
+                        <th data-options="field:'Debit',width:80">借方</th>
+                        <th data-options="field:'Credit',width:80">贷方</th>
+                        <th data-options="field:'Direction',width:80,align:'center'">方向</th>
+                        <th data-options="field:'Balance',width:80,align:'center'">余额</th>
                     </tr>
                 </thead>
             </table>
         </div>
         <div data-options="region:'east',border:true" style="padding:10px;width:300px;">
-            <ul id="quickSwitch" class="easyui-tree"></ul>
+            <ul id="quickSwitch" class="easyui-tree" data-options="method:'GET',url:'/api/LedgerSheet/GetMyAccountsInVoucher'"></ul>
         </div>
     </div>
 
@@ -109,6 +109,7 @@
             });
         }
     }
+
     </script>
 </body>
 </html>

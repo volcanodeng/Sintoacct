@@ -225,6 +225,7 @@
     <Compile Include="Models\CacheModels.cs" />
     <Compile Include="Models\EasyuiViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\LedgerSheetViewModels.cs" />
     <Compile Include="Models\LedgerViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

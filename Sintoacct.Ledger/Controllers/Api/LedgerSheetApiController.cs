@@ -12,9 +12,13 @@ namespace Sintoacct.Ledger.Controllers.Api
     public class LedgerSheetApiController : ApiController
     {
         private readonly ILedgerSheet _sheet;
-        public LedgerSheetApiController(ILedgerSheet sheet)
+        private readonly IModelValidation _modelValid;
+
+        public LedgerSheetApiController(ILedgerSheet sheet,
+                                        IModelValidation modelValid)
         {
             _sheet = sheet;
+            _modelValid = modelValid;
         }
 
         [ClaimsAuthorize("role", "accountant")]
@@ -31,6 +35,22 @@ namespace Sintoacct.Ledger.Controllers.Api
                 cb.Add(cbvm);
             }
             return Ok(cb);
+        }
+
+
+        [ClaimsAuthorize("role", "accountant")]
+        [HttpGet, Route("api/LedgerSheet/GetMyAccountsInVoucher")]
+        public IHttpActionResult GetMyAccountsInVoucher()
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                ResMessage.Fail(err);
+            }
+
+            TreeViewModel<AccountViewModel> accountTree = _sheet.GetMyAccountsInVoucher();
+
+            return Ok(accountTree.children);
         }
     }
 }
