@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Sintoacct.Ledger.Models;
+using System.Data.SqlClient;
+using System.Data;
 using AutoMapper;
 
 namespace Sintoacct.Ledger.Services
@@ -30,6 +32,27 @@ namespace Sintoacct.Ledger.Services
                 AccountRecursion(accounts.Where(acc => acc.ParentAccCode == a.AccCode).ToList(), accNode);
             }
 
+        }
+
+        /// <summary>
+        /// 统一生成查询参数。
+        /// </summary>
+        /// <param name="name">参数名</param>
+        /// <param name="value">参数值</param>
+        /// <returns>参数接口</returns>
+        public static IDataParameter NewParameter(string name,object value)
+        {
+            return new SqlParameter(name, value);
+        }
+
+        /// <summary>
+        /// 生成SQL参数名称。
+        /// </summary>
+        /// <param name="pName">纯参数名，不带参数符号</param>
+        /// <returns>SQL参数名</returns>
+        public static string ParameterNameString(string pName)
+        {
+            return string.Format("@{0}", pName);
         }
     }
 }
