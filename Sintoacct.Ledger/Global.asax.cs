@@ -65,7 +65,7 @@ namespace Sintoacct.Ledger
             //#warning 输出SQL
             //ledger.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
             //builder.RegisterInstance(ledger).As<LedgerContext>();
-            builder.RegisterType<LedgerContext>();
+            builder.RegisterType<LedgerContext>().InstancePerLifetimeScope();
 
             // WebAPI - Register your Web API controllers
             builder.RegisterApiControllers(assembly);
