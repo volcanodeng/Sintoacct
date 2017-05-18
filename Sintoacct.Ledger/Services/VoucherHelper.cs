@@ -61,6 +61,7 @@ namespace Sintoacct.Ledger.Services
             Voucher voucher = new Voucher();
             if (vmVoucher.VId > 0)
             {
+                //修改凭证
                 voucher = this.GetMyVoucher(vmVoucher.VId);
                 if (voucher == null) return null;
 
@@ -90,6 +91,7 @@ namespace Sintoacct.Ledger.Services
             }
             else
             {
+                //新增凭证
                 voucher.CertificateWord = _ledger.CertificateWords.Where(cw => cw.CwId == vmVoucher.CwId).FirstOrDefault();
                 voucher.CertWordSN = vmVoucher.CertWordSN;
                 voucher.VoucherDate = vmVoucher.VoucherDate;
@@ -118,6 +120,8 @@ namespace Sintoacct.Ledger.Services
 
                 _ledger.Vouchers.Add(voucher);
             }
+
+            //科目统计数据
 
             if (_ledger.SaveChanges() > 0)
             {

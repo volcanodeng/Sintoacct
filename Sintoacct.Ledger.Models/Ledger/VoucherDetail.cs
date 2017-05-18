@@ -76,5 +76,30 @@ namespace Sintoacct.Ledger.Models
         /// 贷方金额
         /// </summary>
         public decimal Credit { get; set; }
+
+        #region 统计字段
+
+        /// <summary>
+        /// 期初余额数量
+        /// </summary>
+        public decimal? InitialQuantity { get; set; }
+
+        /// <summary>
+        /// 期初余额
+        /// </summary>
+        public decimal? InitialBalance { get; set; }
+
+
+        /// <summary>
+        /// 年初余额数量
+        /// </summary>
+        public decimal? YtdBeginBalanceQuantity { get; set; }
+
+        /// <summary>
+        /// 年初余额
+        /// </summary>
+        public decimal? YtdBeginBalance { get; set; }
+
+        #endregion
     }
 }

@@ -63,21 +63,9 @@
     <Compile Include="Company.cs" />
     <Compile Include="Ledger\UserBook.cs" />
     <Compile Include="LedgerContext.cs" />
-    <Compile Include="Migrations\201704280845544_InitialCreate.cs" />
-    <Compile Include="Migrations\201704280845544_InitialCreate.Designer.cs">
-      <DependentUpon>201704280845544_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704280911336_ModifySourceDocument.cs" />
-    <Compile Include="Migrations\201704280911336_ModifySourceDocument.Designer.cs">
-      <DependentUpon>201704280911336_ModifySourceDocument.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704280924501_ModifySourceDocument1.cs" />
-    <Compile Include="Migrations\201704280924501_ModifySourceDocument1.Designer.cs">
-      <DependentUpon>201704280924501_ModifySourceDocument1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705110344251_AddVoucherDetail.cs" />
-    <Compile Include="Migrations\201705110344251_AddVoucherDetail.Designer.cs">
-      <DependentUpon>201705110344251_AddVoucherDetail.cs</DependentUpon>
+    <Compile Include="Migrations\201705180930006_InitialCreate.cs" />
+    <Compile Include="Migrations\201705180930006_InitialCreate.Designer.cs">
+      <DependentUpon>201705180930006_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -88,17 +76,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201704280845544_InitialCreate.resx">
-      <DependentUpon>201704280845544_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704280911336_ModifySourceDocument.resx">
-      <DependentUpon>201704280911336_ModifySourceDocument.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704280924501_ModifySourceDocument1.resx">
-      <DependentUpon>201704280924501_ModifySourceDocument1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705110344251_AddVoucherDetail.resx">
-      <DependentUpon>201705110344251_AddVoucherDetail.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201705180930006_InitialCreate.resx">
+      <DependentUpon>201705180930006_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SQL\InitData.sql" />
   </ItemGroup>
