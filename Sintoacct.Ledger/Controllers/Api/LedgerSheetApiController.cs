@@ -52,5 +52,22 @@ namespace Sintoacct.Ledger.Controllers.Api
 
             return Ok(accountTree.children);
         }
+
+        [ClaimsAuthorize("role", "accountant")]
+        [HttpGet, Route("api/LedgerSheet/GetDetailSheet")]
+        public IHttpActionResult GetDetailSheet(long accid)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                ResMessage.Fail(err);
+            }
+
+            List<DetailSheetViewModels> sheet = _sheet.GetDetailSheet(accid);
+            DatagridViewModel<DetailSheetViewModels> dgSheet = new DatagridViewModel<DetailSheetViewModels>();
+            dgSheet.rows = sheet;
+
+            return Ok(dgSheet);
+        }
     }
 }

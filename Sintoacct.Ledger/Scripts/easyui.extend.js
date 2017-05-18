@@ -220,3 +220,9 @@ function responseHandle(data) {
         return true;
     }
 }
+
+
+//datagrid格式化时间，仅显示日期部分
+function fmtDate(value, row, index) {
+    return value.replace(/T00:00:00/, "");
+}

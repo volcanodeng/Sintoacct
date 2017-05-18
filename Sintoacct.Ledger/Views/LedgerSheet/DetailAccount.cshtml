@@ -27,10 +27,10 @@
         </div>
         <div data-options="region:'center',border:true" style="padding:10px;">
             <table class="easyui-datagrid" id="vvList"
-                   data-options="fit:true,singleSelect:true,fitColumns:true">
+                   data-options="fit:true,singleSelect:true,fitColumns:true,url:'/api/LedgerSheet/GetDetailSheet',method:'GET'">
                 <thead>
                     <tr>
-                        <th data-options="field:'VoucherDate',width:100,align:'center'">日期</th>
+                        <th data-options="field:'VoucherDate',width:100,align:'center',formatter: fmtDate">日期</th>
                         <th data-options="field:'CertWord',width:80">凭证字号</th>
                         <th data-options="field:'Abstract',width:80">摘要</th>
                         <th data-options="field:'Debit',width:80">借方</th>
@@ -95,7 +95,7 @@
 
     function onTreeClick(node)
     {
-
+        $("#vvList").datagrid("load", { accid : node.id});
     }
 
     </script>
