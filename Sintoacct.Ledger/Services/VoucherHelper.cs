@@ -32,6 +32,11 @@ namespace Sintoacct.Ledger.Services
             _account = account;
         }
 
+        private Voucher GetLastVoucherBeforeCurrent(long vid)
+        {
+            return null;
+        }
+
         public Voucher GetMyVoucher(long vid)
         {
             Guid abid = _cache.GetUserCache().AccountBookID;
@@ -52,6 +57,7 @@ namespace Sintoacct.Ledger.Services
                                    .Include(v => v.VoucherDetails)
                                    .Include(v => v.CertificateWord)
                                    .Include(v => v.Invoices)
+                                   .Include("VoucherDetails.Account")
                                    .Take(pageSize)
                                    .ToList();
         }
