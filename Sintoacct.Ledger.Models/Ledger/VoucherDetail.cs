@@ -89,6 +89,26 @@ namespace Sintoacct.Ledger.Models
         /// </summary>
         public decimal? InitialBalance { get; set; }
 
+        /// <summary>
+        /// 本年累积借方数量
+        /// </summary>
+        public decimal? YtdDebitQuantity { get; set; }
+
+        /// <summary>
+        /// 本年累积借方金额
+        /// </summary>
+        public decimal? YtdDebit { get; set; }
+
+        /// <summary>
+        /// 本年累积贷方数量
+        /// </summary>
+        public decimal? YtdCreditQuantity { get; set; }
+
+        /// <summary>
+        /// 本年累积贷方金额
+        /// </summary>
+        public decimal? YtdCredit { get; set; }
+
 
         /// <summary>
         /// 年初余额数量

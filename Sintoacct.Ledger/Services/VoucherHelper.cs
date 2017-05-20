@@ -32,9 +32,13 @@ namespace Sintoacct.Ledger.Services
             _account = account;
         }
 
-        private Voucher GetLastVoucherBeforeCurrent(long vid)
+        /// <summary>
+        /// 重算所有科目的期初余额、累计金额、累计数量和年初余额。
+        /// </summary>
+        /// <returns>重算的科目数量</returns>
+        private int RecalculateAllAccount()
         {
-            return null;
+            return 0;
         }
 
         public Voucher GetMyVoucher(long vid)
@@ -93,6 +97,22 @@ namespace Sintoacct.Ledger.Services
                     vDetail.Price = vd.Price;
                     vDetail.Debit = vd.Debit;
                     vDetail.Credit = vd.Credit;
+
+                    vDetail.InitialBalance = vDetail.Account.InitialBalance;
+                    vDetail.InitialQuantity = vDetail.Account.InitialQuantity;
+                    vDetail.YtdBeginBalance = vDetail.Account.YtdBeginBalance;
+                    vDetail.YtdBeginBalanceQuantity = vDetail.Account.YtdBeginBalanceQuantity;
+                    if (vDetail.Account.Direction == "借")
+                    {
+                        vDetail.YtdDebit = vDetail.Account.YtdDebit + vDetail.Debit;
+                        vDetail.YtdDebitQuantity = vDetail.Account.YtdDebitQuantity + vDetail.Quantity;
+                    }
+                    else
+                    {
+                        vDetail.YtdCredit = vDetail.Account.YtdCredit + vDetail.Credit;
+                        vDetail.YtdCreditQuantity = vDetail.Account.YtdCreditQuantity + vDetail.Quantity;
+                    }
+
                 }
             }
             else
@@ -120,6 +140,21 @@ namespace Sintoacct.Ledger.Services
                     vDetail.Price = vd.Price;
                     vDetail.Debit = vd.Debit;
                     vDetail.Credit = vd.Credit;
+
+                    vDetail.InitialBalance = vDetail.Account.InitialBalance;
+                    vDetail.InitialQuantity = vDetail.Account.InitialQuantity;
+                    vDetail.YtdBeginBalance = vDetail.Account.YtdBeginBalance;
+                    vDetail.YtdBeginBalanceQuantity = vDetail.Account.YtdBeginBalanceQuantity;
+                    if (vDetail.Account.Direction == "借")
+                    {
+                        vDetail.YtdDebit = vDetail.Account.YtdDebit + vDetail.Debit;
+                        vDetail.YtdDebitQuantity = vDetail.Account.YtdDebitQuantity + vDetail.Quantity;
+                    }
+                    else
+                    {
+                        vDetail.YtdCredit = vDetail.Account.YtdCredit + vDetail.Credit;
+                        vDetail.YtdCreditQuantity = vDetail.Account.YtdCreditQuantity + vDetail.Quantity;
+                    }
 
                     voucher.VoucherDetails.Add(vDetail);
                 }
