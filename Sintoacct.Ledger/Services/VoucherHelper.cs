@@ -38,6 +38,36 @@ namespace Sintoacct.Ledger.Services
         /// <returns>重算的科目数量</returns>
         private int RecalculateAllAccount()
         {
+            Guid abid = _cache.GetUserCache().AccountBookID;
+            DateTime dt = new DateTime(DateTime.Now.Year, 1, 1);
+            var vouchers = _ledger.Vouchers.Where(v => v.AbId == abid && v.VoucherDate >= dt)
+                                   .Include(v => v.VoucherDetails)
+                                   .Include("VoucherDetails.Account")
+                                   .OrderBy(v=>v.VId)
+                                   .ToList();
+
+            int period = 0;
+            foreach(Voucher v in vouchers)
+            {
+                foreach(VoucherDetail vd in v.VoucherDetails)
+                {
+                    vd.InitialBalance = vd.Account.InitialBalance;
+                    vd.InitialQuantity = vd.Account.InitialQuantity;
+                    if (vd.Account.Direction == "借")
+                    {
+                        vd.YtdDebit = vd.Account.YtdDebit??0 + vd.Debit;
+                        vd.Account.YtdDebit = vd.YtdDebit;
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                if (period != v.VoucherDate.Month)
+                    period = v.VoucherDate.Month;
+            }
+
             return 0;
         }
 
