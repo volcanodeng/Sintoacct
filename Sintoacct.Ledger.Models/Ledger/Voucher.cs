@@ -79,6 +79,7 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 审核人
         /// </summary>
+        [MaxLength(50)]
         public string Review { get; set; }
 
         /// <summary>

@@ -284,21 +284,21 @@ namespace Sintoacct.Ledger.Models
         [MaxLength(5)]
         public string Unit { get; set; }
 
-        public decimal? InitialQuantity { get; set; }
+        public decimal InitialQuantity { get; set; }
 
-        public decimal? InitialBalance { get; set; }
+        public decimal InitialBalance { get; set; }
 
-        public decimal? YtdDebitQuantity { get; set; }
+        public decimal YtdDebitQuantity { get; set; }
 
-        public decimal? YtdDebit { get; set; }
+        public decimal YtdDebit { get; set; }
 
-        public decimal? YtdCreditQuantity { get; set; }
+        public decimal YtdCreditQuantity { get; set; }
 
-        public decimal? YtdCredit { get; set; }
+        public decimal YtdCredit { get; set; }
 
-        public decimal? YtdBeginBalanceQuantity { get; set; }
+        public decimal YtdBeginBalanceQuantity { get; set; }
 
-        public decimal? YtdBeginBalance { get; set; }
+        public decimal YtdBeginBalance { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public AccountState State { get; set; }
@@ -464,13 +464,54 @@ namespace Sintoacct.Ledger.Models
 
         public string AccountName { get; set; }
 
-        public decimal? Quantity { get; set; }
+        public decimal Quantity { get; set; }
 
-        public decimal? Price { get; set; }
+        public decimal Price { get; set; }
 
         public decimal Debit { get; set; }
 
         public decimal Credit { get; set; }
+
+        /// <summary>
+        /// 期初余额数量
+        /// </summary>
+        public decimal InitialQuantity { get; set; }
+
+        /// <summary>
+        /// 期初余额
+        /// </summary>
+        public decimal InitialBalance { get; set; }
+
+        /// <summary>
+        /// 本年累积借方数量
+        /// </summary>
+        public decimal YtdDebitQuantity { get; set; }
+
+        /// <summary>
+        /// 本年累积借方金额
+        /// </summary>
+        public decimal YtdDebit { get; set; }
+
+        /// <summary>
+        /// 本年累积贷方数量
+        /// </summary>
+        public decimal YtdCreditQuantity { get; set; }
+
+        /// <summary>
+        /// 本年累积贷方金额
+        /// </summary>
+        public decimal YtdCredit { get; set; }
+
+
+        /// <summary>
+        /// 年初余额数量
+        /// </summary>
+        public decimal YtdBeginBalanceQuantity { get; set; }
+
+        /// <summary>
+        /// 年初余额
+        /// </summary>
+        public decimal YtdBeginBalance { get; set; }
     }
 
     /// <summary>

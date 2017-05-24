@@ -265,14 +265,14 @@ namespace Sintoacct.Ledger.Services
 
             TrialBalanceViewModel tbInit = new TrialBalanceViewModel();
             tbInit.ItemName = "期初余额";
-            tbInit.DebitBalance = initBal.Where(a => a.Key == "借").FirstOrDefault().InitialBalance ?? 0;
-            tbInit.CreditBalance = initBal.Where(a => a.Key == "贷").FirstOrDefault().InitialBalance ?? 0;
+            tbInit.DebitBalance = initBal.Where(a => a.Key == "借").FirstOrDefault().InitialBalance;
+            tbInit.CreditBalance = initBal.Where(a => a.Key == "贷").FirstOrDefault().InitialBalance;
             tbInit.Imbalance = tbInit.DebitBalance - tbInit.CreditBalance;
 
             TrialBalanceViewModel tbYtd = new TrialBalanceViewModel();
             tbYtd.ItemName = "累计发生额";
-            tbYtd.DebitBalance = accounts.Sum(a => a.YtdDebit) ?? 0;
-            tbYtd.CreditBalance = accounts.Sum(a => a.YtdCredit) ?? 0;
+            tbYtd.DebitBalance = accounts.Sum(a => a.YtdDebit);
+            tbYtd.CreditBalance = accounts.Sum(a => a.YtdCredit);
             tbYtd.Imbalance = tbYtd.DebitBalance - tbYtd.CreditBalance;
 
             return new List<TrialBalanceViewModel>() { tbInit, tbYtd };

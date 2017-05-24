@@ -55,12 +55,19 @@ namespace Sintoacct.Ledger.Services
                     vd.InitialQuantity = vd.Account.InitialQuantity;
                     if (vd.Account.Direction == "借")
                     {
-                        vd.YtdDebit = vd.Account.YtdDebit??0 + vd.Debit;
+                        vd.YtdDebit = vd.Account.YtdDebit + vd.Debit;
                         vd.Account.YtdDebit = vd.YtdDebit;
+
+                        vd.YtdCredit = vd.Account.YtdCredit + vd.YtdCredit * (-1);
+                        vd.Account.YtdCredit = vd.YtdCredit;
                     }
                     else
                     {
+                        vd.YtdDebit = vd.Account.YtdDebit + vd.Debit * (-1);
+                        vd.Account.YtdDebit = vd.YtdDebit;
 
+                        vd.YtdCredit = vd.Account.YtdCredit + vd.YtdCredit;
+                        vd.Account.YtdCredit = vd.YtdCredit;
                     }
                 }
 
@@ -125,8 +132,16 @@ namespace Sintoacct.Ledger.Services
                     vDetail.AccountName = vDetail.Account.AccName;
                     vDetail.Quantity = vd.Quantity;
                     vDetail.Price = vd.Price;
-                    vDetail.Debit = vd.Debit;
-                    vDetail.Credit = vd.Credit;
+                    if (vDetail.Account.Direction == "借")
+                    {
+                        vDetail.Debit = vd.Debit;
+                        vDetail.Credit = vd.Credit * (-1);
+                    }
+                    else
+                    {
+                        vDetail.Debit = vd.Debit * (-1);
+                        vDetail.Credit = vd.Credit;
+                    }
 
                     vDetail.InitialBalance = vDetail.Account.InitialBalance;
                     vDetail.InitialQuantity = vDetail.Account.InitialQuantity;
