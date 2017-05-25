@@ -315,6 +315,10 @@
                 $("#vch_year").text(dArr[0]);
                 $("#vch_period").text(m);
             }
+
+            $.get("/api/voucher/GetNewCertWordSn", { vDate: newValue, cwId: $("#cw").combobox("getValue") }, function (data) {
+                $("#ss").numberspinner("setValue",data);
+            });
         }
 
 

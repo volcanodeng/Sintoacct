@@ -85,6 +85,7 @@ namespace Sintoacct.Ledger.Services
             }
             return 0;
         }
+
     }
 
     public interface ICertificateWordHelper : IDependency

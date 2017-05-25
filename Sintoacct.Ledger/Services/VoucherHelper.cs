@@ -126,6 +126,8 @@ namespace Sintoacct.Ledger.Services
                 voucher.CertificateWord = _ledger.CertificateWords.Where(cw => cw.CwId == vmVoucher.CwId).FirstOrDefault();
                 voucher.CertWordSN = vmVoucher.CertWordSN;
                 voucher.VoucherDate = vmVoucher.VoucherDate;
+                voucher.VoucherYear = voucher.VoucherDate.Year;
+                voucher.VoucherMonth = voucher.VoucherDate.Month;
                 voucher.PaymentTerms = string.Format("{0}年第{1}期", voucher.VoucherDate.Year, voucher.VoucherDate.Month);
                 voucher.InvoiceCount = vmVoucher.InvoiceCount;
 
@@ -177,6 +179,8 @@ namespace Sintoacct.Ledger.Services
                 voucher.CertificateWord = _ledger.CertificateWords.Where(cw => cw.CwId == vmVoucher.CwId).FirstOrDefault();
                 voucher.CertWordSN = vmVoucher.CertWordSN;
                 voucher.VoucherDate = vmVoucher.VoucherDate;
+                voucher.VoucherYear = voucher.VoucherDate.Year;
+                voucher.VoucherMonth = voucher.VoucherDate.Month;
                 voucher.PaymentTerms = string.Format("{0}年第{1}期", voucher.VoucherDate.Year, voucher.VoucherDate.Month);
                 voucher.InvoiceCount = vmVoucher.InvoiceCount;
                 voucher.State = VoucherState.PaddingAudit;
@@ -392,6 +396,14 @@ namespace Sintoacct.Ledger.Services
                 throw new ArgumentNullException("地址不存在或保存失败");
             }
         }
+
+        public int GetMaxCertWordSn(DateTime voucherDate, int certWordId)
+        {
+            int y = voucherDate.Year, m = voucherDate.Month;
+            Guid abid = _cache.GetUserCache().AccountBookID;
+            int cwSn = _ledger.Vouchers.Where(v => v.VoucherYear == y && v.VoucherMonth == m && v.CertificateWord.CwId == certWordId && v.AbId == abid).Max(v => v.CertWordSN);
+            return cwSn;
+        }
     }
 
     public interface IVoucherHelper : IDependency
@@ -419,5 +431,7 @@ namespace Sintoacct.Ledger.Services
         List<Voucher> SearchVoucher(SearchConditionViewModel condition);
 
         List<SearchVoucherViewModel> VoucherToSearchVoucherViewModel(List<Voucher> vouchers);
+
+        int GetMaxCertWordSn(DateTime voucherDate, int certWordId);
     }
 }

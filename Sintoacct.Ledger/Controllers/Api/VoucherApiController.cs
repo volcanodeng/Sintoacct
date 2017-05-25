@@ -188,5 +188,14 @@ namespace Sintoacct.Ledger.Controllers.Api
             dgsv.rows = voucher;
             return Ok(dgsv);
         }
+
+
+        [ClaimsAuthorize("role", "accountant")]
+        [HttpGet, Route("api/voucher/GetNewCertWordSn")]
+        public IHttpActionResult GetNewCertWordSn(DateTime vDate, int cwId)
+        {
+            var newSn = _voucher.GetMaxCertWordSn(vDate, cwId) + 1;
+            return Ok(newSn);
+        }
     }
 }

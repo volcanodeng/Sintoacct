@@ -30,7 +30,18 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 凭证日期
         /// </summary>
+        [Index(IsUnique =false)]
         public DateTime VoucherDate { get; set; }
+
+        /// <summary>
+        /// 凭证年份（查询用）
+        /// </summary>
+        public int VoucherYear { get; set; }
+
+        /// <summary>
+        /// 凭证账期（查询用）
+        /// </summary>
+        public int VoucherMonth { get; set; }
 
         /// <summary>
         /// 账期（当前凭证所在月份）。
