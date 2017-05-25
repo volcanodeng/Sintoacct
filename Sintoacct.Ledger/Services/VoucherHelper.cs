@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Security.Claims;
+﻿using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Sintoacct.Ledger.Models;
-using AutoMapper;
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
+using System.Linq;
+using System.Security.Claims;
+using System.Web;
 
 namespace Sintoacct.Ledger.Services
 {
@@ -46,7 +46,7 @@ namespace Sintoacct.Ledger.Services
                                    .OrderBy(v=>v.VId)
                                    .ToList();
 
-            int period = 0;
+            int period = 0,c=0;
             foreach(Voucher v in vouchers)
             {
                 foreach(VoucherDetail vd in v.VoucherDetails)
@@ -69,14 +69,25 @@ namespace Sintoacct.Ledger.Services
                         vd.YtdCredit = vd.Account.YtdCredit + vd.YtdCredit;
                         vd.Account.YtdCredit = vd.YtdCredit;
                     }
+
+                    c++;
                 }
 
                 if (period != v.VoucherDate.Month)
                     period = v.VoucherDate.Month;
             }
 
-            return 0;
+            _ledger.SaveChanges();
+
+            return c;
         }
+
+        //private async Task<int> Recalculate()
+        //{
+        //    return await Task.Run(()=> {
+        //        return RecalculateAllAccount();
+        //    });
+        //}
 
         public Voucher GetMyVoucher(long vid)
         {
@@ -207,10 +218,11 @@ namespace Sintoacct.Ledger.Services
                 _ledger.Vouchers.Add(voucher);
             }
 
-            //科目统计数据
-
             if (_ledger.SaveChanges() > 0)
             {
+                //科目统计数据
+                this.RecalculateAllAccount();
+
                 return voucher;
             }
 
