@@ -316,7 +316,9 @@
                 $("#vch_period").text(m);
             }
 
-            $.get("/api/voucher/GetNewCertWordSn", { vDate: newValue, cwId: $("#cw").combobox("getValue") }, function (data) {
+            var selCertWord = $("#cw").combobox("getValue");
+            if (!selCertWord) selCertWord = "@Model.CwId";
+            $.get("/api/voucher/GetNewCertWordSn", { vDate: newValue, cwId: selCertWord }, function (data) {
                 $("#ss").numberspinner("setValue",data);
             });
         }

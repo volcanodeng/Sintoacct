@@ -401,7 +401,9 @@ namespace Sintoacct.Ledger.Services
         {
             int y = voucherDate.Year, m = voucherDate.Month;
             Guid abid = _cache.GetUserCache().AccountBookID;
-            int cwSn = _ledger.Vouchers.Where(v => v.VoucherYear == y && v.VoucherMonth == m && v.CertificateWord.CwId == certWordId && v.AbId == abid).Max(v => v.CertWordSN);
+            int cwSn = 0;
+            var voucher = _ledger.Vouchers.Where(v => v.VoucherYear == y && v.VoucherMonth == m && v.CertificateWord.CwId == certWordId && v.AbId == abid).ToList();
+            if (voucher.Count() > 0) cwSn = voucher.Max(v => v.CertWordSN);
             return cwSn;
         }
     }

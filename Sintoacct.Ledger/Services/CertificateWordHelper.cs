@@ -86,6 +86,11 @@ namespace Sintoacct.Ledger.Services
             return 0;
         }
 
+        public CertificateWord GetDefault()
+        {
+            return this.GetCertWordInAccountBook().Where(cw => cw.IsDefault).FirstOrDefault();
+        }
+
     }
 
     public interface ICertificateWordHelper : IDependency
@@ -97,5 +102,7 @@ namespace Sintoacct.Ledger.Services
         int Delete(int certWordId);
 
         int SetDefault(int certWordId);
+
+        CertificateWord GetDefault();
     }
 }

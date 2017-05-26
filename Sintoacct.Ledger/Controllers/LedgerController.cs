@@ -16,16 +16,19 @@ namespace Sintoacct.Ledger.Controllers
         private readonly ICacheHelper _cache;
         private readonly IAuxiliaryHelper _auxiliary;
         private readonly IAccountHelper _account;
+        private readonly ICertificateWordHelper _certWord;
 
         public LedgerController(HttpContextBase context,
                                 ICacheHelper cache,
                                 IAuxiliaryHelper auxiliary,
-                                IAccountHelper account)
+                                IAccountHelper account,
+                                ICertificateWordHelper certWord)
         {
             _identity = context.User.Identity as ClaimsIdentity;
             _cache = cache;
             _auxiliary = auxiliary;
             _account = account;
+            _certWord = certWord;
         }
 
 
@@ -106,7 +109,8 @@ namespace Sintoacct.Ledger.Controllers
         [ClaimsAuthorize("role", "accountant")]
         public ActionResult Voucher()
         {
-            return View();
+            CertificateWord defaultCertWord = _certWord.GetDefault();
+            return View(defaultCertWord);
         }
 
         [ClaimsAuthorize("role", "accountant")]

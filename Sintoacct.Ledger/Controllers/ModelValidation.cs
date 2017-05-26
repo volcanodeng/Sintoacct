@@ -56,6 +56,17 @@ namespace Sintoacct.Ledger.Controllers
 
             return res;
         }
+
+        public bool ValidVoucher(VoucherViewModel voucher,out string err)
+        {
+            //验证凭证字号
+
+
+            //验证账是否平
+
+            err = "";
+            return true;
+        }
     }
 
     public interface IModelValidation : IDependency
