@@ -59,6 +59,12 @@ namespace Sintoacct.Ledger.Controllers.Api
                 ResMessage.Fail(err);
             }
 
+            //校验借贷是否平衡、凭证字号是否最新、科目是否有效等
+            if(!_modelValid.ValidVoucher(voucher,out err))
+            {
+                ResMessage.Fail(err);
+            }
+
             Voucher v = _voucher.Save(voucher);
 
             ResMessageContent rmContent = ResMessage.Success();

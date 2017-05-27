@@ -406,6 +406,37 @@ namespace Sintoacct.Ledger.Services
             if (voucher.Count() > 0) cwSn = voucher.Max(v => v.CertWordSN);
             return cwSn;
         }
+
+        /// <summary>
+        /// 校验录入借贷是否平衡
+        /// </summary>
+        /// <param name="vmVoucher">凭证借贷额</param>
+        /// <returns>空为校验通过，否则为出错原因</returns>
+        public string IsVoucherBalance(VoucherViewModel vmVoucher)
+        {
+            decimal Debit = 0, Credit = 0;
+            foreach (VoucherDetailViewModel d in vmVoucher.VoucherDetails)
+            {
+                Account acc = _account.GetAccount(d.AccId);
+                if (acc == null) return string.Format("科目无效({1})。摘要：{0}", d.Abstract, d.AccId);
+
+                if(acc.Direction=="借")
+                {
+                    Debit += d.Debit;
+                    Debit += d.Credit * (-1);
+                }
+                else
+                {
+                    Credit += d.Credit;
+                    Credit += d.Debit * (-1);
+                }
+            }
+
+            if (Debit != Credit) return "录入借贷不平";
+
+            return string.Empty;
+        }
+
     }
 
     public interface IVoucherHelper : IDependency
@@ -435,5 +466,7 @@ namespace Sintoacct.Ledger.Services
         List<SearchVoucherViewModel> VoucherToSearchVoucherViewModel(List<Voucher> vouchers);
 
         int GetMaxCertWordSn(DateTime voucherDate, int certWordId);
+
+        string IsVoucherBalance(VoucherViewModel vmVoucher);
     }
 }
