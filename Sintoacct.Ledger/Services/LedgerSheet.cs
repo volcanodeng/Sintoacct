@@ -73,13 +73,75 @@ namespace Sintoacct.Ledger.Services
                          "order by vd.VdId";
 
             List<DetailSheetViewModels> sheets = _ledger.Database.SqlQuery<DetailSheetViewModels>(sql, Utility.NewParameter("abid", abid), Utility.NewParameter("accid", accid)).ToList();
+            Account account = _ledger.Accounts.Where(a => a.AbId == abid && a.AccId == accid).FirstOrDefault();
 
             decimal balance = 0;
-            foreach(DetailSheetViewModels s in sheets)
+            string month = "";
+            for(int i=0;i<sheets.Count;i++)
             {
-                balance += (s.Direction == "借" ? s.Debit : s.Credit);
-                s.Balance = balance;
+                balance += (sheets[i].Direction == "借" ? sheets[i].Debit : sheets[i].Credit);
+                sheets[i].Balance = balance;
+
+                if (month != string.Format("{0}-{1}", sheets[i].VoucherDate.Year, sheets[i].VoucherDate.Month))
+                {
+                    if (month != "")
+                    {
+                        //每期增加本期合计
+                        DetailSheetViewModels monthSheet = new DetailSheetViewModels();
+                        monthSheet.VoucherDate = new DateTime(sheets[i].VoucherDate.Year, sheets[i].VoucherDate.Month, DateTime.DaysInMonth(sheets[i].VoucherDate.Year, sheets[i].VoucherDate.Month));
+                        monthSheet.Abstract = "本期合计";
+                        monthSheet.Direction = sheets[i].Direction;
+                        if (monthSheet.Direction == "借")
+                        {
+                            monthSheet.Debit = balance;
+                        }
+                        else
+                        {
+                            monthSheet.Credit = balance;
+                        }
+                        monthSheet.Balance = balance;
+
+                        sheets.Insert(i, monthSheet);
+                    }
+
+                    month = string.Format("{0}-{1}", sheets[i].VoucherDate.Year, sheets[i].VoucherDate.Month);
+                }
             }
+
+            //第一行加入期初余额
+            DetailSheetViewModels initSheet = new DetailSheetViewModels();
+            initSheet.VoucherDate = new DateTime(account.CreateTime.Year, account.CreateTime.Month, 1);
+            initSheet.Abstract = "期初余额";
+            initSheet.Direction = account.Direction;
+            if (initSheet.Direction == "借")
+            {
+                initSheet.Debit = account.InitialBalance;
+            }
+            else
+            {
+                initSheet.Credit = account.InitialBalance;
+            }
+            initSheet.Balance = account.InitialBalance;
+            sheets.Insert(0, initSheet);
+
+            
+            //每期增加本期合计
+            DetailSheetViewModels monthSheetLast = new DetailSheetViewModels();
+            monthSheetLast.VoucherDate = new DateTime(sheets[sheets.Count-1].VoucherDate.Year, sheets[sheets.Count - 1].VoucherDate.Month, DateTime.DaysInMonth(sheets[sheets.Count - 1].VoucherDate.Year, sheets[sheets.Count - 1].VoucherDate.Month));
+            monthSheetLast.Abstract = "本期合计";
+            monthSheetLast.Direction = sheets[sheets.Count - 1].Direction;
+            if (monthSheetLast.Direction == "借")
+            {
+                monthSheetLast.Debit = balance;
+            }
+            else
+            {
+                monthSheetLast.Credit = balance;
+            }
+            monthSheetLast.Balance = balance;
+            sheets.Add(monthSheetLast);
+
+            //最后加入本年累计
 
             return sheets;
         }

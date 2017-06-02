@@ -33,8 +33,8 @@
                         <th data-options="field:'VoucherDate',width:100,align:'center',formatter: fmtDate">日期</th>
                         <th data-options="field:'CertWord',width:80">凭证字号</th>
                         <th data-options="field:'Abstract',width:80">摘要</th>
-                        <th data-options="field:'Debit',width:80">借方</th>
-                        <th data-options="field:'Credit',width:80">贷方</th>
+                        <th data-options="field:'Debit',width:80,formatter:zeroFormatter">借方</th>
+                        <th data-options="field:'Credit',width:80,formatter:zeroFormatter">贷方</th>
                         <th data-options="field:'Direction',width:80,align:'center'">方向</th>
                         <th data-options="field:'Balance',width:80,align:'center'">余额</th>
                     </tr>
@@ -97,6 +97,13 @@
     {
         $("#vvList").datagrid("load", { accid : node.id});
     }
+
+    function zeroFormatter(value, row, index)
+    {
+        if (value == 0) return "";
+        else return value;
+    }
+
 
     </script>
 </body>
