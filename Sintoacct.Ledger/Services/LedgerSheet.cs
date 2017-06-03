@@ -75,12 +75,13 @@ namespace Sintoacct.Ledger.Services
             List<DetailSheetViewModels> sheets = _ledger.Database.SqlQuery<DetailSheetViewModels>(sql, Utility.NewParameter("abid", abid), Utility.NewParameter("accid", accid)).ToList();
             Account account = _ledger.Accounts.Where(a => a.AbId == abid && a.AccId == accid).FirstOrDefault();
 
-            decimal balance = 0;
+            decimal balanceM = 0, balanceY = 0;
             string month = "";
             for(int i=0;i<sheets.Count;i++)
             {
-                balance += (sheets[i].Direction == "借" ? sheets[i].Debit : sheets[i].Credit);
-                sheets[i].Balance = balance;
+                balanceM += (sheets[i].Direction == "借" ? sheets[i].Debit : sheets[i].Credit);
+                balanceY += (sheets[i].Direction == "借" ? sheets[i].Debit : sheets[i].Credit);
+                sheets[i].Balance = balanceM;
 
                 if (month != string.Format("{0}-{1}", sheets[i].VoucherDate.Year, sheets[i].VoucherDate.Month))
                 {
@@ -93,17 +94,20 @@ namespace Sintoacct.Ledger.Services
                         monthSheet.Direction = sheets[i].Direction;
                         if (monthSheet.Direction == "借")
                         {
-                            monthSheet.Debit = balance;
+                            monthSheet.Debit = balanceM;
                         }
                         else
                         {
-                            monthSheet.Credit = balance;
+                            monthSheet.Credit = balanceM;
                         }
-                        monthSheet.Balance = balance;
+                        monthSheet.Balance = balanceM;
 
                         sheets.Insert(i, monthSheet);
+
+                        balanceM = 0;
                     }
 
+                    //修改本期标志
                     month = string.Format("{0}-{1}", sheets[i].VoucherDate.Year, sheets[i].VoucherDate.Month);
                 }
             }
@@ -132,16 +136,30 @@ namespace Sintoacct.Ledger.Services
             monthSheetLast.Direction = sheets[sheets.Count - 1].Direction;
             if (monthSheetLast.Direction == "借")
             {
-                monthSheetLast.Debit = balance;
+                monthSheetLast.Debit = balanceM;
             }
             else
             {
-                monthSheetLast.Credit = balance;
+                monthSheetLast.Credit = balanceM;
             }
-            monthSheetLast.Balance = balance;
+            monthSheetLast.Balance = balanceM;
             sheets.Add(monthSheetLast);
 
             //最后加入本年累计
+            DetailSheetViewModels yearSheet = new DetailSheetViewModels();
+            yearSheet.VoucherDate = new DateTime(sheets[sheets.Count - 1].VoucherDate.Year, sheets[sheets.Count - 1].VoucherDate.Month, DateTime.DaysInMonth(sheets[sheets.Count - 1].VoucherDate.Year, sheets[sheets.Count - 1].VoucherDate.Month));
+            yearSheet.Abstract = "本年累计";
+            yearSheet.Direction= sheets[sheets.Count - 1].Direction;
+            if (yearSheet.Direction == "借")
+            {
+                yearSheet.Debit = balanceY;
+            }
+            else
+            {
+                yearSheet.Credit = balanceY;
+            }
+            yearSheet.Balance = balanceY;
+            sheets.Add(yearSheet);
 
             return sheets;
         }
