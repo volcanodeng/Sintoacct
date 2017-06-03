@@ -79,10 +79,7 @@ namespace Sintoacct.Ledger.Services
             string month = "";
             for(int i=0;i<sheets.Count;i++)
             {
-                balanceM += (sheets[i].Direction == "借" ? sheets[i].Debit : sheets[i].Credit);
-                balanceY += (sheets[i].Direction == "借" ? sheets[i].Debit : sheets[i].Credit);
-                sheets[i].Balance = balanceM;
-
+                //判断是否本期
                 if (month != string.Format("{0}-{1}", sheets[i].VoucherDate.Year, sheets[i].VoucherDate.Month))
                 {
                     if (month != "")
@@ -110,11 +107,16 @@ namespace Sintoacct.Ledger.Services
                     //修改本期标志
                     month = string.Format("{0}-{1}", sheets[i].VoucherDate.Year, sheets[i].VoucherDate.Month);
                 }
+
+                //累计金额
+                balanceM += (sheets[i].Direction == "借" ? sheets[i].Debit- sheets[i].Credit : sheets[i].Credit- sheets[i].Debit);
+                balanceY += (sheets[i].Direction == "借" ? sheets[i].Debit- sheets[i].Credit : sheets[i].Credit- sheets[i].Debit);
+                sheets[i].Balance = balanceM;
             }
 
             //第一行加入期初余额
             DetailSheetViewModels initSheet = new DetailSheetViewModels();
-            initSheet.VoucherDate = new DateTime(account.CreateTime.Year, account.CreateTime.Month, 1);
+            initSheet.VoucherDate = new DateTime(sheets[sheets.Count - 1].VoucherDate.Year, sheets[sheets.Count - 1].VoucherDate.Month, 1);
             initSheet.Abstract = "期初余额";
             initSheet.Direction = account.Direction;
             if (initSheet.Direction == "借")
