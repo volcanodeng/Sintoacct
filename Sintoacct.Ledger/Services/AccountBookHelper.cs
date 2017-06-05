@@ -73,7 +73,7 @@ namespace Sintoacct.Ledger.Services
                                           .Include(ub => ub.AccountBook)
                                           .Include(ub => ub.AccountBook.Company).ToList();
 
-            return books.Where(ub=>ub.AccountBook.State== AccountBookState.Normal).Select(ub => ub.AccountBook).ToList();
+            return books.Where(ub => ub.AccountBook.State == AccountBookState.Normal).Select(ub => ub.AccountBook).OrderByDescending(ub => ub.CreateTime).ToList();
         }
 
         public AccountBook GetAccountBook(Guid abid)

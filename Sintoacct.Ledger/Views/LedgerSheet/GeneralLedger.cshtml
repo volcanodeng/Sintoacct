@@ -1,0 +1,110 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/easyui")
+
+    <style type="text/css">
+        form div {
+            padding: 5px;
+        }
+
+        .datagrid-header-row td {
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'north',split:false,border:false" style="padding:10px;overflow:hidden;background-color:#F2F2F2;">
+            <input id="sv" label="明细账" panelWidth="350" panelHeight="400" />
+        </div>
+        <div data-options="region:'center',border:true" style="padding:10px;">
+            <table class="easyui-datagrid" id="vvList"
+                   data-options="fit:true,singleSelect:true,fitColumns:true,url:'/api/LedgerSheet/GetDetailSheet',method:'GET'">
+                <thead>
+                    <tr>
+                        <th data-options="field:'VoucherDate',width:100,align:'center',formatter: fmtDate">日期</th>
+                        <th data-options="field:'CertWord',width:80">凭证字号</th>
+                        <th data-options="field:'Abstract',width:80">摘要</th>
+                        <th data-options="field:'Debit',width:80,formatter:zeroFormatter">借方</th>
+                        <th data-options="field:'Credit',width:80,formatter:zeroFormatter">贷方</th>
+                        <th data-options="field:'Direction',width:80,align:'center'">方向</th>
+                        <th data-options="field:'Balance',width:80,align:'center',formatter:zeroFormatter">余额</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div data-options="region:'east',border:true" style="padding:10px;width:300px;">
+            <ul id="quickSwitch" class="easyui-tree" data-options="method:'GET',url:'/api/LedgerSheet/GetMyAccountsInVoucher',onClick:onTreeClick"></ul>
+        </div>
+    </div>
+
+    <div id="searchPanel" style="padding:10px;">
+        <form id="sForm" method="post">
+            <div>会计期间：<input class="easyui-combobox" id="StartPeriod" name="StartPeriod" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /> 至 <input class="easyui-combobox" id="EndPeriod" name="EndPeriod" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /></div>
+
+            <div><span style="padding-left:12px;">凭证字：</span><input class="easyui-combobox" name="CertWord" data-options="valueField:'CertWord',textField:'CertWord',url:'/api/acctbook/MyCertWordArray',width:100,height:30,method:'GET'" /></div>
+
+            <div><span style="padding-left:12px;">凭证号：</span><input class="easyui-textbox" name="CertWordSN" data-options="width:220,height:30,prompt:'请输入凭证号或凭证号范围'" /></div>
+
+            <div><span>凭证状态：</span><input class="easyui-combobox" name="VoucherState" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /></div>
+
+            <div style="width:100%;text-align:center;"><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#sForm').submit();" style="width:100px;">查询</a></div>
+        </form>
+    </div>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/easyui")
+
+    <script type="text/javascript">
+
+
+    $(function () {
+        init();
+    });
+
+    function init()
+    {
+        $("#sForm").form({
+            url: "/api/voucher/viewVoucher/",
+            onSubmit: formOnSubmit,
+            success: formSuccess
+        });
+
+        $("#sv").combo();
+        $('#searchPanel').appendTo($('#sv').combo('panel'));
+    }
+
+    function formOnSubmit() {
+        return $(this).form('validate');
+    }
+
+    function formSuccess(data) {
+
+        $("#vvList").datagrid("loadData", JSON.parse(data));
+
+    }
+
+    function onTreeClick(node)
+    {
+        $("#vvList").datagrid("load", { accid : node.id});
+    }
+
+    function zeroFormatter(value, row, index)
+    {
+        if (value == 0) return "";
+        else return value;
+    }
+
+
+    </script>
+</body>
+</html>

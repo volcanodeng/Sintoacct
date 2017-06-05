@@ -12,10 +12,12 @@ namespace Sintoacct.Ledger.Services
     public class CacheHelper : ICacheHelper
     {
         private readonly HttpContextBase _context;
+        private readonly LedgerContext _ledger;
 
-        public CacheHelper(HttpContextBase context)
+        public CacheHelper(HttpContextBase context, LedgerContext ledger)
         {
             _context = context;
+            _ledger = ledger;
         }
 
         private string UserCacheKey()
@@ -47,7 +49,20 @@ namespace Sintoacct.Ledger.Services
 
         public UserCacheModel GetUserCache()
         {
-            return (UserCacheModel)_context.Cache.Get(UserCacheKey()); 
+            UserCacheModel ucm = (UserCacheModel)_context.Cache.Get(UserCacheKey());
+            if (ucm == null)
+            {
+                string userId = ((ClaimsIdentity)_context.User.Identity).GetUserId();
+                Guid abid = _ledger.UserBooks.Where(ub => ub.UserId == userId && ub.AccountBook.State == AccountBookState.Normal).Select(ub => ub.AbId).FirstOrDefault();
+                if(abid == Guid.Empty)
+                {
+                    throw new ArgumentNullException("当前用户没有创建账套");
+                }
+                ucm = new UserCacheModel();
+                ucm.AccountBookID = abid;
+                this.SetUserCache(ucm);
+            }
+            return ucm;
         }
 
         public void ClearUserCache()

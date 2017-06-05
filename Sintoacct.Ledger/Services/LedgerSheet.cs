@@ -166,6 +166,11 @@ namespace Sintoacct.Ledger.Services
             return sheets;
         }
 
+        public List<GeneralLedgerViewModels> GetGeneralLedger()
+        {
+            return new List<GeneralLedgerViewModels>();
+        }
+
         #endregion
     }
 
