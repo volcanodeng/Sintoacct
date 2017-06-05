@@ -116,7 +116,8 @@ namespace Sintoacct.Ledger.Models.Migrations
                     {
                         VId = c.Long(nullable: false, identity: true),
                         CertWordSN = c.Int(nullable: false),
-                        VoucherDate = c.DateTime(nullable: false),
+                        VoucherYear = c.Int(nullable: false),
+                        VoucherMonth = c.Int(nullable: false),
                         PaymentTerms = c.String(nullable: false, maxLength: 20),
                         InvoiceCount = c.Int(nullable: false),
                         InvoicePath = c.String(maxLength: 255),

@@ -29,9 +29,11 @@ namespace Sintoacct.Ledger.Controllers.Api
             var pt = _sheet.GetPaymentTerms();
             foreach(string s in pt)
             {
+                if (string.IsNullOrEmpty(s)) continue;
+
                 ComboboxViewModel cbvm = new ComboboxViewModel();
                 cbvm.val = s;
-                cbvm.text = s;
+                cbvm.text = string.Format("{0}年第{1}期",s.Substring(0,4),s.Substring(4));
                 cb.Add(cbvm);
             }
             return Ok(cb);

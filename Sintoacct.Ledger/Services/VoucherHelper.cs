@@ -39,8 +39,8 @@ namespace Sintoacct.Ledger.Services
         private int RecalculateAllAccount()
         {
             Guid abid = _cache.GetUserCache().AccountBookID;
-            DateTime dt = new DateTime(DateTime.Now.Year, 1, 1);
-            var vouchers = _ledger.Vouchers.Where(v => v.AbId == abid && v.VoucherDate >= dt)
+            //DateTime dt = new DateTime(DateTime.Now.Year, 1, 1);
+            var vouchers = _ledger.Vouchers.Where(v => v.AbId == abid && v.VoucherYear == DateTime.Now.Year)
                                    .Include(v => v.VoucherDetails)
                                    .Include("VoucherDetails.Account")
                                    .OrderBy(v=>v.VId)
@@ -73,8 +73,7 @@ namespace Sintoacct.Ledger.Services
                     c++;
                 }
 
-                if (period != v.VoucherDate.Month)
-                    period = v.VoucherDate.Month;
+                if (period != v.VoucherMonth) period = v.VoucherMonth;
             }
 
             _ledger.SaveChanges();
@@ -125,10 +124,9 @@ namespace Sintoacct.Ledger.Services
 
                 voucher.CertificateWord = _ledger.CertificateWords.Where(cw => cw.CwId == vmVoucher.CwId).FirstOrDefault();
                 voucher.CertWordSN = vmVoucher.CertWordSN;
-                voucher.VoucherDate = vmVoucher.VoucherDate;
-                voucher.VoucherYear = voucher.VoucherDate.Year;
-                voucher.VoucherMonth = voucher.VoucherDate.Month;
-                voucher.PaymentTerms = string.Format("{0}年第{1}期", voucher.VoucherDate.Year, voucher.VoucherDate.Month);
+                voucher.VoucherYear = vmVoucher.VoucherDate.Year;
+                voucher.VoucherMonth = vmVoucher.VoucherDate.Month;
+                voucher.PaymentTerms = string.Format("{0}{1:D2}", voucher.VoucherYear, voucher.VoucherMonth);
                 voucher.InvoiceCount = vmVoucher.InvoiceCount;
 
                 foreach (VoucherDetailViewModel vd in vmVoucher.VoucherDetails)
@@ -178,10 +176,9 @@ namespace Sintoacct.Ledger.Services
                 //新增凭证
                 voucher.CertificateWord = _ledger.CertificateWords.Where(cw => cw.CwId == vmVoucher.CwId).FirstOrDefault();
                 voucher.CertWordSN = vmVoucher.CertWordSN;
-                voucher.VoucherDate = vmVoucher.VoucherDate;
-                voucher.VoucherYear = voucher.VoucherDate.Year;
-                voucher.VoucherMonth = voucher.VoucherDate.Month;
-                voucher.PaymentTerms = string.Format("{0}年第{1}期", voucher.VoucherDate.Year, voucher.VoucherDate.Month);
+                voucher.VoucherYear = vmVoucher.VoucherDate.Year;
+                voucher.VoucherMonth = vmVoucher.VoucherDate.Month;
+                voucher.PaymentTerms = string.Format("{0}{1:D2}", voucher.VoucherYear, voucher.VoucherMonth);
                 voucher.InvoiceCount = vmVoucher.InvoiceCount;
                 voucher.State = VoucherState.PaddingAudit;
                 voucher.AccountBook = _acctBook.GetCurrentBook();
@@ -352,7 +349,7 @@ namespace Sintoacct.Ledger.Services
                 {
                     SearchVoucherViewModel sv = new SearchVoucherViewModel();
                     sv.VId = v.VId;
-                    sv.VoucherDate = v.VoucherDate;
+                    sv.VoucherDate = v.CreateTime;
                     sv.CertWord = string.Format("{0}-{1}", v.CertificateWord.CertWord, v.CertWordSN);
                     sv.Abstract = vd.Abstract;
                     sv.Account = string.Format("{0}  {1}", vd.Account.AccCode, vd.Account.AccName); 

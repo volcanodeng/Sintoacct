@@ -27,25 +27,21 @@ namespace Sintoacct.Ledger.Models
         /// </summary>
         public int CertWordSN { get; set; }
 
-        /// <summary>
-        /// 凭证日期
-        /// </summary>
-        [Index(IsUnique =false)]
-        public DateTime VoucherDate { get; set; }
 
         /// <summary>
-        /// 凭证年份（查询用）
+        /// 凭证账期年份（查询用）
         /// </summary>
         public int VoucherYear { get; set; }
 
         /// <summary>
-        /// 凭证账期（查询用）
+        /// 凭证账期账期（查询用）
         /// </summary>
         public int VoucherMonth { get; set; }
 
         /// <summary>
         /// 账期（当前凭证所在月份）。
-        /// 根据凭证日期自动计算。
+        /// 根据VoucherYear和VoucherMonth自动计算。
+        /// 格式：201704
         /// </summary>
         [Required,MaxLength(20)]
         public string PaymentTerms { get; set; }
