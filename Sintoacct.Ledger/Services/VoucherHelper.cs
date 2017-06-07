@@ -39,7 +39,7 @@ namespace Sintoacct.Ledger.Services
         private int RecalculateAllAccount()
         {
             Guid abid = _cache.GetUserCache().AccountBookID;
-            //DateTime dt = new DateTime(DateTime.Now.Year, 1, 1);
+            
             var vouchers = _ledger.Vouchers.Where(v => v.AbId == abid && v.VoucherYear == DateTime.Now.Year)
                                    .Include(v => v.VoucherDetails)
                                    .Include("VoucherDetails.Account")

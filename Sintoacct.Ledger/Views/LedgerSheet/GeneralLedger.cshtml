@@ -23,16 +23,17 @@
 <body>
     <div class="easyui-layout" data-options="fit:true">
         <div data-options="region:'north',split:false,border:false" style="padding:10px;overflow:hidden;background-color:#F2F2F2;">
-            <input id="sv" label="明细账" panelWidth="350" panelHeight="400" />
+            <input id="sv" label="总账" panelWidth="350" panelHeight="400" />
         </div>
         <div data-options="region:'center',border:true" style="padding:10px;">
             <table class="easyui-datagrid" id="vvList"
                    data-options="fit:true,singleSelect:true,fitColumns:true,url:'/api/LedgerSheet/GetDetailSheet',method:'GET'">
                 <thead>
                     <tr>
-                        <th data-options="field:'VoucherDate',width:100,align:'center',formatter: fmtDate">日期</th>
-                        <th data-options="field:'CertWord',width:80">凭证字号</th>
-                        <th data-options="field:'Abstract',width:80">摘要</th>
+                        <th data-options="field:'AccCode',width:80">科目编码</th>
+                        <th data-options="field:'AccName',width:80">科目名称</th>
+                        <th data-options="field:'Period',width:80,align:'center'">期间</th>
+                        <th data-options="field:'Abstract',width:80,align:'center'">摘要</th>
                         <th data-options="field:'Debit',width:80,formatter:zeroFormatter">借方</th>
                         <th data-options="field:'Credit',width:80,formatter:zeroFormatter">贷方</th>
                         <th data-options="field:'Direction',width:80,align:'center'">方向</th>
@@ -40,9 +41,6 @@
                     </tr>
                 </thead>
             </table>
-        </div>
-        <div data-options="region:'east',border:true" style="padding:10px;width:300px;">
-            <ul id="quickSwitch" class="easyui-tree" data-options="method:'GET',url:'/api/LedgerSheet/GetMyAccountsInVoucher',onClick:onTreeClick"></ul>
         </div>
     </div>
 

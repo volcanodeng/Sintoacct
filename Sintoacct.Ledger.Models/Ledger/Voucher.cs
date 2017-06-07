@@ -31,11 +31,13 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 凭证账期年份（查询用）
         /// </summary>
+        [Index(IsUnique =false)]
         public int VoucherYear { get; set; }
 
         /// <summary>
         /// 凭证账期账期（查询用）
         /// </summary>
+        [Index(IsUnique =false)]
         public int VoucherMonth { get; set; }
 
         /// <summary>
@@ -43,7 +45,7 @@ namespace Sintoacct.Ledger.Models
         /// 根据VoucherYear和VoucherMonth自动计算。
         /// 格式：201704
         /// </summary>
-        [Required,MaxLength(20)]
+        [Required,MaxLength(20),Index(IsUnique =false)]
         public string PaymentTerms { get; set; }
 
         /// <summary>

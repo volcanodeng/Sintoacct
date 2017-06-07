@@ -15,8 +15,22 @@ namespace Sintoacct.Ledger.Controllers
 
         }
 
+        /// <summary>
+        /// 明细账
+        /// </summary>
+        /// <returns></returns>
         [ClaimsAuthorize("role", "accountant")]
         public ActionResult DetailAccount()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 总账
+        /// </summary>
+        /// <returns></returns>
+        [ClaimsAuthorize("role", "accountant")]
+        public ActionResult GeneralLedger()
         {
             return View();
         }

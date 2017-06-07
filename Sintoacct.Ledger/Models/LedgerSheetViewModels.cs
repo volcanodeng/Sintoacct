@@ -30,6 +30,8 @@ namespace Sintoacct.Ledger.Models
     /// </summary>
     public class GeneralLedgerViewModels
     {
+        public long AccId { get; set; }
+
         public string AccCode { get; set; }
 
         public string AccName { get; set; }

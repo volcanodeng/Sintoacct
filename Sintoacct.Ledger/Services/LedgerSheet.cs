@@ -166,8 +166,31 @@ namespace Sintoacct.Ledger.Services
             return sheets;
         }
 
-        public List<GeneralLedgerViewModels> GetGeneralLedger()
+        #endregion
+
+        #region 总账
+
+        public List<GeneralLedgerViewModels> GetGeneralLedger(SearchConditionViewModel condition)
         {
+            Guid abid = _cache.GetUserCache().AccountBookID;
+            string sql = "select a.AccId,a.AccCode,a.AccName,v.PaymentTerms," +
+                         "SUM(vd.Debit) as Debit,SUM(vd.Credit) as Credit,min(a.Direction) as Direction " +
+                         "from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
+                         "inner join T_Account a on vd.AccId=a.AccId " +
+                         string.Format("where v.AbId={0} ", Utility.ParameterNameString("abid"))+
+#warning 查询条件
+                         "group by a.AccId,a.AccCode,a.AccName,v.PaymentTerms " +
+                         "order by a.AccCode,v.PaymentTerms";
+
+            List<GeneralLedgerViewModels> genLedger = _ledger.Database.SqlQuery<GeneralLedgerViewModels>(sql, Utility.NewParameter("abid", abid)).ToList();
+
+            int s = Convert.ToInt32(condition.StartPeriod), e = Convert.ToInt32(condition.EndPeriod);
+            for (int j = s; j <= e; j++)
+                for (int i = 0; i < genLedger.Count(); i++)
+                {
+
+                }
+
             return new List<GeneralLedgerViewModels>();
         }
 
