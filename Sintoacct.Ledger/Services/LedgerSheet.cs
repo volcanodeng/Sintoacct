@@ -182,14 +182,17 @@ namespace Sintoacct.Ledger.Services
                          "group by a.AccId,a.AccCode,a.AccName,v.PaymentTerms " +
                          "order by a.AccCode,v.PaymentTerms";
 
+            string accSql = "select vd.AccId from  T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId "+
+                            string.Format("where v.AbId={0} group by vd.AccId", Utility.ParameterNameString("abid"));
+
             List<GeneralLedgerViewModels> genLedger = _ledger.Database.SqlQuery<GeneralLedgerViewModels>(sql, Utility.NewParameter("abid", abid)).ToList();
+            List<int> accids = _ledger.Database.SqlQuery<int>(accSql, Utility.NewParameter("abid", abid)).ToList();
 
             int s = Convert.ToInt32(condition.StartPeriod), e = Convert.ToInt32(condition.EndPeriod);
-            for (int j = s; j <= e; j++)
-                for (int i = 0; i < genLedger.Count(); i++)
-                {
-
-                }
+            for (int i = s; i <= e; i++)
+            {
+                
+            }
 
             return new List<GeneralLedgerViewModels>();
         }

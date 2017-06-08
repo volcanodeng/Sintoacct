@@ -67,6 +67,10 @@
     <Compile Include="Migrations\201706050931124_InitialCreate.Designer.cs">
       <DependentUpon>201706050931124_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706080851372_ModifyVoucher.cs" />
+    <Compile Include="Migrations\201706080851372_ModifyVoucher.Designer.cs">
+      <DependentUpon>201706080851372_ModifyVoucher.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Region.cs" />
@@ -78,6 +82,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201706050931124_InitialCreate.resx">
       <DependentUpon>201706050931124_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706080851372_ModifyVoucher.resx">
+      <DependentUpon>201706080851372_ModifyVoucher.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SQL\InitData.sql" />
   </ItemGroup>
