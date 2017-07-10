@@ -71,5 +71,23 @@ namespace Sintoacct.Ledger.Controllers.Api
 
             return Ok(dgSheet);
         }
+
+
+        [ClaimsAuthorize("role", "accountant")]
+        [HttpGet,HttpPost, Route("api/LedgerSheet/GetGeneralLedger")]
+        public IHttpActionResult GetGeneralLedger(SearchConditionViewModel condition)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                ResMessage.Fail(err);
+            }
+
+            List<GeneralLedgerViewModels> sheet = _sheet.GetGeneralLedger(condition);
+            DatagridViewModel<GeneralLedgerViewModels> dgSheet = new DatagridViewModel<GeneralLedgerViewModels>();
+            dgSheet.rows = sheet;
+
+            return Ok(dgSheet);
+        }
     }
 }

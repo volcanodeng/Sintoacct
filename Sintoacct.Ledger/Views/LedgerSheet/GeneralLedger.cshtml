@@ -27,7 +27,7 @@
         </div>
         <div data-options="region:'center',border:true" style="padding:10px;">
             <table class="easyui-datagrid" id="vvList"
-                   data-options="fit:true,singleSelect:true,fitColumns:true,url:'/api/LedgerSheet/GetDetailSheet',method:'GET'">
+                   data-options="fit:true,singleSelect:true,fitColumns:true">
                 <thead>
                     <tr>
                         <th data-options="field:'AccCode',width:80">科目编码</th>
@@ -54,7 +54,7 @@
 
             <div><span>凭证状态：</span><input class="easyui-combobox" name="VoucherState" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /></div>
 
-            <div style="width:100%;text-align:center;"><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#sForm').submit();" style="width:100px;">查询</a></div>
+            <div style="width:100%;text-align:center;"><a href="javascript:void(0)" id="btnSearch" class="easyui-linkbutton" onclick="javascript: $('#sForm').submit();" style="width:100px;">查询</a></div>
         </form>
     </div>
 
@@ -67,18 +67,26 @@
 
     $(function () {
         init();
+
+        window.setTimeout("$('#sForm').submit();",500);
     });
 
     function init()
     {
         $("#sForm").form({
-            url: "/api/voucher/viewVoucher/",
+            url: "/api/LedgerSheet/GetGeneralLedger/",
             onSubmit: formOnSubmit,
             success: formSuccess
         });
 
         $("#sv").combo();
         $('#searchPanel').appendTo($('#sv').combo('panel'));
+
+
+        $.get("/api/LedgerSheet/GetMyPaymentTerms", null, function (data) {
+            $("#StartPeriod").combobox("loadData", data);
+            $("#EndPeriod").combobox("loadData", data);
+        });
     }
 
     function formOnSubmit() {
@@ -86,7 +94,7 @@
     }
 
     function formSuccess(data) {
-
+        $("#vvList").datagrid("loadData", []);
         $("#vvList").datagrid("loadData", JSON.parse(data));
 
     }

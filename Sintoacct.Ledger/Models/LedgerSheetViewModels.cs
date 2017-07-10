@@ -44,8 +44,27 @@ namespace Sintoacct.Ledger.Models
 
         public decimal Credit { get; set; }
 
+        public decimal YtdDebit { get; set; }
+
+        public decimal YtdCredit { get; set; }
+
         public string Direction { get; set; }
 
         public decimal Balance { get; set; }
+
+        /// <summary>
+        /// 用于合并行的行索引
+        /// </summary>
+        public int MergeIndex { get; set; }
+
+        /// <summary>
+        /// 合并行的行数
+        /// </summary>
+        public int RowSpan { get; set; }
+
+        /// <summary>
+        /// 行排序专用，不显示在界面上
+        /// </summary>
+        public int Sort { get; set; }
     }
 }
