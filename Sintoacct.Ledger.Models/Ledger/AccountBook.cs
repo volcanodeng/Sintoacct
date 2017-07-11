@@ -19,7 +19,7 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 账套编号
         /// </summary>
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public Guid AbId { get; set; }
 
         /// <summary>

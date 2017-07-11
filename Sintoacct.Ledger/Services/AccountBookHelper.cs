@@ -96,6 +96,7 @@ namespace Sintoacct.Ledger.Services
             if (string.IsNullOrEmpty(acctBook.AbId))
             {
                 book = new AccountBook();
+                book.AbId = Guid.NewGuid();
                 book.Currency = acctBook.Currency;
                 book.StartYear = acctBook.StartYear;
                 book.StartPeriod = acctBook.StartPeriod;
