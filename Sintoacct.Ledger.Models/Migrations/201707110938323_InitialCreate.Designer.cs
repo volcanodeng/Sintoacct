@@ -7,13 +7,13 @@ namespace Sintoacct.Ledger.Models.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class ModifyAccountBook : IMigrationMetadata
+    public sealed partial class InitialCreate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ModifyAccountBook));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201707110913342_ModifyAccountBook"; }
+            get { return "201707110938323_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

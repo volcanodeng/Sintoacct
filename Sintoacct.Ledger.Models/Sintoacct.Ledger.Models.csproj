@@ -63,17 +63,9 @@
     <Compile Include="Company.cs" />
     <Compile Include="Ledger\UserBook.cs" />
     <Compile Include="LedgerContext.cs" />
-    <Compile Include="Migrations\201706050931124_InitialCreate.cs" />
-    <Compile Include="Migrations\201706050931124_InitialCreate.Designer.cs">
-      <DependentUpon>201706050931124_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201706080851372_ModifyVoucher.cs" />
-    <Compile Include="Migrations\201706080851372_ModifyVoucher.Designer.cs">
-      <DependentUpon>201706080851372_ModifyVoucher.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201707110913342_ModifyAccountBook.cs" />
-    <Compile Include="Migrations\201707110913342_ModifyAccountBook.Designer.cs">
-      <DependentUpon>201707110913342_ModifyAccountBook.cs</DependentUpon>
+    <Compile Include="Migrations\201707110938323_InitialCreate.cs" />
+    <Compile Include="Migrations\201707110938323_InitialCreate.Designer.cs">
+      <DependentUpon>201707110938323_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,14 +76,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201706050931124_InitialCreate.resx">
-      <DependentUpon>201706050931124_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201706080851372_ModifyVoucher.resx">
-      <DependentUpon>201706080851372_ModifyVoucher.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201707110913342_ModifyAccountBook.resx">
-      <DependentUpon>201707110913342_ModifyAccountBook.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201707110938323_InitialCreate.resx">
+      <DependentUpon>201707110938323_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SQL\InitData.sql" />
   </ItemGroup>

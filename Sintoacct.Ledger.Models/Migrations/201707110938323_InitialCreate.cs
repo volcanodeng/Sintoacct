@@ -23,7 +23,7 @@ namespace Sintoacct.Ledger.Models.Migrations
                 "dbo.T_Account_Book",
                 c => new
                     {
-                        AbId = c.Guid(nullable: false, identity: true),
+                        AbId = c.Guid(nullable: false),
                         Currency = c.String(maxLength: 10),
                         StartYear = c.Int(nullable: false),
                         StartPeriod = c.Int(nullable: false),
@@ -132,6 +132,9 @@ namespace Sintoacct.Ledger.Models.Migrations
                 .PrimaryKey(t => t.VId)
                 .ForeignKey("dbo.T_Account_Book", t => t.AbId, cascadeDelete: true)
                 .ForeignKey("dbo.T_Certificate_Word", t => t.CertificateWord_CwId)
+                .Index(t => t.VoucherYear)
+                .Index(t => t.VoucherMonth)
+                .Index(t => t.PaymentTerms)
                 .Index(t => t.AbId)
                 .Index(t => t.CertificateWord_CwId);
             
@@ -288,6 +291,9 @@ namespace Sintoacct.Ledger.Models.Migrations
             DropIndex("dbo.T_Certificate_Word", new[] { "AbId" });
             DropIndex("dbo.T_Voucher", new[] { "CertificateWord_CwId" });
             DropIndex("dbo.T_Voucher", new[] { "AbId" });
+            DropIndex("dbo.T_Voucher", new[] { "PaymentTerms" });
+            DropIndex("dbo.T_Voucher", new[] { "VoucherMonth" });
+            DropIndex("dbo.T_Voucher", new[] { "VoucherYear" });
             DropIndex("dbo.T_Voucher_Detail", new[] { "AccId" });
             DropIndex("dbo.T_Voucher_Detail", new[] { "VId" });
             DropIndex("dbo.T_Account", new[] { "AbId" });
