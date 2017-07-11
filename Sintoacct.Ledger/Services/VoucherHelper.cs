@@ -47,10 +47,18 @@ namespace Sintoacct.Ledger.Services
                                    .ToList();
 
             int period = 0,c=0;
+            List<long> accids = new List<long>(); 
             foreach(Voucher v in vouchers)
             {
                 foreach(VoucherDetail vd in v.VoucherDetails)
                 {
+                    if(!accids.Contains(vd.Account.AccId))
+                    {
+                        vd.Account.YtdCredit = 0;
+                        vd.Account.YtdDebit = 0;
+                        accids.Add(vd.Account.AccId);
+                    }
+
                     vd.InitialBalance = vd.Account.InitialBalance;
                     vd.InitialQuantity = vd.Account.InitialQuantity;
                     if (vd.Account.Direction == "借")
@@ -66,7 +74,7 @@ namespace Sintoacct.Ledger.Services
                         vd.YtdDebit = vd.Account.YtdDebit + vd.Debit * (-1);
                         vd.Account.YtdDebit = vd.YtdDebit;
 
-                        vd.YtdCredit = vd.Account.YtdCredit + vd.YtdCredit;
+                        vd.YtdCredit = vd.Account.YtdCredit + vd.Credit;
                         vd.Account.YtdCredit = vd.YtdCredit;
                     }
 
@@ -195,8 +203,18 @@ namespace Sintoacct.Ledger.Services
                     vDetail.AccountName = vDetail.Account.AccName;
                     vDetail.Quantity = vd.Quantity;
                     vDetail.Price = vd.Price;
-                    vDetail.Debit = vd.Debit;
-                    vDetail.Credit = vd.Credit;
+                    //vDetail.Debit = vd.Debit;
+                    //vDetail.Credit = vd.Credit;
+                    if (vDetail.Account.Direction == "借")
+                    {
+                        vDetail.Debit = vd.Debit;
+                        vDetail.Credit = vd.Credit * (-1);
+                    }
+                    else
+                    {
+                        vDetail.Debit = vd.Debit * (-1);
+                        vDetail.Credit = vd.Credit;
+                    }
 
                     vDetail.InitialBalance = vDetail.Account.InitialBalance;
                     vDetail.InitialQuantity = vDetail.Account.InitialQuantity;

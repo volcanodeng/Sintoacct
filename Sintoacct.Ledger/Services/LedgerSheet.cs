@@ -190,7 +190,7 @@ namespace Sintoacct.Ledger.Services
 
             List<GeneralLedgerViewModels> genLedger = _ledger.Database.SqlQuery<GeneralLedgerViewModels>(sql, Utility.NewParameter("abid", abid), Utility.NewParameter("start", condition.StartPeriod), Utility.NewParameter("end", condition.EndPeriod)).ToList();
             //List<long> accids = _ledger.Database.SqlQuery<long>(accSql, Utility.NewParameter("abid", abid)).ToList();
-
+            List<GeneralLedgerViewModels> genList = new List<GeneralLedgerViewModels>();
             for(int i = 0;i<genLedger.Count;i++)
             {
                 if(genLedger[i].Period==condition.StartPeriod)
@@ -206,22 +206,48 @@ namespace Sintoacct.Ledger.Services
                     glInitBalance.Balance = genLedger[i].Balance;
                     glInitBalance.Direction = (glInitBalance.Balance == 0 ? "平" : genLedger[i].Direction);
                     glInitBalance.Sort = 1;
-                    genLedger.Add(glInitBalance);
+                    genList.Add(glInitBalance);
+                    glInitBalance.MergeIndex = genList.Count - 1;
+                    glInitBalance.RowSpan = 3;
 
                     genLedger[i].Sort = 2;
+                    genList.Add(genLedger[i]);
 
                     GeneralLedgerViewModels ytdBalance = new GeneralLedgerViewModels();
                     ytdBalance.AccId = genLedger[i].AccId;
                     ytdBalance.AccCode = genLedger[i].AccCode;
                     ytdBalance.AccName = genLedger[i].AccName;
+                    ytdBalance.Period = genLedger[i].Period;
+                    ytdBalance.Abstract = "本年累计";
+                    ytdBalance.Debit = genLedger[i].YtdDebit;
+                    ytdBalance.Credit = genLedger[i].YtdCredit;
+                    ytdBalance.Direction = genLedger[i].Direction;
+                    ytdBalance.Sort = 3;
+                    genList.Add(ytdBalance);
                 }
                 else
                 {
+                    genLedger[i].Sort = 2;
+                    genList.Add(genLedger[i]);
 
+                    GeneralLedgerViewModels ytdBalance = new GeneralLedgerViewModels();
+                    ytdBalance.AccId = genLedger[i].AccId;
+                    ytdBalance.AccCode = genLedger[i].AccCode;
+                    ytdBalance.AccName = genLedger[i].AccName;
+                    ytdBalance.Period = genLedger[i].Period;
+                    ytdBalance.Abstract = "本年累计";
+                    ytdBalance.Debit = genLedger[i].YtdDebit;
+                    ytdBalance.Credit = genLedger[i].YtdCredit;
+                    ytdBalance.Direction = genLedger[i].Direction;
+                    ytdBalance.Sort = 3;
+                    genList.Add(ytdBalance);
+
+                    var accFirst = genList.Where(gl => gl.AccId == genLedger[i].AccId && gl.Abstract == "期初余额").FirstOrDefault();
+                    if (accFirst != null) accFirst.RowSpan += 2;
                 }
             }
 
-            return genLedger;
+            return genList;
         }
 
         #endregion
