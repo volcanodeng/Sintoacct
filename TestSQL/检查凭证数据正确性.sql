@@ -19,4 +19,8 @@ select v.[VoucherYear]
       ,vd.[YtdBeginBalanceQuantity]
       ,vd.[YtdBeginBalance]
 from dbo.T_Voucher v,dbo.T_Voucher_Detail vd
-where v.VId=vd.VId and v.AbId=''
+where v.VId=vd.VId and v.AbId='81084FA8-0D66-E711-826E-9C5C8E79F58D'
+
+
+
+select * from dbo.T_Account where AccId in (550,582,551,583)
