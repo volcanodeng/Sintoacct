@@ -170,6 +170,22 @@ namespace Sintoacct.Ledger.Services
 
         #region 总账
 
+        private decimal CalBalance(GeneralLedgerViewModels genLedger)
+        {
+            decimal bal = 0;
+            if(genLedger.Direction=="借")
+            {
+                bal += (genLedger.Debit - genLedger.Credit);
+            }
+
+            if (genLedger.Direction == "贷")
+            {
+                bal += (genLedger.Credit - genLedger.Debit);
+            }
+
+            return bal;
+        }
+
         public List<GeneralLedgerViewModels> GetGeneralLedger(SearchConditionViewModel condition)
         {
             Guid abid = _cache.GetUserCache().AccountBookID;
@@ -184,16 +200,19 @@ namespace Sintoacct.Ledger.Services
 #warning 查询条件
                          "group by a.AccId,a.AccCode,a.AccName,v.PaymentTerms " +
                          "order by a.AccCode,v.PaymentTerms";
-
-            //string accSql = "select  vd.AccId from  T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
-            //                string.Format("where v.AbId={0} group by vd.AccId ", Utility.ParameterNameString("abid"));
-
             List<GeneralLedgerViewModels> genLedger = _ledger.Database.SqlQuery<GeneralLedgerViewModels>(sql, Utility.NewParameter("abid", abid), Utility.NewParameter("start", condition.StartPeriod), Utility.NewParameter("end", condition.EndPeriod)).ToList();
-            //List<long> accids = _ledger.Database.SqlQuery<long>(accSql, Utility.NewParameter("abid", abid)).ToList();
+            
             List<GeneralLedgerViewModels> genList = new List<GeneralLedgerViewModels>();
-            for(int i = 0;i<genLedger.Count;i++)
+            decimal varBalance = 0;
+            for (int i = 0; i < genLedger.Count; i++)
             {
-                if(genLedger[i].Period==condition.StartPeriod)
+                if(!genList.Any(gl=>gl.AccId==genLedger[i].AccId))
+                {
+                    varBalance = 0;
+                }
+
+                if (genLedger[i].Period == condition.StartPeriod ||
+                    !genList.Any(gl => gl.AccId == genLedger[i].AccId && gl.Abstract == "期初余额"))
                 {
                     GeneralLedgerViewModels glInitBalance = new GeneralLedgerViewModels();
                     glInitBalance.AccId = genLedger[i].AccId;
@@ -209,9 +228,12 @@ namespace Sintoacct.Ledger.Services
                     genList.Add(glInitBalance);
                     glInitBalance.MergeIndex = genList.Count - 1;
                     glInitBalance.RowSpan = 3;
+                    varBalance = glInitBalance.Balance;
 
                     genLedger[i].Sort = 2;
                     genList.Add(genLedger[i]);
+                    varBalance += this.CalBalance(genLedger[i]);
+                    genLedger[i].Balance = varBalance;
 
                     GeneralLedgerViewModels ytdBalance = new GeneralLedgerViewModels();
                     ytdBalance.AccId = genLedger[i].AccId;
@@ -222,13 +244,17 @@ namespace Sintoacct.Ledger.Services
                     ytdBalance.Debit = genLedger[i].YtdDebit;
                     ytdBalance.Credit = genLedger[i].YtdCredit;
                     ytdBalance.Direction = genLedger[i].Direction;
+                    ytdBalance.Balance = varBalance;
                     ytdBalance.Sort = 3;
                     genList.Add(ytdBalance);
+                    
                 }
                 else
                 {
                     genLedger[i].Sort = 2;
                     genList.Add(genLedger[i]);
+                    varBalance += this.CalBalance(genLedger[i]);
+                    genLedger[i].Balance = varBalance;
 
                     GeneralLedgerViewModels ytdBalance = new GeneralLedgerViewModels();
                     ytdBalance.AccId = genLedger[i].AccId;
@@ -239,6 +265,7 @@ namespace Sintoacct.Ledger.Services
                     ytdBalance.Debit = genLedger[i].YtdDebit;
                     ytdBalance.Credit = genLedger[i].YtdCredit;
                     ytdBalance.Direction = genLedger[i].Direction;
+                    ytdBalance.Balance = varBalance;
                     ytdBalance.Sort = 3;
                     genList.Add(ytdBalance);
 

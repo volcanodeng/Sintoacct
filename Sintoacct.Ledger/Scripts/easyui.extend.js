@@ -211,6 +211,8 @@ function responseHandle(data) {
     if (data == null) return false;
     if (typeof data != "object") data = JSON.parse(data);
 
+    if (data.IsSuccess == undefined) return true;
+
     if (!data.IsSuccess) {
         $.messager.alert("操作结果", data.message, "warning");
         return false;

@@ -43,7 +43,7 @@ namespace Sintoacct.Ledger.Services
             var vouchers = _ledger.Vouchers.Where(v => v.AbId == abid && v.VoucherYear == DateTime.Now.Year)
                                    .Include(v => v.VoucherDetails)
                                    .Include("VoucherDetails.Account")
-                                   .OrderBy(v=>v.VId)
+                                   .OrderBy(v=>v.VoucherYear).ThenBy(v=>v.VoucherMonth)
                                    .ToList();
 
             int period = 0,c=0;

@@ -67,8 +67,6 @@
 
     $(function () {
         init();
-
-        window.setTimeout("$('#sForm').submit();",500);
     });
 
     function init()
@@ -94,9 +92,10 @@
     }
 
     function formSuccess(data) {
-        $("#vvList").datagrid("loadData", []);
-        $("#vvList").datagrid("loadData", JSON.parse(data));
-
+        if (responseHandle(data)) {
+            $("#vvList").datagrid("loadData", []);
+            $("#vvList").datagrid("loadData", JSON.parse(data));
+        }
     }
 
     function onTreeClick(node)

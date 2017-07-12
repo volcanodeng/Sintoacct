@@ -83,6 +83,11 @@ namespace Sintoacct.Ledger.Controllers.Api
                 ResMessage.Fail(err);
             }
 
+            if(string.IsNullOrEmpty( condition.StartPeriod) || string.IsNullOrEmpty(condition.EndPeriod))
+            {
+                ResMessage.Fail("会计期间不能为空");
+            }
+
             List<GeneralLedgerViewModels> sheet = _sheet.GetGeneralLedger(condition);
             DatagridViewModel<GeneralLedgerViewModels> dgSheet = new DatagridViewModel<GeneralLedgerViewModels>();
             dgSheet.rows = sheet;
