@@ -65,7 +65,7 @@ namespace Sintoacct.Ledger.Services
         public List<DetailSheetViewModels> GetDetailSheet(long accid)
         {
             Guid abid = _cache.GetUserCache().AccountBookID;
-            string sql = "select v.[CreateTime],cw.CertWord+'-'+CONVERT(nvarchar(10),v.certwordsn) as CertWord,vd.Abstract,vd.Debit,vd.Credit,a.Direction " +
+            string sql = "select v.[CreateTime] as VoucherDate,cw.CertWord+'-'+CONVERT(nvarchar(10),v.certwordsn) as CertWord,vd.Abstract,vd.Debit,vd.Credit,a.Direction " +
                          "from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
                          "left join T_Certificate_Word cw on v.CertificateWord_CwId=cw.CwId " +
                          "left join T_Account a on a.AccId=vd.AccId " +
@@ -112,6 +112,7 @@ namespace Sintoacct.Ledger.Services
                 balanceM += (sheets[i].Direction == "借" ? sheets[i].Debit- sheets[i].Credit : sheets[i].Credit- sheets[i].Debit);
                 balanceY += (sheets[i].Direction == "借" ? sheets[i].Debit- sheets[i].Credit : sheets[i].Credit- sheets[i].Debit);
                 sheets[i].Balance = balanceM;
+                sheets[i].VoucherDate = new DateTime(sheets[i].VoucherDate.Year, sheets[i].VoucherDate.Month, DateTime.DaysInMonth(sheets[i].VoucherDate.Year, sheets[i].VoucherDate.Month));
             }
 
             //第一行加入期初余额
