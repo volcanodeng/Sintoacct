@@ -615,4 +615,18 @@ namespace Sintoacct.Ledger.Models
         /// </summary>
         public int RowSpan { get; set; }
     }
+
+    /// <summary>
+    /// LedgerController.Voucher()的视图模型
+    /// </summary>
+    public class VoucherActionViewModel
+    {
+        public CertificateWord CertWord { get; set; }
+
+        public string VouchersJson { get; set; }
+
+        public string AbstractsJson { get; set; }
+
+        public string AccountsJson { get; set; }
+    }
 }

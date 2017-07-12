@@ -63,7 +63,8 @@
             <div class="easyui-panel" style="width:1200px;padding:20px;">
                 <div class="mod-toolbar-top">
                     <div class="left">
-                        <a class="easyui-linkbutton" id="add" onclick="addVoucher()">新增</a>
+                        <a class="easyui-linkbutton" id="addVoucher" onclick="addVoucher()">新增凭证</a>
+                        <a class="easyui-linkbutton" id="addRec" onclick="addRec()">新增记录</a>
                         <a class="easyui-linkbutton" id="edit" onclick="saveVoucher()">保存</a>
                         <a class="easyui-linkbutton" id="print">打印</a>
                         <a class="easyui-linkbutton" id="audit" onclick="reviewVoucher()">审核</a>
@@ -154,12 +155,12 @@
 
         //全局定义
         var globVar = {
-            voucher: null,                  //凭证数据
-            voucherIndex: -1,               //当前凭证实例在集合中的索引
-            vTable: "#voucherTab",          //凭证列表名称
-            cache: "#dataCache",            //缓存div容器
-            abstractData: null,             //摘要数据
-            accountData: null               //科目数据
+            voucher: @Html.Raw( Model.VouchersJson),                  //凭证数据
+            voucherIndex: -1,                              //当前凭证实例在集合中的索引
+            vTable: "#voucherTab",                         //凭证列表名称
+            cache: "#dataCache",                           //缓存div容器
+            abstractData: @Html.Raw( Model.AbstractsJson),            //摘要数据
+            accountData: @Html.Raw( Model.AccountsJson),               //科目数据
         };
 
         //======初始化=======
@@ -183,17 +184,17 @@
 
             $(globVar.vTable).datagrid('acceptChanges');
 
-            $.get("/api/voucher/myAbstracts/", null, function (data) {
-                globVar.abstractData = data;
-            });
+            //$.get("/api/voucher/myAbstracts/", null, function (data) {
+            //    globVar.abstractData = data;
+            //});
 
-            $.get("/api/acctbook/accTreeOfCate", { acctCateId: 0 }, function (data) {
-                globVar.accountData = data;
-            });
+            //$.get("/api/acctbook/accTreeOfCate", { acctCateId: 0 }, function (data) {
+            //    globVar.accountData = data;
+            //});
 
-            $.get("/api/voucher/myVouchers", null, function (data) {
-                globVar.voucher = data;
-            });
+            //$.get("/api/voucher/myVouchers", null, function (data) {
+            //    globVar.voucher = data;
+            //});
         }
 
         function newVoucher()
@@ -317,7 +318,7 @@
             }
 
             var selCertWord = $("#cw").combobox("getValue");
-            if (!selCertWord) selCertWord = "@Model.CwId";
+            if (!selCertWord) selCertWord = "@Model.CertWord.CwId";
             $.get("/api/voucher/GetNewCertWordSn", { vDate: newValue, cwId: selCertWord }, function (data) {
                 $("#ss").numberspinner("setValue",data);
             });
@@ -350,9 +351,27 @@
                     });
             }
         }
-        function addVoucher() {
+        function addVoucher()
+        {
+            var rows = $(globVar.vTable).datagrid('getRows');
+            for (var i = rows.length-1; i >=0 ; i--) $(globVar.vTable).datagrid('deleteRow',i);
+
+            initData();
+        }
+        function addRec() {
             if (endEditing()) {
-                $(globVar.vTable).datagrid('appendRow', { VId: $("#VId").val(), VdId:0, Abstract: "", AccId: "", AccountCode: "", Quantity: 0, Price: 0, AccountName: "", Debit: 0, Credit: 0 });
+                $(globVar.vTable).datagrid('appendRow', { 
+                    VId: $("#VId").val(), 
+                    VdId:0, 
+                    Abstract: "",
+                    AccId: "", 
+                    AccountCode: "", 
+                    Quantity: 0, 
+                    Price: 0, 
+                    AccountName: "",
+                    Debit: 0, 
+                    Credit: 0 
+                });
 
             }
         }

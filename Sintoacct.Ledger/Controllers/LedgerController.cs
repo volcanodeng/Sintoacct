@@ -7,6 +7,7 @@ using Sintoacct.Ledger.Models;
 using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
 using AutoMapper;
+using Newtonsoft.Json;
 
 namespace Sintoacct.Ledger.Controllers
 {
@@ -17,18 +18,21 @@ namespace Sintoacct.Ledger.Controllers
         private readonly IAuxiliaryHelper _auxiliary;
         private readonly IAccountHelper _account;
         private readonly ICertificateWordHelper _certWord;
+        private readonly IVoucherHelper _voucher;
 
         public LedgerController(HttpContextBase context,
                                 ICacheHelper cache,
                                 IAuxiliaryHelper auxiliary,
                                 IAccountHelper account,
-                                ICertificateWordHelper certWord)
+                                ICertificateWordHelper certWord,
+                                IVoucherHelper voucher)
         {
             _identity = context.User.Identity as ClaimsIdentity;
             _cache = cache;
             _auxiliary = auxiliary;
             _account = account;
             _certWord = certWord;
+            _voucher = voucher;
         }
 
 
@@ -109,8 +113,12 @@ namespace Sintoacct.Ledger.Controllers
         [ClaimsAuthorize("role", "accountant")]
         public ActionResult Voucher()
         {
-            CertificateWord defaultCertWord = _certWord.GetDefault();
-            return View(defaultCertWord);
+            VoucherActionViewModel model = new VoucherActionViewModel();
+            model.CertWord = _certWord.GetDefault();
+            model.VouchersJson = JsonConvert.SerializeObject( Mapper.Map<List<VoucherViewModel>>(_voucher.GetMyUnauditVouchers(10)));
+            model.AbstractsJson =JsonConvert.SerializeObject( Mapper.Map<List<AbstractViewModel>>(_voucher.GetMyAbstracts()));
+            model.AccountsJson = JsonConvert.SerializeObject( _account.GetAccountTree().children);
+            return View(model);
         }
 
         [ClaimsAuthorize("role", "accountant")]
