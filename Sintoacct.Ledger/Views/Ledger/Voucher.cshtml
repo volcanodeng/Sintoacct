@@ -63,7 +63,7 @@
             <div class="easyui-panel" style="width:1200px;padding:20px;">
                 <div class="mod-toolbar-top">
                     <div class="left">
-                        <a class="easyui-linkbutton" id="addVoucher" onclick="addVoucher()">新增凭证</a>
+                        <a class="easyui-linkbutton" id="addVoucher" onclick="newVoucher()">新增凭证</a>
                         <a class="easyui-linkbutton" id="addRec" onclick="addRec()">新增记录</a>
                         <a class="easyui-linkbutton" id="edit" onclick="saveVoucher()">保存</a>
                         <a class="easyui-linkbutton" id="print">打印</a>
@@ -351,13 +351,7 @@
                     });
             }
         }
-        function addVoucher()
-        {
-            var rows = $(globVar.vTable).datagrid('getRows');
-            for (var i = rows.length-1; i >=0 ; i--) $(globVar.vTable).datagrid('deleteRow',i);
-
-            initData();
-        }
+        
         function addRec() {
             if (endEditing()) {
                 $(globVar.vTable).datagrid('appendRow', { 

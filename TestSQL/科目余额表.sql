@@ -20,26 +20,26 @@ order by MIN(a.AccCode)
 
 
 
-select vd.AccountCode,vd.AccountName,
+select vd.AccountCode,vd.AccountName,'init',
 case  a.Direction when '½è' then SUM(vd.Debit-vd.Credit) when '´û' then SUM(vd.Credit-vd.Debit) end 
 from T_Voucher v,T_Voucher_Detail vd,T_Account a 
 where v.VId=vd.VId and vd.AccId=a.AccId
   and v.AbId='81084FA8-0D66-E711-826E-9C5C8E79F58D' 
-  and v.VoucherYear=2017 and v.VoucherMonth<6
+  and v.VoucherYear=2017 and v.VoucherMonth<7
   group by vd.AccId,vd.AccountCode,vd.AccountName,a.Direction
-union
-select vd.AccountCode,vd.AccountName,
+union all
+select vd.AccountCode,vd.AccountName,'cur',
 case  a.Direction when '½è' then SUM(vd.Debit-vd.Credit) when '´û' then SUM(vd.Credit-vd.Debit) end
 from T_Voucher v,T_Voucher_Detail vd,T_Account a
 where v.VId=vd.VId and vd.AccId=a.AccId 
 and v.AbId='81084FA8-0D66-E711-826E-9C5C8E79F58D'
-and v.[VoucherYear]=2017 and v.VoucherMonth >=6 and v.VoucherMonth<=7
+and v.[VoucherYear]=2017 and v.VoucherMonth >=7 and v.VoucherMonth<=8
 group by vd.AccId,vd.AccountCode,vd.AccountName,a.Direction
-union
-select vd.AccountCode,vd.AccountName,
+union all
+select vd.AccountCode,vd.AccountName,'yearly',
 case  a.Direction when '½è' then SUM(vd.Debit-vd.Credit) when '´û' then SUM(vd.Credit-vd.Debit) end 
 from T_Voucher v,T_Voucher_Detail vd,T_Account a 
 where v.VId=vd.VId and vd.AccId=a.AccId
   and v.AbId='81084FA8-0D66-E711-826E-9C5C8E79F58D' 
-  and v.VoucherYear=2017 and v.VoucherMonth<=7
+  and v.VoucherYear=2017 and v.VoucherMonth<=8
   group by vd.AccId,vd.AccountCode,vd.AccountName,a.Direction

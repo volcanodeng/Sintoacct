@@ -134,6 +134,7 @@ namespace Sintoacct.Ledger.Services
                 voucher.CertWordSN = vmVoucher.CertWordSN;
                 voucher.VoucherYear = vmVoucher.VoucherDate.Year;
                 voucher.VoucherMonth = vmVoucher.VoucherDate.Month;
+                voucher.VoucherDate = vmVoucher.VoucherDate;
                 voucher.PaymentTerms = string.Format("{0}{1:D2}", voucher.VoucherYear, voucher.VoucherMonth);
                 voucher.InvoiceCount = vmVoucher.InvoiceCount;
 
@@ -186,6 +187,7 @@ namespace Sintoacct.Ledger.Services
                 voucher.CertWordSN = vmVoucher.CertWordSN;
                 voucher.VoucherYear = vmVoucher.VoucherDate.Year;
                 voucher.VoucherMonth = vmVoucher.VoucherDate.Month;
+                voucher.VoucherDate = vmVoucher.VoucherDate;
                 voucher.PaymentTerms = string.Format("{0}{1:D2}", voucher.VoucherYear, voucher.VoucherMonth);
                 voucher.InvoiceCount = vmVoucher.InvoiceCount;
                 voucher.State = VoucherState.PaddingAudit;

@@ -27,6 +27,12 @@ namespace Sintoacct.Ledger.Models
         /// </summary>
         public int CertWordSN { get; set; }
 
+        /// <summary>
+        /// 凭证时间。
+        /// 与录单时间不同，凭证时间决定凭证所在月份。
+        /// </summary>
+        public DateTime VoucherDate { get; set; }
+
 
         /// <summary>
         /// 凭证账期年份（查询用）
