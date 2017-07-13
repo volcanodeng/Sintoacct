@@ -67,4 +67,30 @@ namespace Sintoacct.Ledger.Models
         /// </summary>
         public int Sort { get; set; }
     }
+
+    /// <summary>
+    /// 科目余额表
+    /// </summary>
+    public class AccountBalanceViewModels
+    {
+        public string AccountCode { get; set; }
+
+        public string AccountName { get; set; }
+
+        public decimal InitDebit { get; set; }
+
+        public decimal InitCredit { get; set; }
+
+        public decimal CurOccurrenceDebit { get; set; }
+
+        public decimal CurOccurrenceCredit { get; set; }
+
+        public decimal YtdDebit { get; set; }
+
+        public decimal YtdCredit { get; set; }
+
+        public decimal DebitBalance { get; set; }
+
+        public decimal CreditBalance { get; set; }
+    }
 }

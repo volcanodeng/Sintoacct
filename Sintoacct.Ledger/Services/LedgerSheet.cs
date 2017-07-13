@@ -279,6 +279,81 @@ namespace Sintoacct.Ledger.Services
         }
 
         #endregion
+
+        #region 科目余额表
+
+        public List<AccountBalanceViewModels> GetAccountBalance(SearchConditionViewModel condition)
+        {
+            Guid abid = _cache.GetUserCache().AccountBookID;
+            string initBalance = "select vd.AccountCode,vd.AccountName,'init' as Period,a.Direction," +
+                                 "case  a.Direction when '借' then SUM(vd.Debit - vd.Credit) when '贷' then SUM(vd.Credit - vd.Debit) end as Balance "+
+                                 "from T_Voucher v, T_Voucher_Detail vd, T_Account a "+
+                                 "where v.VId = vd.VId and vd.AccId = a.AccId "+
+                                 string.Format("and v.AbId = {0} ", Utility.ParameterNameString("abid")) +
+                                 string.Format("and v.VoucherYear = {0} and v.VoucherMonth < {1} ", Utility.ParameterNameString("year"), Utility.ParameterNameString("minmonth")) +
+                                 "group by vd.AccId, vd.AccountCode, vd.AccountName, a.Direction ";
+
+            string curBalance = "select vd.AccountCode,vd.AccountName,'cur' as Period,a.Direction," +
+                                "case  a.Direction when '借' then SUM(vd.Debit - vd.Credit) when '贷' then SUM(vd.Credit - vd.Debit) end as Balance "+
+                                "from T_Voucher v, T_Voucher_Detail vd, T_Account a "+
+                                "where v.VId = vd.VId and vd.AccId = a.AccId "+
+                                string.Format("and v.AbId = {0} ", Utility.ParameterNameString("abid")) +
+                                string.Format("and v.[VoucherYear] = {0} and v.VoucherMonth >= {1} and v.VoucherMonth <= {2} ", Utility.ParameterNameString("year"), Utility.ParameterNameString("minmonth"), Utility.ParameterNameString("maxmonth")) +
+                                "group by vd.AccId, vd.AccountCode, vd.AccountName, a.Direction";
+
+            string ytdBalance = "select vd.AccountCode,vd.AccountName,'yearly' as Period,a.Direction," +
+                                "case  a.Direction when '借' then SUM(vd.Debit - vd.Credit) when '贷' then SUM(vd.Credit - vd.Debit) end as Balance " +
+                                "from T_Voucher v, T_Voucher_Detail vd, T_Account a " +
+                                "where v.VId = vd.VId and vd.AccId = a.AccId " +
+                                string.Format("and v.AbId = {0} ", Utility.ParameterNameString("abid")) +
+                                string.Format("and v.[VoucherYear] = {0} and v.VoucherMonth <= {1} ", Utility.ParameterNameString("year"),  Utility.ParameterNameString("maxmonth")) +
+                                "group by vd.AccId, vd.AccountCode, vd.AccountName, a.Direction";
+
+            object[] parames = new object[] {
+                Utility.NewParameter("abid", abid),
+                Utility.NewParameter("year", condition.StartPeriod.Substring(0,4)),
+                Utility.NewParameter("minmonth", condition.StartPeriod.Substring(3)),
+                Utility.NewParameter("maxmonth", condition.EndPeriod.Substring(3))
+            };
+
+            List<AccountBalanceModel> accBalances = _ledger.Database.SqlQuery<AccountBalanceModel>(initBalance,parames).ToList();
+            accBalances.AddRange(_ledger.Database.SqlQuery<AccountBalanceModel>(curBalance, parames).ToList());
+            accBalances.AddRange(_ledger.Database.SqlQuery<AccountBalanceModel>(ytdBalance, parames).ToList());
+
+            List<AccountBalanceViewModels> abViewModels = new List<AccountBalanceViewModels>();
+            foreach(AccountBalanceModel ab in accBalances)
+            {
+                AccountBalanceViewModels abRow = abViewModels.Where(abvm => abvm.AccountCode == ab.AccountCode).FirstOrDefault();
+                if(abRow == null)
+                {
+                    abRow = new AccountBalanceViewModels();
+                    abRow.AccountCode = ab.AccountCode;
+                    abRow.AccountName = ab.AccountName;
+                    abViewModels.Add(abRow);
+                }
+
+                switch(ab.Period)
+                {
+                    case "init":
+                        if (ab.Direction == "借") abRow.InitDebit = ab.Balance;
+                        if (ab.Direction == "贷") abRow.InitCredit = ab.Balance;
+                        break;
+                    case "cur":
+                        if (ab.Direction == "借") abRow.CurOccurrenceDebit = ab.Balance;
+                        if (ab.Direction == "贷") abRow.CurOccurrenceCredit = ab.Balance;
+                        break;
+                    case "yearly":
+                        if (ab.Direction == "借") abRow.YtdDebit = ab.Balance;
+                        if (ab.Direction == "贷") abRow.YtdCredit = ab.Balance;
+                        break;
+                }
+
+            }
+
+            return abViewModels;
+        }
+
+        #endregion
     }
 
     public interface ILedgerSheet : IDependency
@@ -290,5 +365,18 @@ namespace Sintoacct.Ledger.Services
         List<DetailSheetViewModels> GetDetailSheet(long accid);
 
         List<GeneralLedgerViewModels> GetGeneralLedger(SearchConditionViewModel condition);
+    }
+
+    public class AccountBalanceModel
+    {
+        public string AccountCode { get; set; }
+
+        public string AccountName { get; set; }
+
+        public string Period { get; set; }
+
+        public string Direction { get; set; }
+
+        public decimal Balance { get; set; }
     }
 }

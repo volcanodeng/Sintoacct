@@ -20,8 +20,8 @@ order by MIN(a.AccCode)
 
 
 
-select vd.AccountCode,vd.AccountName,'init',
-case  a.Direction when '½è' then SUM(vd.Debit-vd.Credit) when '´û' then SUM(vd.Credit-vd.Debit) end 
+select vd.AccountCode,vd.AccountName,'init' as period,
+case  a.Direction when '½è' then SUM(vd.Debit-vd.Credit) when '´û' then SUM(vd.Credit-vd.Debit) end as balance
 from T_Voucher v,T_Voucher_Detail vd,T_Account a 
 where v.VId=vd.VId and vd.AccId=a.AccId
   and v.AbId='81084FA8-0D66-E711-826E-9C5C8E79F58D' 
