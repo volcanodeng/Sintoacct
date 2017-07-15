@@ -312,13 +312,13 @@ namespace Sintoacct.Ledger.Services
             object[] parames = new object[] {
                 Utility.NewParameter("abid", abid),
                 Utility.NewParameter("year", condition.StartPeriod.Substring(0,4)),
-                Utility.NewParameter("minmonth", condition.StartPeriod.Substring(3)),
-                Utility.NewParameter("maxmonth", condition.EndPeriod.Substring(3))
+                Utility.NewParameter("minmonth", condition.StartPeriod.Substring(4)),
+                Utility.NewParameter("maxmonth", condition.EndPeriod.Substring(4))
             };
 
             List<AccountBalanceModel> accBalances = _ledger.Database.SqlQuery<AccountBalanceModel>(initBalance,parames).ToList();
-            accBalances.AddRange(_ledger.Database.SqlQuery<AccountBalanceModel>(curBalance, parames).ToList());
-            accBalances.AddRange(_ledger.Database.SqlQuery<AccountBalanceModel>(ytdBalance, parames).ToList());
+            accBalances.AddRange(_ledger.Database.SqlQuery<AccountBalanceModel>(curBalance,parames.Select(p=>((ICloneable)p).Clone()).ToArray()).ToList());
+            accBalances.AddRange(_ledger.Database.SqlQuery<AccountBalanceModel>(ytdBalance, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList());
 
             List<AccountBalanceViewModels> abViewModels = new List<AccountBalanceViewModels>();
             foreach(AccountBalanceModel ab in accBalances)
@@ -365,6 +365,8 @@ namespace Sintoacct.Ledger.Services
         List<DetailSheetViewModels> GetDetailSheet(long accid);
 
         List<GeneralLedgerViewModels> GetGeneralLedger(SearchConditionViewModel condition);
+
+        List<AccountBalanceViewModels> GetAccountBalance(SearchConditionViewModel condition);
     }
 
     public class AccountBalanceModel

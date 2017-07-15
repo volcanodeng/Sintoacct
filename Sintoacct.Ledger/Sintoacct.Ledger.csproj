@@ -372,6 +372,7 @@
     <Content Include="Views\Ledger\ViewVoucher.cshtml" />
     <Content Include="Views\LedgerSheet\DetailAccount.cshtml" />
     <Content Include="Views\LedgerSheet\GeneralLedger.cshtml" />
+    <Content Include="Views\LedgerSheet\AccountBalance.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

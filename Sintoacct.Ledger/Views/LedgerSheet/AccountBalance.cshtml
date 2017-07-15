@@ -14,7 +14,7 @@
             padding: 5px;
         }
 
-        
+       
 
         .datagrid-header-row td div{
             text-align: center !important;
@@ -46,14 +46,23 @@
                    data-options="fit:true,singleSelect:true,fitColumns:true,onLoadSuccess:onLoadSuccess">
                 <thead>
                     <tr>
-                        <th data-options="field:'AccCode',width:50,align:'center'">科目编码</th>
-                        <th data-options="field:'AccName',width:150,align:'center'">科目名称</th>
-                        <th data-options="field:'Period',width:80,align:'center'">期间</th>
-                        <th data-options="field:'Abstract',width:60,align:'center'">摘要</th>
-                        <th data-options="field:'Debit',width:60,formatter:zeroFormatter,align:'right'">借方</th>
-                        <th data-options="field:'Credit',width:60,formatter:zeroFormatter,align:'right'">贷方</th>
-                        <th data-options="field:'Direction',width:40,align:'center'">方向</th>
-                        <th data-options="field:'Balance',width:60,align:'right',formatter:zeroFormatter">余额</th>
+                    <th data-options="field:'AccountCode',width:50,align:'center'" rowspan="2">科目编码</th>
+                    <th data-options="field:'AccountName',width:150,align:'center'" rowspan="2">科目名称</th>
+                        <th colspan="2">期初余额</th>
+                        <th colspan="2">期初发生额</th>
+                        <th colspan="2">本年累计发生额</th>
+                        <th colspan="2">期末余额</th>
+                    </tr>
+                    <tr>
+                        
+                        <th data-options="field:'InitDebit',width:80,align:'right',formatter:zeroFormatter">借方</th>
+                        <th data-options="field:'InitCredit',width:60,align:'right',formatter:zeroFormatter">贷方</th>
+                        <th data-options="field:'CurOccurrenceDebit',width:60,formatter:zeroFormatter,align:'right'">借方</th>
+                        <th data-options="field:'CurOccurrenceCredit',width:60,formatter:zeroFormatter,align:'right'">贷方</th>
+                        <th data-options="field:'YtdDebit',width:40,align:'right',formatter:zeroFormatter">借方</th>
+                        <th data-options="field:'YtdCredit',width:60,align:'right',formatter:zeroFormatter">贷方</th>
+                        <th data-options="field:'DebitBalance',width:80,align:'right',formatter:zeroFormatter">借方</th>
+                        <th data-options="field:'CreditBalance',width:60,align:'right',formatter:zeroFormatter">贷方</th>
                     </tr>
                 </thead>
             </table>
@@ -73,7 +82,7 @@
     function init()
     {
         $("#sForm").form({
-            url: "/api/LedgerSheet/GetGeneralLedger/",
+            url: "/api/LedgerSheet/GetAccountBalance/",
             onSubmit: formOnSubmit,
             success: formSuccess
         });

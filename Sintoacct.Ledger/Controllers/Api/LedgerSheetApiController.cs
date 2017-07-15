@@ -94,5 +94,28 @@ namespace Sintoacct.Ledger.Controllers.Api
 
             return Ok(dgSheet);
         }
+
+
+        [ClaimsAuthorize("role", "accountant")]
+        [HttpGet, HttpPost, Route("api/LedgerSheet/GetAccountBalance")]
+        public IHttpActionResult GetAccountBalance(SearchConditionViewModel condition)
+        {
+            string err;
+            if (!_modelValid.Valid(ModelState, out err))
+            {
+                ResMessage.Fail(err);
+            }
+
+            if (string.IsNullOrEmpty(condition.StartPeriod) || string.IsNullOrEmpty(condition.EndPeriod))
+            {
+                ResMessage.Fail("会计期间不能为空");
+            }
+
+            List<AccountBalanceViewModels> sheet = _sheet.GetAccountBalance(condition);
+            DatagridViewModel<AccountBalanceViewModels> dgSheet = new DatagridViewModel<AccountBalanceViewModels>();
+            dgSheet.rows = sheet;
+
+            return Ok(dgSheet);
+        }
     }
 }

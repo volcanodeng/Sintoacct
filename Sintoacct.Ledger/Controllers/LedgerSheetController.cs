@@ -34,5 +34,15 @@ namespace Sintoacct.Ledger.Controllers
         {
             return View();
         }
+
+        /// <summary>
+        /// 科目余额表
+        /// </summary>
+        /// <returns></returns>
+        [ClaimsAuthorize("role", "accountant")]
+        public ActionResult AccountBalance()
+        {
+            return View();
+        }
     }
 }
