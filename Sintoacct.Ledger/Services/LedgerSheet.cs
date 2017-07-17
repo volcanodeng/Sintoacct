@@ -285,29 +285,30 @@ namespace Sintoacct.Ledger.Services
         public List<AccountBalanceViewModels> GetAccountBalance(SearchConditionViewModel condition)
         {
             Guid abid = _cache.GetUserCache().AccountBookID;
-            string initBalance = "select vd.AccountCode,vd.AccountName,'init' as Period,a.Direction," +
-                                 "case  a.Direction when '借' then SUM(vd.Debit - vd.Credit) when '贷' then SUM(vd.Credit - vd.Debit) end as Balance "+
+            string initBalance = "select vd.AccId,vd.AccountCode,vd.AccountName,'init' as Period,a.Direction," +
+                                 "(case  a.Direction when '借' then SUM(vd.Debit - vd.Credit) when '贷' then SUM(vd.Credit - vd.Debit) end) as Balance " +
                                  "from T_Voucher v, T_Voucher_Detail vd, T_Account a "+
                                  "where v.VId = vd.VId and vd.AccId = a.AccId "+
                                  string.Format("and v.AbId = {0} ", Utility.ParameterNameString("abid")) +
                                  string.Format("and v.VoucherYear = {0} and v.VoucherMonth < {1} ", Utility.ParameterNameString("year"), Utility.ParameterNameString("minmonth")) +
                                  "group by vd.AccId, vd.AccountCode, vd.AccountName, a.Direction ";
 
-            string curBalance = "select vd.AccountCode,vd.AccountName,'cur' as Period,a.Direction," +
-                                "case  a.Direction when '借' then SUM(vd.Debit - vd.Credit) when '贷' then SUM(vd.Credit - vd.Debit) end as Balance "+
+            string curBalance = "select vd.AccId,vd.AccountCode,vd.AccountName,'cur' as Period,a.Direction," +
+                                "(case  a.Direction when '借' then SUM(vd.Debit - vd.Credit) when '贷' then SUM(vd.Credit - vd.Debit) end) as Balance "+
                                 "from T_Voucher v, T_Voucher_Detail vd, T_Account a "+
                                 "where v.VId = vd.VId and vd.AccId = a.AccId "+
                                 string.Format("and v.AbId = {0} ", Utility.ParameterNameString("abid")) +
                                 string.Format("and v.[VoucherYear] = {0} and v.VoucherMonth >= {1} and v.VoucherMonth <= {2} ", Utility.ParameterNameString("year"), Utility.ParameterNameString("minmonth"), Utility.ParameterNameString("maxmonth")) +
                                 "group by vd.AccId, vd.AccountCode, vd.AccountName, a.Direction";
 
-            string ytdBalance = "select vd.AccountCode,vd.AccountName,'yearly' as Period,a.Direction," +
-                                "case  a.Direction when '借' then SUM(vd.Debit - vd.Credit) when '贷' then SUM(vd.Credit - vd.Debit) end as Balance " +
+            string ytdBalance = "select vd.AccId,vd.AccountCode,vd.AccountName,'yearly' as Period,a.Direction," +
+                                "(case  a.Direction when '借' then SUM(vd.Debit - vd.Credit) when '贷' then SUM(vd.Credit - vd.Debit) end) as Balance " +
                                 "from T_Voucher v, T_Voucher_Detail vd, T_Account a " +
                                 "where v.VId = vd.VId and vd.AccId = a.AccId " +
                                 string.Format("and v.AbId = {0} ", Utility.ParameterNameString("abid")) +
                                 string.Format("and v.[VoucherYear] = {0} and v.VoucherMonth <= {1} ", Utility.ParameterNameString("year"),  Utility.ParameterNameString("maxmonth")) +
                                 "group by vd.AccId, vd.AccountCode, vd.AccountName, a.Direction";
+
 
             object[] parames = new object[] {
                 Utility.NewParameter("abid", abid),
@@ -319,6 +320,7 @@ namespace Sintoacct.Ledger.Services
             List<AccountBalanceModel> accBalances = _ledger.Database.SqlQuery<AccountBalanceModel>(initBalance,parames).ToList();
             accBalances.AddRange(_ledger.Database.SqlQuery<AccountBalanceModel>(curBalance,parames.Select(p=>((ICloneable)p).Clone()).ToArray()).ToList());
             accBalances.AddRange(_ledger.Database.SqlQuery<AccountBalanceModel>(ytdBalance, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList());
+            var accounts = _ledger.Accounts.Where(a=>a.AbId==abid).ToList();
 
             List<AccountBalanceViewModels> abViewModels = new List<AccountBalanceViewModels>();
             foreach(AccountBalanceModel ab in accBalances)
@@ -329,14 +331,19 @@ namespace Sintoacct.Ledger.Services
                     abRow = new AccountBalanceViewModels();
                     abRow.AccountCode = ab.AccountCode;
                     abRow.AccountName = ab.AccountName;
+                    abRow.Direction = ab.Direction;
                     abViewModels.Add(abRow);
                 }
 
-                switch(ab.Period)
+                decimal initBal = accounts.Where(ai => ai.AccId == ab.AccId).Select(ai => ai.InitialBalance).FirstOrDefault();
+                if (ab.Direction == "借") abRow.InitDebit =  initBal;
+                if (ab.Direction == "贷") abRow.InitCredit = initBal;
+
+                switch (ab.Period)
                 {
                     case "init":
-                        if (ab.Direction == "借") abRow.InitDebit = ab.Balance;
-                        if (ab.Direction == "贷") abRow.InitCredit = ab.Balance;
+                        if (ab.Direction == "借") abRow.InitDebit += ab.Balance ;
+                        if (ab.Direction == "贷") abRow.InitCredit += ab.Balance ;
                         break;
                     case "cur":
                         if (ab.Direction == "借") abRow.CurOccurrenceDebit = ab.Balance;
@@ -348,6 +355,13 @@ namespace Sintoacct.Ledger.Services
                         break;
                 }
 
+            }
+
+            foreach(AccountBalanceViewModels abvm in abViewModels)
+            {
+                if (abvm.Direction == "借") abvm.DebitBalance = abvm.InitDebit + abvm.CurOccurrenceDebit;
+
+                if (abvm.Direction == "贷") abvm.CreditBalance = abvm.CreditBalance + abvm.CurOccurrenceCredit;
             }
 
             return abViewModels;
@@ -371,6 +385,8 @@ namespace Sintoacct.Ledger.Services
 
     public class AccountBalanceModel
     {
+        public long AccId { get; set; }
+
         public string AccountCode { get; set; }
 
         public string AccountName { get; set; }
@@ -380,5 +396,12 @@ namespace Sintoacct.Ledger.Services
         public string Direction { get; set; }
 
         public decimal Balance { get; set; }
+    }
+
+    public class AccountInitBalanceModel
+    {
+        public long AccId { get; set; }
+
+        public decimal InitialBalance { get; set; }
     }
 }

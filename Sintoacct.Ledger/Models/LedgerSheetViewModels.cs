@@ -77,6 +77,8 @@ namespace Sintoacct.Ledger.Models
 
         public string AccountName { get; set; }
 
+        public string Direction { get; set; }
+
         public decimal InitDebit { get; set; }
 
         public decimal InitCredit { get; set; }
