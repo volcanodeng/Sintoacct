@@ -12,6 +12,7 @@ namespace Sintoacct.Ledger
 
             Bundle easyui = new ScriptBundle("~/bundles/easyui").Include(
                 "~/Scripts/jquery.easyui.min.js",
+                //"~/Scripts/jquery.easyui.mobile.js",
                       "~/Scripts/easyui-lang-zh_CN.js",
                       "~/Scripts/easyui.extend.js"
                 );
