@@ -190,7 +190,7 @@ namespace Sintoacct.Ledger.Services
         public List<GeneralLedgerViewModels> GetGeneralLedger(SearchConditionViewModel condition)
         {
             Guid abid = _cache.GetUserCache().AccountBookID;
-            string sql = "select a.AccId,a.AccCode,a.AccName,v.PaymentTerms as Period,'本期合计' as Abstract," +
+            string sql = "select a.AccId,a.AccCode as AccountCode,a.AccName as AccountName,v.PaymentTerms as Period,'本期合计' as Abstract," +
                          "SUM(vd.Debit) as Debit,SUM(vd.Credit) as Credit,max(vd.[YtdDebit]) as YtdDebit,max(vd.[YtdCredit]) as YtdCredit,min(a.Direction) as Direction,min(vd.[InitialBalance]) as Balance " +
                          "from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
                          "inner join T_Account a on vd.AccId=a.AccId " +
@@ -217,8 +217,8 @@ namespace Sintoacct.Ledger.Services
                 {
                     GeneralLedgerViewModels glInitBalance = new GeneralLedgerViewModels();
                     glInitBalance.AccId = genLedger[i].AccId;
-                    glInitBalance.AccCode = genLedger[i].AccCode;
-                    glInitBalance.AccName = genLedger[i].AccName;
+                    glInitBalance.AccountCode = genLedger[i].AccountCode;
+                    glInitBalance.AccountName = genLedger[i].AccountName;
                     glInitBalance.Period = genLedger[i].Period;
                     glInitBalance.Abstract = "期初余额";
                     glInitBalance.Debit = 0;
@@ -238,8 +238,8 @@ namespace Sintoacct.Ledger.Services
 
                     GeneralLedgerViewModels ytdBalance = new GeneralLedgerViewModels();
                     ytdBalance.AccId = genLedger[i].AccId;
-                    ytdBalance.AccCode = genLedger[i].AccCode;
-                    ytdBalance.AccName = genLedger[i].AccName;
+                    ytdBalance.AccountCode = genLedger[i].AccountCode;
+                    ytdBalance.AccountName = genLedger[i].AccountName;
                     ytdBalance.Period = genLedger[i].Period;
                     ytdBalance.Abstract = "本年累计";
                     ytdBalance.Debit = genLedger[i].YtdDebit;
@@ -259,8 +259,8 @@ namespace Sintoacct.Ledger.Services
 
                     GeneralLedgerViewModels ytdBalance = new GeneralLedgerViewModels();
                     ytdBalance.AccId = genLedger[i].AccId;
-                    ytdBalance.AccCode = genLedger[i].AccCode;
-                    ytdBalance.AccName = genLedger[i].AccName;
+                    ytdBalance.AccountCode = genLedger[i].AccountCode;
+                    ytdBalance.AccountName = genLedger[i].AccountName;
                     ytdBalance.Period = genLedger[i].Period;
                     ytdBalance.Abstract = "本年累计";
                     ytdBalance.Debit = genLedger[i].YtdDebit;
@@ -276,6 +276,40 @@ namespace Sintoacct.Ledger.Services
             }
 
             return genList;
+        }
+
+        public List<GeneralLedgerViewModels> GetGeneralLedger1(SearchConditionViewModel condition)
+        {
+            string initBalance = "select "+
+                                    "vd.AccId,"+
+                                    "min(vd.AccountCode) as AccountCode,"+
+                                    "min(vd.AccountName) as AccountName,"+
+                                    "min(v.PaymentTerms) as Period,"+
+                                    "'期初余额' as Abstract,"+
+                                    "SUM(vd.Debit) as Debit,"+
+                                    "SUM(vd.Credit) as Credit,"+
+                                    "min(a.Direction) as Direction,"+
+                                    "0 as Balance,"+
+                                    "1 as Sort "+
+                                    "from T_Voucher v, T_Voucher_Detail vd, T_Account a "+
+                                    "where v.VId = vd.VId and vd.AccId = a.AccId "+
+                                    string.Format("and v.AbId = {0} ", Utility.ParameterNameString("abid")) +
+                                    string.Format("and v.VoucherYear = {0} and v.VoucherMonth < {1} ", Utility.ParameterNameString("year"), Utility.ParameterNameString("minmonth")) +
+                                    "group by vd.AccId, v.VoucherYear";
+
+
+            string sy, ey, sm, em;
+            if(condition.StartPeriod.CompareTo(condition.EndPeriod)<0)
+            {
+                sy = condition.StartPeriod.Substring(0, 4);
+                ey = condition.EndPeriod.Substring(0, 4);
+                sm = condition.StartPeriod.Substring(4);
+                em = condition.EndPeriod.Substring(4);
+            }
+
+            List<GeneralLedgerViewModels> genLedger = new List<GeneralLedgerViewModels>();
+
+            return genLedger;
         }
 
         #endregion
@@ -332,23 +366,28 @@ namespace Sintoacct.Ledger.Services
                     abRow.AccountCode = ab.AccountCode;
                     abRow.AccountName = ab.AccountName;
                     abRow.Direction = ab.Direction;
+
+                    //科目期初余额
+                    decimal initBal = accounts.Where(ai => ai.AccId == ab.AccId).Select(ai => ai.InitialBalance).FirstOrDefault();
+                    if (ab.Direction == "借") abRow.InitDebit = initBal;
+                    if (ab.Direction == "贷") abRow.InitCredit = initBal;
+
                     abViewModels.Add(abRow);
                 }
 
-                decimal initBal = accounts.Where(ai => ai.AccId == ab.AccId).Select(ai => ai.InitialBalance).FirstOrDefault();
-                if (ab.Direction == "借") abRow.InitDebit =  initBal;
-                if (ab.Direction == "贷") abRow.InitCredit = initBal;
-
                 switch (ab.Period)
                 {
+                    //期初余额（加上科目期初）
                     case "init":
                         if (ab.Direction == "借") abRow.InitDebit += ab.Balance ;
                         if (ab.Direction == "贷") abRow.InitCredit += ab.Balance ;
                         break;
+                    //本期发生额
                     case "cur":
                         if (ab.Direction == "借") abRow.CurOccurrenceDebit = ab.Balance;
                         if (ab.Direction == "贷") abRow.CurOccurrenceCredit = ab.Balance;
                         break;
+                    //本年累计
                     case "yearly":
                         if (ab.Direction == "借") abRow.YtdDebit = ab.Balance;
                         if (ab.Direction == "贷") abRow.YtdCredit = ab.Balance;
@@ -357,6 +396,7 @@ namespace Sintoacct.Ledger.Services
 
             }
 
+            //期末余额
             foreach(AccountBalanceViewModels abvm in abViewModels)
             {
                 if (abvm.Direction == "借") abvm.DebitBalance = abvm.InitDebit + abvm.CurOccurrenceDebit;

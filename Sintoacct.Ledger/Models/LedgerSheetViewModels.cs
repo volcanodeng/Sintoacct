@@ -32,9 +32,9 @@ namespace Sintoacct.Ledger.Models
     {
         public long AccId { get; set; }
 
-        public string AccCode { get; set; }
+        public string AccountCode { get; set; }
 
-        public string AccName { get; set; }
+        public string AccountName { get; set; }
 
         public string Period { get; set; }
 

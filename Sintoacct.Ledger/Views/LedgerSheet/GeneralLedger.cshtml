@@ -46,8 +46,8 @@
                    data-options="fit:true,singleSelect:true,fitColumns:true,onLoadSuccess:onLoadSuccess">
                 <thead>
                     <tr>
-                        <th data-options="field:'AccCode',width:50,align:'center'">科目编码</th>
-                        <th data-options="field:'AccName',width:150,align:'center'">科目名称</th>
+                        <th data-options="field:'AccountCode',width:50,align:'center'">科目编码</th>
+                        <th data-options="field:'AccountName',width:150,align:'center'">科目名称</th>
                         <th data-options="field:'Period',width:80,align:'center'">期间</th>
                         <th data-options="field:'Abstract',width:60,align:'center'">摘要</th>
                         <th data-options="field:'Debit',width:60,formatter:zeroFormatter,align:'right'">借方</th>
@@ -112,13 +112,13 @@
         for (var i = 0; i < data.rows.length; i++) {
             $(this).datagrid('mergeCells', {
                 index: data.rows[i].MergeIndex,
-                field: 'AccCode',
+                field: 'AccountCode',
                 rowspan: data.rows[i].RowSpan
             });
 
             $(this).datagrid('mergeCells', {
                 index: data.rows[i].MergeIndex,
-                field: 'AccName',
+                field: 'AccountName',
                 rowspan: data.rows[i].RowSpan
             });
 
