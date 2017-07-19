@@ -33,7 +33,7 @@ min(a.Direction) as Direction,
 from T_Voucher v, T_Voucher_Detail vd, T_Account a 
 where v.VId = vd.VId and vd.AccId = a.AccId 
 and v.AbId = '81084FA8-0D66-E711-826E-9C5C8E79F58D'
-and v.VoucherYear = 2017 and 7 <= v.VoucherMonth and v.VoucherMonth <= 7
+and v.VoucherYear = 2017 and 6 <= v.VoucherMonth and v.VoucherMonth <= 7
 group by vd.AccId, v.VoucherYear, v.VoucherMonth
 
 union all
@@ -56,3 +56,25 @@ and v.VoucherYear = 2017 and v.VoucherMonth <= 7
 group by vd.AccId, v.VoucherYear 
 ) t
 order by  AccountCode,Period,Sort
+
+
+select VoucherYear,VoucherMonth from T_Voucher 
+where AbId = '81084FA8-0D66-E711-826E-9C5C8E79F58D' and PaymentTerms <= '201707'
+group by VoucherYear,VoucherMonth
+
+select 
+vd.AccId,
+min(vd.AccountCode) as AccountCode,
+min(vd.AccountName) as AccountName,
+min(v.PaymentTerms) as Period,
+'±¾ÄêÀÛ¼Æ' as Abstract,
+SUM(vd.Debit) as Debit,
+SUM(vd.Credit) as Credit,
+min(a.Direction) as Direction,
+0 as Balance,
+3 as Sort 
+from T_Voucher v, T_Voucher_Detail vd, T_Account a 
+where v.VId = vd.VId and vd.AccId = a.AccId 
+and v.AbId = '81084FA8-0D66-E711-826E-9C5C8E79F58D'
+and v.VoucherYear = 2017 and v.VoucherMonth <= 7
+group by vd.AccId, v.VoucherYear 

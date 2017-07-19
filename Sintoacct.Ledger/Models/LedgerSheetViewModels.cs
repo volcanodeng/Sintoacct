@@ -44,9 +44,9 @@ namespace Sintoacct.Ledger.Models
 
         public decimal Credit { get; set; }
 
-        public decimal YtdDebit { get; set; }
+        //public decimal YtdDebit { get; set; }
 
-        public decimal YtdCredit { get; set; }
+        //public decimal YtdCredit { get; set; }
 
         public string Direction { get; set; }
 

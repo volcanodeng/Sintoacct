@@ -187,7 +187,8 @@ namespace Sintoacct.Ledger.Services
             return bal;
         }
 
-        public List<GeneralLedgerViewModels> GetGeneralLedger(SearchConditionViewModel condition)
+        /*
+        public List<GeneralLedgerViewModels> GetGeneralLedger1(SearchConditionViewModel condition)
         {
             Guid abid = _cache.GetUserCache().AccountBookID;
             string sql = "select a.AccId,a.AccCode as AccountCode,a.AccName as AccountName,v.PaymentTerms as Period,'本期合计' as Abstract," +
@@ -242,8 +243,8 @@ namespace Sintoacct.Ledger.Services
                     ytdBalance.AccountName = genLedger[i].AccountName;
                     ytdBalance.Period = genLedger[i].Period;
                     ytdBalance.Abstract = "本年累计";
-                    ytdBalance.Debit = genLedger[i].YtdDebit;
-                    ytdBalance.Credit = genLedger[i].YtdCredit;
+                    //ytdBalance.Debit = genLedger[i].YtdDebit;
+                    //ytdBalance.Credit = genLedger[i].YtdCredit;
                     ytdBalance.Direction = genLedger[i].Direction;
                     ytdBalance.Balance = varBalance;
                     ytdBalance.Sort = 3;
@@ -263,8 +264,8 @@ namespace Sintoacct.Ledger.Services
                     ytdBalance.AccountName = genLedger[i].AccountName;
                     ytdBalance.Period = genLedger[i].Period;
                     ytdBalance.Abstract = "本年累计";
-                    ytdBalance.Debit = genLedger[i].YtdDebit;
-                    ytdBalance.Credit = genLedger[i].YtdCredit;
+                    //ytdBalance.Debit = genLedger[i].YtdDebit;
+                    //ytdBalance.Credit = genLedger[i].YtdCredit;
                     ytdBalance.Direction = genLedger[i].Direction;
                     ytdBalance.Balance = varBalance;
                     ytdBalance.Sort = 3;
@@ -277,37 +278,89 @@ namespace Sintoacct.Ledger.Services
 
             return genList;
         }
+        */
 
-        public List<GeneralLedgerViewModels> GetGeneralLedger1(SearchConditionViewModel condition)
+        public List<GeneralLedgerViewModels> GetGeneralLedger(SearchConditionViewModel condition)
         {
             string initBalance = "select "+
                                     "vd.AccId,"+
                                     "min(vd.AccountCode) as AccountCode,"+
                                     "min(vd.AccountName) as AccountName,"+
-                                    "min(v.PaymentTerms) as Period,"+
+                                    string.Format("'{0}' as Period,", condition.StartPeriod) +
                                     "'期初余额' as Abstract,"+
                                     "SUM(vd.Debit) as Debit,"+
                                     "SUM(vd.Credit) as Credit,"+
                                     "min(a.Direction) as Direction,"+
-                                    "0 as Balance,"+
-                                    "1 as Sort "+
+                                    "0.00 as Balance,0 as MergeIndex,0 as RowSpan,1 as Sort " +
                                     "from T_Voucher v, T_Voucher_Detail vd, T_Account a "+
                                     "where v.VId = vd.VId and vd.AccId = a.AccId "+
                                     string.Format("and v.AbId = {0} ", Utility.ParameterNameString("abid")) +
-                                    string.Format("and v.VoucherYear = {0} and v.VoucherMonth < {1} ", Utility.ParameterNameString("year"), Utility.ParameterNameString("minmonth")) +
+                                    string.Format("and v.PaymentTerms < {0} ", Utility.ParameterNameString("startterm")) +
                                     "group by vd.AccId, v.VoucherYear";
 
+            string curBalance = "select " +
+                                    "vd.AccId," +
+                                    "min(vd.AccountCode) as AccountCode," +
+                                    "min(vd.AccountName) as AccountName," +
+                                    "min(v.PaymentTerms) as Period," +
+                                    "'本期合计' as Abstract," +
+                                    "SUM(vd.Debit) as Debit," +
+                                    "SUM(vd.Credit) as Credit," +
+                                    "min(a.Direction) as Direction," +
+                                    "0.00 as Balance,0 as MergeIndex,0 as RowSpan,2 as Sort " +
+                                    "from T_Voucher v, T_Voucher_Detail vd, T_Account a " +
+                                    "where v.VId = vd.VId and vd.AccId = a.AccId " +
+                                    string.Format("and v.AbId = {0} ", Utility.ParameterNameString("abid")) +
+                                    string.Format("and {0} <= v.PaymentTerms and v.PaymentTerms <= {1} ", Utility.ParameterNameString("startterm"), Utility.ParameterNameString("endterm")) +
+                                    "group by vd.AccId, v.VoucherYear, v.VoucherMonth";
 
-            string sy, ey, sm, em;
-            if(condition.StartPeriod.CompareTo(condition.EndPeriod)<0)
+            string ytdBalance = "select " +
+                                    "vd.AccId," +
+                                    "min(vd.AccountCode) as AccountCode," +
+                                    "min(vd.AccountName) as AccountName," +
+                                    "max(v.PaymentTerms) as Period," +
+                                    "'本年累计' as Abstract," +
+                                    "SUM(vd.Debit) as Debit," +
+                                    "SUM(vd.Credit) as Credit," +
+                                    "min(a.Direction) as Direction," +
+                                    "0.00 as Balance,0 as MergeIndex,0 as RowSpan,3 as Sort " +
+                                    "from T_Voucher v, T_Voucher_Detail vd, T_Account a " +
+                                    "where v.VId = vd.VId and vd.AccId = a.AccId " +
+                                    string.Format("and v.AbId = {0} ", Utility.ParameterNameString("abid")) +
+                                    string.Format("and v.PaymentTerms <= {0} ", Utility.ParameterNameString("endterm")) +
+                                    "group by vd.AccId, v.VoucherYear";
+
+            Guid abid = _cache.GetUserCache().AccountBookID;
+            object[] parames = new object[] {
+                Utility.NewParameter("abid", abid),
+                Utility.NewParameter("startterm", condition.StartPeriod),
+                Utility.NewParameter("endterm", condition.EndPeriod)
+            };
+
+            //List<Voucher> vouchers = _ledger.Vouchers.Where(v => v.AbId == abid && condition.EndPeriod.CompareTo(v.PaymentTerms) <= 0).ToList().OrderBy(v=>v.PaymentTerms).ToList();
+            List<string> paymentTerms = _ledger.Database.SqlQuery<string>(string.Format("select PaymentTerms from T_Voucher where AbId = {0} and {1} <= PaymentTerms and PaymentTerms <= {2} group by PaymentTerms order by PaymentTerms", 
+                                                                                         Utility.ParameterNameString("abid"), Utility.ParameterNameString("startterm"), Utility.ParameterNameString("endterm")),
+                                                                          Utility.NewParameter("abid", abid), Utility.NewParameter("startterm", condition.StartPeriod), Utility.NewParameter("endterm", condition.EndPeriod)).ToList();
+
+            List <GeneralLedgerViewModels> genLedger = _ledger.Database.SqlQuery<GeneralLedgerViewModels>(initBalance, parames).ToList();
+            genLedger.AddRange(_ledger.Database.SqlQuery<GeneralLedgerViewModels>(curBalance, Utility.NewParameter("abid", abid), Utility.NewParameter("startterm", condition.StartPeriod), Utility.NewParameter("endterm", condition.EndPeriod)).ToList());
+
+            foreach (string pt in paymentTerms)
             {
-                sy = condition.StartPeriod.Substring(0, 4);
-                ey = condition.EndPeriod.Substring(0, 4);
-                sm = condition.StartPeriod.Substring(4);
-                em = condition.EndPeriod.Substring(4);
+                genLedger.AddRange(_ledger.Database.SqlQuery<GeneralLedgerViewModels>(ytdBalance, Utility.NewParameter("abid", abid), Utility.NewParameter("endterm", pt)).ToList());
             }
 
-            List<GeneralLedgerViewModels> genLedger = new List<GeneralLedgerViewModels>();
+            genLedger = genLedger.OrderBy(gl => gl.AccId).ThenBy(gl => gl.Period).ThenBy(gl => gl.Sort).ToList();
+            long accid = -1;
+            for (int i=0;i<genLedger.Count;i++)
+            {
+                if (accid != genLedger[i].AccId)
+                {
+                    genLedger[i].MergeIndex = i;
+                    genLedger[i].RowSpan = genLedger.Where(gl => gl.AccId == genLedger[i].AccId).Count();
+                    accid = genLedger[i].AccId;
+                }
+            }
 
             return genLedger;
         }
