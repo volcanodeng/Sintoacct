@@ -567,6 +567,8 @@ namespace Sintoacct.Ledger.Models
 
         public string EndPeriod { get; set; }
 
+        public long AccId { get; set; }
+
         public string CertWord { get; set; }
 
         public string CertWordSN { get; set; }

@@ -167,6 +167,59 @@ namespace Sintoacct.Ledger.Services
             return sheets;
         }
 
+        public List<DetailSheetViewModels> GetDetailSheet(SearchConditionViewModel condition)
+        {
+            Guid abid = _cache.GetUserCache().AccountBookID;
+            object[] parames = new object[] {
+                Utility.NewParameter("abid", abid),
+                Utility.NewParameter("startterm", condition.StartPeriod),
+                Utility.NewParameter("endterm", condition.EndPeriod),
+                Utility.NewParameter("accid", condition.AccId)
+            };
+
+            List<string> paymentTerms = _ledger.Database.SqlQuery<string>(string.Format("select PaymentTerms from T_Voucher where AbId = {0} and {1} <= PaymentTerms and PaymentTerms <= {2} group by PaymentTerms order by PaymentTerms",
+                                                                                         Utility.ParameterNameString("abid"), Utility.ParameterNameString("startterm"), Utility.ParameterNameString("endterm")),
+                                                                          parames).ToList();
+
+            #region 期初余额
+            //计算期初发生余额
+            string initBalance = "select " +
+                                    string.Format("'{0}-{1}-01' as VoucherDate,",condition.StartPeriod.Substring(0,4),condition.StartPeriod.Substring(4)) +
+                                    "'' as CertWord," +
+                                    "'期初余额' as Abstract,"+
+                                    "sum(vd.Debit) as Debit,"+
+                                    "sum(vd.Credit) as Credit,"+
+                                    "'平' as Direction," +
+                                    "case a.Direction when '借' then sum(vd.Debit)-sum(vd.Credit) when '贷' then sum(vd.Credit)-sum(vd.Debit) end as Balance" +
+                                    "from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
+                                    "left join T_Certificate_Word cw on v.CertificateWord_CwId=cw.CwId " +
+                                    "left join T_Account a on a.AccId=vd.AccId " +
+                                    string.Format("where v.AbId={0} and vd.AccId={1} ", Utility.ParameterNameString("abid"), Utility.ParameterNameString("accid")) +
+                                    string.Format("and v.PaymentTerms < {0} ", Utility.ParameterNameString("startterm")) +
+                                    "group by  vd.AccId,a.Direction";
+
+            Account account = _ledger.Accounts.Where(a => a.AccId == condition.AccId).FirstOrDefault();
+
+            List<DetailSheetViewModels> detailSheet = new List<DetailSheetViewModels>();
+            DetailSheetViewModels initDetail = _ledger.Database.SqlQuery<DetailSheetViewModels>(initBalance, parames).FirstOrDefault();
+            if (account != null)
+            {
+                //加上科目余额
+                if (account.Direction == "借")
+                {
+                    initDetail.Debit += account.InitialBalance;
+                }
+                if (account.Direction == "贷")
+                {
+                    initDetail.Credit += account.InitialBalance;
+                }
+            }
+            detailSheet.Add(initDetail);
+            #endregion
+
+            return detailSheet;
+        }
+
         #endregion
 
         #region 总账
@@ -185,100 +238,7 @@ namespace Sintoacct.Ledger.Services
             }
 
             return bal;
-        }
-
-        /*
-        public List<GeneralLedgerViewModels> GetGeneralLedger1(SearchConditionViewModel condition)
-        {
-            Guid abid = _cache.GetUserCache().AccountBookID;
-            string sql = "select a.AccId,a.AccCode as AccountCode,a.AccName as AccountName,v.PaymentTerms as Period,'本期合计' as Abstract," +
-                         "SUM(vd.Debit) as Debit,SUM(vd.Credit) as Credit,max(vd.[YtdDebit]) as YtdDebit,max(vd.[YtdCredit]) as YtdCredit,min(a.Direction) as Direction,min(vd.[InitialBalance]) as Balance " +
-                         "from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
-                         "inner join T_Account a on vd.AccId=a.AccId " +
-                         string.Format("where v.AbId={0} ", Utility.ParameterNameString("abid"))+
-                         (Convert.ToInt64(condition.StartPeriod)<=Convert.ToInt64( condition.EndPeriod)?
-                            string.Format(" and (v.[PaymentTerms] BETWEEN {0} and {1}) ", Utility.ParameterNameString("start"), Utility.ParameterNameString("end")) : 
-                            string.Format(" and (v.[PaymentTerms] BETWEEN {1} and {0}) ", Utility.ParameterNameString("start"), Utility.ParameterNameString("end"))) +
-#warning 查询条件
-                         "group by a.AccId,a.AccCode,a.AccName,v.PaymentTerms " +
-                         "order by a.AccCode,v.PaymentTerms";
-            List<GeneralLedgerViewModels> genLedger = _ledger.Database.SqlQuery<GeneralLedgerViewModels>(sql, Utility.NewParameter("abid", abid), Utility.NewParameter("start", condition.StartPeriod), Utility.NewParameter("end", condition.EndPeriod)).ToList();
-            
-            List<GeneralLedgerViewModels> genList = new List<GeneralLedgerViewModels>();
-            decimal varBalance = 0;
-            for (int i = 0; i < genLedger.Count; i++)
-            {
-                if(!genList.Any(gl=>gl.AccId==genLedger[i].AccId))
-                {
-                    varBalance = 0;
-                }
-
-                if (genLedger[i].Period == condition.StartPeriod ||
-                    !genList.Any(gl => gl.AccId == genLedger[i].AccId && gl.Abstract == "期初余额"))
-                {
-                    GeneralLedgerViewModels glInitBalance = new GeneralLedgerViewModels();
-                    glInitBalance.AccId = genLedger[i].AccId;
-                    glInitBalance.AccountCode = genLedger[i].AccountCode;
-                    glInitBalance.AccountName = genLedger[i].AccountName;
-                    glInitBalance.Period = genLedger[i].Period;
-                    glInitBalance.Abstract = "期初余额";
-                    glInitBalance.Debit = 0;
-                    glInitBalance.Credit = 0;
-                    glInitBalance.Balance = genLedger[i].Balance;
-                    glInitBalance.Direction = (glInitBalance.Balance == 0 ? "平" : genLedger[i].Direction);
-                    glInitBalance.Sort = 1;
-                    genList.Add(glInitBalance);
-                    glInitBalance.MergeIndex = genList.Count - 1;
-                    glInitBalance.RowSpan = 3;
-                    varBalance = glInitBalance.Balance;
-
-                    genLedger[i].Sort = 2;
-                    genList.Add(genLedger[i]);
-                    varBalance += this.CalBalance(genLedger[i]);
-                    genLedger[i].Balance = varBalance;
-
-                    GeneralLedgerViewModels ytdBalance = new GeneralLedgerViewModels();
-                    ytdBalance.AccId = genLedger[i].AccId;
-                    ytdBalance.AccountCode = genLedger[i].AccountCode;
-                    ytdBalance.AccountName = genLedger[i].AccountName;
-                    ytdBalance.Period = genLedger[i].Period;
-                    ytdBalance.Abstract = "本年累计";
-                    //ytdBalance.Debit = genLedger[i].YtdDebit;
-                    //ytdBalance.Credit = genLedger[i].YtdCredit;
-                    ytdBalance.Direction = genLedger[i].Direction;
-                    ytdBalance.Balance = varBalance;
-                    ytdBalance.Sort = 3;
-                    genList.Add(ytdBalance);
-                    
-                }
-                else
-                {
-                    genLedger[i].Sort = 2;
-                    genList.Add(genLedger[i]);
-                    varBalance += this.CalBalance(genLedger[i]);
-                    genLedger[i].Balance = varBalance;
-
-                    GeneralLedgerViewModels ytdBalance = new GeneralLedgerViewModels();
-                    ytdBalance.AccId = genLedger[i].AccId;
-                    ytdBalance.AccountCode = genLedger[i].AccountCode;
-                    ytdBalance.AccountName = genLedger[i].AccountName;
-                    ytdBalance.Period = genLedger[i].Period;
-                    ytdBalance.Abstract = "本年累计";
-                    //ytdBalance.Debit = genLedger[i].YtdDebit;
-                    //ytdBalance.Credit = genLedger[i].YtdCredit;
-                    ytdBalance.Direction = genLedger[i].Direction;
-                    ytdBalance.Balance = varBalance;
-                    ytdBalance.Sort = 3;
-                    genList.Add(ytdBalance);
-
-                    var accFirst = genList.Where(gl => gl.AccId == genLedger[i].AccId && gl.Abstract == "期初余额").FirstOrDefault();
-                    if (accFirst != null) accFirst.RowSpan += 2;
-                }
-            }
-
-            return genList;
-        }
-        */
+        }        
 
         public List<GeneralLedgerViewModels> GetGeneralLedger(SearchConditionViewModel condition)
         {
@@ -337,7 +297,6 @@ namespace Sintoacct.Ledger.Services
                 Utility.NewParameter("endterm", condition.EndPeriod)
             };
 
-            //List<Voucher> vouchers = _ledger.Vouchers.Where(v => v.AbId == abid && condition.EndPeriod.CompareTo(v.PaymentTerms) <= 0).ToList().OrderBy(v=>v.PaymentTerms).ToList();
             List<string> paymentTerms = _ledger.Database.SqlQuery<string>(string.Format("select PaymentTerms from T_Voucher where AbId = {0} and {1} <= PaymentTerms and PaymentTerms <= {2} group by PaymentTerms order by PaymentTerms", 
                                                                                          Utility.ParameterNameString("abid"), Utility.ParameterNameString("startterm"), Utility.ParameterNameString("endterm")),
                                                                           Utility.NewParameter("abid", abid), Utility.NewParameter("startterm", condition.StartPeriod), Utility.NewParameter("endterm", condition.EndPeriod)).ToList();
@@ -350,7 +309,10 @@ namespace Sintoacct.Ledger.Services
                 genLedger.AddRange(_ledger.Database.SqlQuery<GeneralLedgerViewModels>(ytdBalance, Utility.NewParameter("abid", abid), Utility.NewParameter("endterm", pt)).ToList());
             }
 
+            //记录排序
             genLedger = genLedger.OrderBy(gl => gl.AccId).ThenBy(gl => gl.Period).ThenBy(gl => gl.Sort).ToList();
+
+            //设置合并列
             long accid = -1;
             for (int i=0;i<genLedger.Count;i++)
             {

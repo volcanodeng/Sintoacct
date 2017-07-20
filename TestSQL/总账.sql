@@ -58,11 +58,9 @@ group by vd.AccId, v.VoucherYear
 order by  AccountCode,Period,Sort
 
 
-select VoucherYear,VoucherMonth from T_Voucher 
-where AbId = '81084FA8-0D66-E711-826E-9C5C8E79F58D' and PaymentTerms <= '201707'
-group by VoucherYear,VoucherMonth
-
 select 
+
+(select 
 vd.AccId,
 min(vd.AccountCode) as AccountCode,
 min(vd.AccountName) as AccountName,
@@ -75,6 +73,13 @@ min(a.Direction) as Direction,
 3 as Sort 
 from T_Voucher v, T_Voucher_Detail vd, T_Account a 
 where v.VId = vd.VId and vd.AccId = a.AccId 
-and v.AbId = '81084FA8-0D66-E711-826E-9C5C8E79F58D'
-and v.VoucherYear = 2017 and v.VoucherMonth <= 7
-group by vd.AccId, v.VoucherYear 
+and v.AbId = v1.AbId
+and v.VoucherYear = v1.VoucherYear and v.VoucherMonth <= v1.VoucherMonth
+group by vd.AccId, v.VoucherYear )
+
+from T_Voucher v1
+where AbId = '81084FA8-0D66-E711-826E-9C5C8E79F58D' and PaymentTerms <= '201707'
+group by AbId,VoucherYear,VoucherMonth
+
+
+select PaymentTerms from T_Voucher where AbId = '81084FA8-0D66-E711-826E-9C5C8E79F58D' and PaymentTerms <= '201707' group by PaymentTerms
