@@ -192,7 +192,6 @@ namespace Sintoacct.Ledger.Services
                                     "'平' as Direction," +
                                     "case a.Direction when '借' then sum(vd.Debit)-sum(vd.Credit) when '贷' then sum(vd.Credit)-sum(vd.Debit) end as Balance" +
                                     "from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
-                                    "left join T_Certificate_Word cw on v.CertificateWord_CwId=cw.CwId " +
                                     "left join T_Account a on a.AccId=vd.AccId " +
                                     string.Format("where v.AbId={0} and vd.AccId={1} ", Utility.ParameterNameString("abid"), Utility.ParameterNameString("accid")) +
                                     string.Format("and v.PaymentTerms < {0} ", Utility.ParameterNameString("startterm")) +
@@ -216,6 +215,21 @@ namespace Sintoacct.Ledger.Services
             }
             detailSheet.Add(initDetail);
             #endregion
+
+            //返回各个期的明细
+            string detail = "select " +
+                                    "v.VoucherDate," +
+                                    "cw.CertWord+'-'+CONVERT(nvarchar(10),v.certwordsn) as CertWord," +
+                                    "vd.Abstract," +
+                                    "vd.Debit," +
+                                    "vd.Credit," +
+                                    "a.Direction," +
+                                    "0.00 as Balance" +
+                                    "from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
+                                    "left join T_Account a on a.AccId=vd.AccId " +
+                                    string.Format("where v.AbId={0} and vd.AccId={1} ", Utility.ParameterNameString("abid"), Utility.ParameterNameString("accid")) +
+                                    string.Format("and v.PaymentTerms < {0} ", Utility.ParameterNameString("startterm"));
+
 
             return detailSheet;
         }
