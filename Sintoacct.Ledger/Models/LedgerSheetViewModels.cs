@@ -23,6 +23,8 @@ namespace Sintoacct.Ledger.Models
         public string Direction { get; set; }
 
         public decimal Balance { get; set; }
+
+        public string PaymentTerms { get; set; }
     }
 
     /// <summary>

@@ -56,8 +56,8 @@ namespace Sintoacct.Ledger.Controllers.Api
         }
 
         [ClaimsAuthorize("role", "accountant")]
-        [HttpGet, Route("api/LedgerSheet/GetDetailSheet")]
-        public IHttpActionResult GetDetailSheet(long accid)
+        [HttpGet, HttpPost, Route("api/LedgerSheet/GetDetailSheet")]
+        public IHttpActionResult GetDetailSheet(SearchConditionViewModel condition)
         {
             string err;
             if (!_modelValid.Valid(ModelState, out err))
@@ -65,7 +65,7 @@ namespace Sintoacct.Ledger.Controllers.Api
                 ResMessage.Fail(err);
             }
 
-            List<DetailSheetViewModels> sheet = _sheet.GetDetailSheet(accid);
+            List<DetailSheetViewModels> sheet = _sheet.GetDetailSheet(condition);
             DatagridViewModel<DetailSheetViewModels> dgSheet = new DatagridViewModel<DetailSheetViewModels>();
             dgSheet.rows = sheet;
 

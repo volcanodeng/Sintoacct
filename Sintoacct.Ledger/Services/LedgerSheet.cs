@@ -177,6 +177,8 @@ namespace Sintoacct.Ledger.Services
                 Utility.NewParameter("accid", condition.AccId)
             };
 
+            List<DetailSheetViewModels> detailSheet = new List<DetailSheetViewModels>();
+
             List<string> paymentTerms = _ledger.Database.SqlQuery<string>(string.Format("select PaymentTerms from T_Voucher where AbId = {0} and {1} <= PaymentTerms and PaymentTerms <= {2} group by PaymentTerms order by PaymentTerms",
                                                                                          Utility.ParameterNameString("abid"), Utility.ParameterNameString("startterm"), Utility.ParameterNameString("endterm")),
                                                                           parames).ToList();
@@ -184,24 +186,30 @@ namespace Sintoacct.Ledger.Services
             #region 期初余额
             //计算期初发生余额
             string initBalance = "select " +
-                                    string.Format("'{0}-{1}-01' as VoucherDate,",condition.StartPeriod.Substring(0,4),condition.StartPeriod.Substring(4)) +
-                                    "'' as CertWord," +
-                                    "'期初余额' as Abstract,"+
-                                    "sum(vd.Debit) as Debit,"+
-                                    "sum(vd.Credit) as Credit,"+
-                                    "'平' as Direction," +
-                                    "case a.Direction when '借' then sum(vd.Debit)-sum(vd.Credit) when '贷' then sum(vd.Credit)-sum(vd.Debit) end as Balance" +
-                                    "from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
-                                    "left join T_Account a on a.AccId=vd.AccId " +
-                                    string.Format("where v.AbId={0} and vd.AccId={1} ", Utility.ParameterNameString("abid"), Utility.ParameterNameString("accid")) +
-                                    string.Format("and v.PaymentTerms < {0} ", Utility.ParameterNameString("startterm")) +
-                                    "group by  vd.AccId,a.Direction";
+                                    " GETDATE() as VoucherDate," +
+                                    " '' as CertWord," +
+                                    " '期初余额' as Abstract,"+
+                                    " sum(vd.Debit) as Debit,"+
+                                    " sum(vd.Credit) as Credit,"+
+                                    " '平' as Direction," +
+                                    " case a.Direction when '借' then sum(vd.Debit)-sum(vd.Credit) when '贷' then sum(vd.Credit)-sum(vd.Debit) end as Balance " +
+                                    " from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
+                                    " left join T_Account a on a.AccId=vd.AccId " +
+                                    string.Format(" where v.AbId={0} and vd.AccId={1} ", Utility.ParameterNameString("abid"), Utility.ParameterNameString("accid")) +
+                                    string.Format(" and v.PaymentTerms < {0} ", Utility.ParameterNameString("startterm")) +
+                                    " group by  vd.AccId,a.Direction";
 
             Account account = _ledger.Accounts.Where(a => a.AccId == condition.AccId).FirstOrDefault();
+            DetailSheetViewModels initDetail = _ledger.Database.SqlQuery<DetailSheetViewModels>(initBalance, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).FirstOrDefault();
+            if (initDetail == null)
+            {
+                initDetail = new DetailSheetViewModels();
+                initDetail.Abstract = "期初余额";
+                initDetail.Direction = "平";
+            }
+            initDetail.VoucherDate = new DateTime(Convert.ToInt32(condition.StartPeriod.Substring(0, 4)), Convert.ToInt32(condition.StartPeriod.Substring(4)), 1);
 
-            List<DetailSheetViewModels> detailSheet = new List<DetailSheetViewModels>();
-            DetailSheetViewModels initDetail = _ledger.Database.SqlQuery<DetailSheetViewModels>(initBalance, parames).FirstOrDefault();
-            if (account != null)
+            if (account != null && account.InitialBalance > 0)
             {
                 //加上科目余额
                 if (account.Direction == "借")
@@ -213,22 +221,78 @@ namespace Sintoacct.Ledger.Services
                     initDetail.Credit += account.InitialBalance;
                 }
             }
+            //期初余额方向，默认显示“平”
+            if (initDetail.Debit > 0 || initDetail.Credit > 0) initDetail.Direction = account.Direction;
+            //加入集合
             detailSheet.Add(initDetail);
             #endregion
 
-            //返回各个期的明细
+            #region 明细
+            //各期的明细
             string detail = "select " +
-                                    "v.VoucherDate," +
-                                    "cw.CertWord+'-'+CONVERT(nvarchar(10),v.certwordsn) as CertWord," +
-                                    "vd.Abstract," +
-                                    "vd.Debit," +
-                                    "vd.Credit," +
-                                    "a.Direction," +
-                                    "0.00 as Balance" +
-                                    "from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
-                                    "left join T_Account a on a.AccId=vd.AccId " +
-                                    string.Format("where v.AbId={0} and vd.AccId={1} ", Utility.ParameterNameString("abid"), Utility.ParameterNameString("accid")) +
-                                    string.Format("and v.PaymentTerms < {0} ", Utility.ParameterNameString("startterm"));
+                                    " v.VoucherDate," +
+                                    " cw.CertWord+'-'+CONVERT(nvarchar(10),v.certwordsn) as CertWord," +
+                                    " vd.Abstract," +
+                                    " vd.Debit," +
+                                    " vd.Credit," +
+                                    " a.Direction," +
+                                    " 0.00 as Balance " +
+                                    " from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
+                                    " left join T_Account a on a.AccId=vd.AccId " +
+                                    " left join T_Certificate_Word cw on v.CertificateWord_CwId=cw.CwId " +
+                                    string.Format(" where v.AbId={0} and vd.AccId={1} ", Utility.ParameterNameString("abid"), Utility.ParameterNameString("accid")) +
+                                    string.Format(" and {0} <= v.PaymentTerms and v.PaymentTerms <= {1} ", Utility.ParameterNameString("startterm"), Utility.ParameterNameString("endterm"))+
+                                    " order by v.VoucherYear,v.VoucherMonth";
+
+            detailSheet.AddRange(_ledger.Database.SqlQuery<DetailSheetViewModels>(detail, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList());
+
+            //本期合计
+            string detailMonth = "select " +
+                                    " max(v.VoucherDate) as VoucherDate," +
+                                    " '' as CertWord," +
+                                    " '本期合计' as Abstract," +
+                                    " sum(vd.Debit) as Debit," +
+                                    " sum(vd.Credit) as Credit," +
+                                    " min(a.Direction) as Direction," +
+                                    " 0.00 as Balance " +
+                                    " from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
+                                    " left join T_Account a on a.AccId=vd.AccId " +
+                                    string.Format(" where v.AbId={0} and vd.AccId={1} ", Utility.ParameterNameString("abid"), Utility.ParameterNameString("accid")) +
+                                    string.Format(" and {0} <= v.PaymentTerms and v.PaymentTerms <= {1} ", Utility.ParameterNameString("startterm"), Utility.ParameterNameString("endterm")) +
+                                    " group by v.VoucherYear,v.VoucherMonth"+
+                                    " order by v.VoucherYear,v.VoucherMonth";
+            detailSheet.AddRange(_ledger.Database.SqlQuery<DetailSheetViewModels>(detailMonth, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList());
+
+            #endregion
+
+
+            #region 本年累计
+            string detailYear = "select " +
+                                    " max(v.VoucherDate) as VoucherDate," +
+                                    " '' as CertWord," +
+                                    " '本年累计' as Abstract," +
+                                    " sum(vd.Debit) as Debit," +
+                                    " sum(vd.Credit) as Credit," +
+                                    " min(a.Direction) as Direction," +
+                                    " 0.00 as Balance " +
+                                    " from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
+                                    " left join T_Account a on a.AccId=vd.AccId " +
+                                    string.Format(" where v.AbId={0} and vd.AccId={1} ", Utility.ParameterNameString("abid"), Utility.ParameterNameString("accid")) +
+                                    string.Format(" and v.PaymentTerms <= {0} ",  Utility.ParameterNameString("endterm")) +
+                                    " group by v.VoucherYear" +
+                                    " order by v.VoucherYear";
+
+            List<DetailSheetViewModels> orderDetail = new List<DetailSheetViewModels>();
+            foreach(string p in paymentTerms)
+            {
+                detailSheet.AddRange(_ledger.Database.SqlQuery<DetailSheetViewModels>(detailYear, 
+                                                                                      Utility.NewParameter("abid", abid),
+                                                                                      Utility.NewParameter("accid", condition.AccId),
+                                                                                      Utility.NewParameter("endterm", p)).ToList());
+            }
+
+
+            #endregion
 
 
             return detailSheet;
@@ -446,6 +510,8 @@ namespace Sintoacct.Ledger.Services
         TreeViewModel<AccountViewModel> GetMyAccountsInVoucher();
 
         List<DetailSheetViewModels> GetDetailSheet(long accid);
+
+        List<DetailSheetViewModels> GetDetailSheet(SearchConditionViewModel condition);
 
         List<GeneralLedgerViewModels> GetGeneralLedger(SearchConditionViewModel condition);
 
