@@ -6,8 +6,8 @@
             <tr>
                 <th data-options="field:'CompanyName',width:100,align:'center'">公司名称</th>
                 <th data-options="field:'Currency',width:100,align:'center'">币种</th>
-                <th data-options="field:'StartYear',width:100,align:'center'">开始年份</th>
-                <th data-options="field:'StartPeriod',width:100,align:'center'">账期</th>
+                <th data-options="field:'StartYear',width:100,align:'center',formatter:fmt_Period">开始年份</th>
+                @*<th data-options="field:'StartPeriod',width:100,align:'center'">账期</th>*@
                 <th data-options="field:'FiscalSystem',width:100,align:'center'">会计制度</th>
                 <th data-options="field:'Creator',width:100,align:'center'">创建人</th>
                 <th data-options="field:'CreateTime',width:100,align:'center'">创建时间</th>
@@ -166,9 +166,24 @@
             }
         }
 
+        function fmt_Period(value, row, index)
+        {
+            return row.StartYear.toString() + pad(row.StartPeriod,2);
+        }
+
         function dg_onDblClickRow(index, row)
         {
             location.replace("/Ledger/LedgerFrame?abid="+row.AbId);
+        }
+
+        /* 质朴长存法  by lifesinger */
+        function pad(num, n) {
+            var len = num.toString().length;
+            while (len < n) {
+                num = "0" + num;
+                len++;
+            }
+            return num;
         }
 
     </script>
