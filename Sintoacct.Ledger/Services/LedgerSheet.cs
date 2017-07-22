@@ -60,113 +60,8 @@ namespace Sintoacct.Ledger.Services
         /// <summary>
         /// 生成明细账列表数据。
         /// </summary>
-        /// <param name="accid"></param>
+        /// <param name="condition"></param>
         /// <returns></returns>
-        public List<DetailSheetViewModels> GetDetailSheet(long accid)
-        {
-            Guid abid = _cache.GetUserCache().AccountBookID;
-            string sql = "select v.[CreateTime] as VoucherDate,cw.CertWord+'-'+CONVERT(nvarchar(10),v.certwordsn) as CertWord,vd.Abstract,vd.Debit,vd.Credit,a.Direction " +
-                         "from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
-                         "left join T_Certificate_Word cw on v.CertificateWord_CwId=cw.CwId " +
-                         "left join T_Account a on a.AccId=vd.AccId " +
-                         string.Format("where v.AbId={0} and vd.AccId={1} ", Utility.ParameterNameString("abid"), Utility.ParameterNameString("accid"))+
-                         "order by vd.VdId";
-
-            List<DetailSheetViewModels> sheets = _ledger.Database.SqlQuery<DetailSheetViewModels>(sql, Utility.NewParameter("abid", abid), Utility.NewParameter("accid", accid)).ToList();
-            Account account = _ledger.Accounts.Where(a => a.AbId == abid && a.AccId == accid).FirstOrDefault();
-
-            decimal balanceM = 0, balanceY = 0;
-            string month = "";
-            for(int i=0;i<sheets.Count;i++)
-            {
-                //判断是否本期
-                if (month != string.Format("{0}-{1}", sheets[i].VoucherDate.Year, sheets[i].VoucherDate.Month))
-                {
-                    if (month != "")
-                    {
-                        //每期增加本期合计
-                        DetailSheetViewModels monthSheet = new DetailSheetViewModels();
-                        monthSheet.VoucherDate = new DateTime(sheets[i].VoucherDate.Year, sheets[i].VoucherDate.Month, DateTime.DaysInMonth(sheets[i].VoucherDate.Year, sheets[i].VoucherDate.Month));
-                        monthSheet.Abstract = "本期合计";
-                        monthSheet.Direction = sheets[i].Direction;
-                        if (monthSheet.Direction == "借")
-                        {
-                            monthSheet.Debit = balanceM;
-                        }
-                        else
-                        {
-                            monthSheet.Credit = balanceM;
-                        }
-                        monthSheet.Balance = balanceM;
-
-                        sheets.Insert(i, monthSheet);
-
-                        balanceM = 0;
-                    }
-
-                    //修改本期标志
-                    month = string.Format("{0}-{1}", sheets[i].VoucherDate.Year, sheets[i].VoucherDate.Month);
-                }
-
-                //累计金额
-                balanceM += (sheets[i].Direction == "借" ? sheets[i].Debit- sheets[i].Credit : sheets[i].Credit- sheets[i].Debit);
-                balanceY += (sheets[i].Direction == "借" ? sheets[i].Debit- sheets[i].Credit : sheets[i].Credit- sheets[i].Debit);
-                sheets[i].Balance = balanceM;
-                sheets[i].VoucherDate = new DateTime(sheets[i].VoucherDate.Year, sheets[i].VoucherDate.Month, DateTime.DaysInMonth(sheets[i].VoucherDate.Year, sheets[i].VoucherDate.Month));
-            }
-
-            //第一行加入期初余额
-            DetailSheetViewModels initSheet = new DetailSheetViewModels();
-            initSheet.VoucherDate = new DateTime(sheets[sheets.Count - 1].VoucherDate.Year, sheets[sheets.Count - 1].VoucherDate.Month, 1);
-            initSheet.Abstract = "期初余额";
-            initSheet.Direction = account.Direction;
-            if (initSheet.Direction == "借")
-            {
-                initSheet.Debit = account.InitialBalance;
-            }
-            else
-            {
-                initSheet.Credit = account.InitialBalance;
-            }
-            initSheet.Balance = account.InitialBalance;
-            sheets.Insert(0, initSheet);
-
-            
-            //每期增加本期合计
-            DetailSheetViewModels monthSheetLast = new DetailSheetViewModels();
-            monthSheetLast.VoucherDate = new DateTime(sheets[sheets.Count-1].VoucherDate.Year, sheets[sheets.Count - 1].VoucherDate.Month, DateTime.DaysInMonth(sheets[sheets.Count - 1].VoucherDate.Year, sheets[sheets.Count - 1].VoucherDate.Month));
-            monthSheetLast.Abstract = "本期合计";
-            monthSheetLast.Direction = sheets[sheets.Count - 1].Direction;
-            if (monthSheetLast.Direction == "借")
-            {
-                monthSheetLast.Debit = balanceM;
-            }
-            else
-            {
-                monthSheetLast.Credit = balanceM;
-            }
-            monthSheetLast.Balance = balanceM;
-            sheets.Add(monthSheetLast);
-
-            //最后加入本年累计
-            DetailSheetViewModels yearSheet = new DetailSheetViewModels();
-            yearSheet.VoucherDate = new DateTime(sheets[sheets.Count - 1].VoucherDate.Year, sheets[sheets.Count - 1].VoucherDate.Month, DateTime.DaysInMonth(sheets[sheets.Count - 1].VoucherDate.Year, sheets[sheets.Count - 1].VoucherDate.Month));
-            yearSheet.Abstract = "本年累计";
-            yearSheet.Direction= sheets[sheets.Count - 1].Direction;
-            if (yearSheet.Direction == "借")
-            {
-                yearSheet.Debit = balanceY;
-            }
-            else
-            {
-                yearSheet.Credit = balanceY;
-            }
-            yearSheet.Balance = balanceY;
-            sheets.Add(yearSheet);
-
-            return sheets;
-        }
-
         public List<DetailSheetViewModels> GetDetailSheet(SearchConditionViewModel condition)
         {
             Guid abid = _cache.GetUserCache().AccountBookID;
@@ -178,7 +73,7 @@ namespace Sintoacct.Ledger.Services
             };
 
             List<DetailSheetViewModels> detailSheet = new List<DetailSheetViewModels>();
-
+            //获取查询的所有会计期间
             List<string> paymentTerms = _ledger.Database.SqlQuery<string>(string.Format("select PaymentTerms from T_Voucher where AbId = {0} and {1} <= PaymentTerms and PaymentTerms <= {2} group by PaymentTerms order by PaymentTerms",
                                                                                          Utility.ParameterNameString("abid"), Utility.ParameterNameString("startterm"), Utility.ParameterNameString("endterm")),
                                                                           parames).ToList();
@@ -192,6 +87,7 @@ namespace Sintoacct.Ledger.Services
                                     " sum(vd.Debit) as Debit,"+
                                     " sum(vd.Credit) as Credit,"+
                                     " '平' as Direction," +
+                                    "min(v.PaymentTerms) as PaymentTerms," +
                                     " case a.Direction when '借' then sum(vd.Debit)-sum(vd.Credit) when '贷' then sum(vd.Credit)-sum(vd.Debit) end as Balance " +
                                     " from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
                                     " left join T_Account a on a.AccId=vd.AccId " +
@@ -208,6 +104,7 @@ namespace Sintoacct.Ledger.Services
                 initDetail.Direction = "平";
             }
             initDetail.VoucherDate = new DateTime(Convert.ToInt32(condition.StartPeriod.Substring(0, 4)), Convert.ToInt32(condition.StartPeriod.Substring(4)), 1);
+            initDetail.PaymentTerms = condition.StartPeriod;
 
             if (account != null && account.InitialBalance > 0)
             {
@@ -236,6 +133,7 @@ namespace Sintoacct.Ledger.Services
                                     " vd.Debit," +
                                     " vd.Credit," +
                                     " a.Direction," +
+                                    " v.PaymentTerms," +
                                     " 0.00 as Balance " +
                                     " from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
                                     " left join T_Account a on a.AccId=vd.AccId " +
@@ -244,7 +142,18 @@ namespace Sintoacct.Ledger.Services
                                     string.Format(" and {0} <= v.PaymentTerms and v.PaymentTerms <= {1} ", Utility.ParameterNameString("startterm"), Utility.ParameterNameString("endterm"))+
                                     " order by v.VoucherYear,v.VoucherMonth";
 
-            detailSheet.AddRange(_ledger.Database.SqlQuery<DetailSheetViewModels>(detail, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList());
+            //计算明细余额
+            var detailRecord = _ledger.Database.SqlQuery<DetailSheetViewModels>(detail, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
+            decimal balance = initDetail.Balance;
+            foreach(DetailSheetViewModels dsvm in detailRecord)
+            {
+                if (dsvm.Direction == "借") balance += (dsvm.Debit - dsvm.Credit);
+
+                if (dsvm.Direction == "贷") balance += (dsvm.Credit - dsvm.Debit);
+                
+                dsvm.Balance = balance;
+            }
+            detailSheet.AddRange(detailRecord);
 
             //本期合计
             string detailMonth = "select " +
@@ -254,6 +163,7 @@ namespace Sintoacct.Ledger.Services
                                     " sum(vd.Debit) as Debit," +
                                     " sum(vd.Credit) as Credit," +
                                     " min(a.Direction) as Direction," +
+                                    " max(v.PaymentTerms) as PaymentTerms," +
                                     " 0.00 as Balance " +
                                     " from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
                                     " left join T_Account a on a.AccId=vd.AccId " +
@@ -261,7 +171,18 @@ namespace Sintoacct.Ledger.Services
                                     string.Format(" and {0} <= v.PaymentTerms and v.PaymentTerms <= {1} ", Utility.ParameterNameString("startterm"), Utility.ParameterNameString("endterm")) +
                                     " group by v.VoucherYear,v.VoucherMonth"+
                                     " order by v.VoucherYear,v.VoucherMonth";
-            detailSheet.AddRange(_ledger.Database.SqlQuery<DetailSheetViewModels>(detailMonth, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList());
+
+            var detailRecordM = _ledger.Database.SqlQuery<DetailSheetViewModels>(detailMonth, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
+            balance = initDetail.Balance;
+            foreach(DetailSheetViewModels dsvm in detailRecordM)
+            {
+                if (dsvm.Direction == "借") balance += (dsvm.Debit - dsvm.Credit);
+
+                if (dsvm.Direction == "贷") balance += (dsvm.Credit - dsvm.Debit);
+
+                dsvm.Balance = balance;
+            }
+            detailSheet.AddRange(detailRecordM);
 
             #endregion
 
@@ -274,6 +195,7 @@ namespace Sintoacct.Ledger.Services
                                     " sum(vd.Debit) as Debit," +
                                     " sum(vd.Credit) as Credit," +
                                     " min(a.Direction) as Direction," +
+                                    " max(v.PaymentTerms) as PaymentTerms," +
                                     " 0.00 as Balance " +
                                     " from T_Voucher v inner join T_Voucher_Detail vd on v.VId=vd.VId " +
                                     " left join T_Account a on a.AccId=vd.AccId " +
@@ -285,17 +207,27 @@ namespace Sintoacct.Ledger.Services
             List<DetailSheetViewModels> orderDetail = new List<DetailSheetViewModels>();
             foreach(string p in paymentTerms)
             {
-                detailSheet.AddRange(_ledger.Database.SqlQuery<DetailSheetViewModels>(detailYear, 
+                var detailRecordY = _ledger.Database.SqlQuery<DetailSheetViewModels>(detailYear,
                                                                                       Utility.NewParameter("abid", abid),
                                                                                       Utility.NewParameter("accid", condition.AccId),
-                                                                                      Utility.NewParameter("endterm", p)).ToList());
+                                                                                      Utility.NewParameter("endterm", p)).ToList();
+                foreach(DetailSheetViewModels dsvm in detailRecordY)
+                {
+                    if (dsvm.Direction == "借") dsvm.Balance = initDetail.Balance + (dsvm.Debit - dsvm.Credit);
+
+                    if (dsvm.Direction == "贷") dsvm.Balance = initDetail.Balance + (dsvm.Credit - dsvm.Debit);
+                }
+                detailSheet.AddRange(detailRecordY);
+
+                //按会计期间排序(单个期间的顺序已排好只需按期间排列)
+                orderDetail.AddRange(detailSheet.Where(d => d.PaymentTerms == p).ToList());
             }
 
 
             #endregion
 
 
-            return detailSheet;
+            return orderDetail;
         }
 
         #endregion
@@ -508,8 +440,6 @@ namespace Sintoacct.Ledger.Services
         List<string> GetPaymentTerms();
 
         TreeViewModel<AccountViewModel> GetMyAccountsInVoucher();
-
-        List<DetailSheetViewModels> GetDetailSheet(long accid);
 
         List<DetailSheetViewModels> GetDetailSheet(SearchConditionViewModel condition);
 
