@@ -36,12 +36,11 @@ namespace Sintoacct.Ledger
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
-                      "~/Content/easyui.css",
-                      "~/Content/icon.css"));
+                      "~/Content/easyui.css"));
 
             bundles.Add(new StyleBundle("~/Content/easyui").Include(
                       "~/Content/easyui.css",
-                      "~/Content/icon.css"));
+                      "~/Content/awesome/css/font-awesome.min.css"));
         }
     }
 }
