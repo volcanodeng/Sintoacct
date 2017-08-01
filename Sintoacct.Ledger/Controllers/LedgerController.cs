@@ -118,6 +118,7 @@ namespace Sintoacct.Ledger.Controllers
             model.VouchersJson = JsonConvert.SerializeObject( Mapper.Map<List<VoucherViewModel>>(_voucher.GetMyUnauditVouchers(10)));
             model.AbstractsJson =JsonConvert.SerializeObject( Mapper.Map<List<AbstractViewModel>>(_voucher.GetMyAbstracts()));
             model.AccountsJson = JsonConvert.SerializeObject( _account.GetAccountTree().children);
+            model.NextVoucherDate = _voucher.GetNextVoucherDate();
             return View(model);
         }
 
