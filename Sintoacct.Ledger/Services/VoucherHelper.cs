@@ -18,7 +18,7 @@ namespace Sintoacct.Ledger.Services
         private readonly IAccountBookHelper _acctBook;
         private readonly HttpContextBase _context;
         private readonly IAccountHelper _account;
-        private readonly Guid _abid;
+        private  Guid _abid;
 
         public VoucherHelper(LedgerContext ledger,
                              ICacheHelper cache,
@@ -31,8 +31,6 @@ namespace Sintoacct.Ledger.Services
             _acctBook = acctBook;
             _context = context;
             _account = account;
-
-            _abid = _cache.GetUserCache().AccountBookID;
         }
 
         /// <summary>
@@ -41,7 +39,7 @@ namespace Sintoacct.Ledger.Services
         /// <returns>重算的科目数量</returns>
         private int RecalculateAllAccount()
         {
-            
+            _abid = _cache.GetUserCache().AccountBookID;
             var vouchers = _ledger.Vouchers.Where(v => v.AbId == _abid && v.VoucherYear == DateTime.Now.Year)
                                    .Include(v => v.VoucherDetails)
                                    .Include("VoucherDetails.Account")
@@ -100,7 +98,7 @@ namespace Sintoacct.Ledger.Services
 
         public Voucher GetMyVoucher(long vid)
         {
-
+            _abid = _cache.GetUserCache().AccountBookID;
             return _ledger.Vouchers.Where(v => v.AbId == _abid && v.VId == vid)
                                    .Include(v => v.VoucherDetails)
                                    .Include(v => v.CertificateWord)
@@ -109,6 +107,7 @@ namespace Sintoacct.Ledger.Services
 
         public List<Voucher> GetMyUnauditVouchers(int pageSize)
         {
+            _abid = _cache.GetUserCache().AccountBookID;
 
             //仅返回最新的pageSize个未审核的凭证
             return _ledger.Vouchers.Where(v => v.AbId == _abid && v.State == VoucherState.PaddingAudit)
@@ -293,6 +292,7 @@ namespace Sintoacct.Ledger.Services
 
         public AbstractTemp SaveAbstract(AbstractViewModel abs)
         {
+            _abid = _cache.GetUserCache().AccountBookID;
             AbstractTemp absTemp = new AbstractTemp();
             if(abs.AbsId>0)
             {
@@ -315,6 +315,7 @@ namespace Sintoacct.Ledger.Services
 
         public List<AbstractTemp> GetMyAbstracts()
         {
+            _abid = _cache.GetUserCache().AccountBookID;
             return _ledger.AbstractTemps.Where(ab => ab.AbId == _abid).ToList();
         }
 
@@ -329,7 +330,7 @@ namespace Sintoacct.Ledger.Services
 
         public List<Voucher> SearchVoucher(SearchConditionViewModel condition)
         {
-
+            _abid = _cache.GetUserCache().AccountBookID;
             //生成可查询的凭证集合
             var vouchers = _ledger.Vouchers.Where(v => v.AbId == _abid);
 
@@ -413,6 +414,7 @@ namespace Sintoacct.Ledger.Services
 
         public int GetMaxCertWordSn(DateTime voucherDate, int certWordId)
         {
+            _abid = _cache.GetUserCache().AccountBookID;
             int y = voucherDate.Year, m = voucherDate.Month;
             int cwSn = 0;
             var voucher = _ledger.Vouchers.Where(v => v.VoucherYear == y && v.VoucherMonth == m && v.CertificateWord.CwId == certWordId && v.AbId == _abid).ToList();
@@ -456,6 +458,7 @@ namespace Sintoacct.Ledger.Services
         /// <returns></returns>
         public DateTime GetNextVoucherDate()
         {
+            _abid = _cache.GetUserCache().AccountBookID;
             DateTime dt = DateTime.Now;
             var voucher = _ledger.Vouchers.Where(v => v.AbId == _abid).OrderByDescending(v => v.VoucherYear).ThenByDescending(v => v.VoucherMonth).FirstOrDefault();
             if(voucher != null)

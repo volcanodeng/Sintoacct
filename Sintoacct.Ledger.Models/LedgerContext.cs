@@ -38,7 +38,7 @@ namespace Sintoacct.Ledger.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            Database.SetInitializer(new CreateDatabaseIfNotExists<LedgerContext>());
+            //Database.SetInitializer(new CreateDatabaseIfNotExists<LedgerContext>());
 
             modelBuilder.Entity<Account>().HasMany(t => t.VoucherDetails).WithRequired(p => p.Account).WillCascadeOnDelete(false);
 

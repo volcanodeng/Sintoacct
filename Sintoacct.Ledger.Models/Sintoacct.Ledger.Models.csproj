@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonContext.cs" />
     <Compile Include="Ledger\AccountBook.cs" />
     <Compile Include="Ledger\AbstractTemp.cs" />
     <Compile Include="Ledger\Account.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Company.cs" />
     <Compile Include="Ledger\UserBook.cs" />
     <Compile Include="LedgerContext.cs" />
+    <Compile Include="LogModel\ExceptionLog.cs" />
     <Compile Include="Migrations\201707110938323_InitialCreate.cs" />
     <Compile Include="Migrations\201707110938323_InitialCreate.Designer.cs">
       <DependentUpon>201707110938323_InitialCreate.cs</DependentUpon>
@@ -88,6 +90,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SQL\InitData.sql" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
