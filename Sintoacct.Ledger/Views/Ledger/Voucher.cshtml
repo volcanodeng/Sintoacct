@@ -72,8 +72,8 @@
                         
                         &nbsp;&nbsp;&nbsp;
                         <a class="easyui-linkbutton" id="appendRec" onclick="addRec()" style="width:70px;">追加分录行</a>
-                        <a class="easyui-linkbutton" id="insertRec" onclick="addRec()" style="width:70px;">插入分录行</a>
-                        <a class="easyui-linkbutton" id="deleteRec" onclick="addRec()" style="width:70px;">删除分录行</a>
+                        <a class="easyui-linkbutton" id="insertRec" onclick="insRec()" style="width:70px;">插入分录行</a>
+                        <a class="easyui-linkbutton" id="deleteRec" onclick="delRec()" style="width:70px;">删除分录行</a>
                     </div>
                     <div class="right">
                         <a class="easyui-linkbutton" id="prev" title="上一张" onclick="prevClick()" data-options="iconCls:'fa fa-chevron-circle-left fa-lg',plain:true" ></a>
@@ -364,6 +364,46 @@
 
             }
         }
+
+        function insRec()
+        {
+            if (endEditing()) {
+
+                var row = $(globVar.vTable).datagrid('getSelected');
+                var ind = $(globVar.vTable).datagrid('getRowIndex',row);
+
+                $(globVar.vTable).datagrid('insertRow',
+                    {index: (ind>0?ind-1:0),
+                    row:{
+                        VId: $("#VId").val(),
+                        VdId:0,
+                        Abstract: "",
+                        AccId: "",
+                        AccountCode: "",
+                        Quantity: 0,
+                        Price: 0,
+                        AccountName: "",
+                        Debit: 0,
+                        Credit: 0
+                    }
+                });
+
+            }
+        }
+
+        function delRec()
+        {
+            $.messager.confirm('凭证删除','您确定要删除该凭证记录吗?',function(r){
+                if (r){
+                    if (endEditing()) {
+                        var row = $(globVar.vTable).datagrid('getSelected');
+                        var ind = $(globVar.vTable).datagrid('getRowIndex',row);
+                        $(globVar.vTable).datagrid('deleteRow',ind);
+                    }
+                }
+            });
+        }
+
         function reviewVoucher() {
 
             var vid = $("#VId").val();
