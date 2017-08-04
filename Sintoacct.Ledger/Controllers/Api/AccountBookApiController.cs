@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Http;
 using Sintoacct.Ledger.Models;
 using Sintoacct.Ledger.Services;
@@ -9,7 +6,7 @@ using AutoMapper;
 
 namespace Sintoacct.Ledger.Controllers.Api
 {
-    public class AccountBookApiController : ApiController
+    public class AccountBookApiController : BaseApiController
     {
         private readonly IAccountBookHelper _acctBook;
         private readonly IModelValidation _modelValid;

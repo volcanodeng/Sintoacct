@@ -1,7 +1,4 @@
 ﻿using System.Web.Http.ExceptionHandling;
-using System.Diagnostics;
-using System.Net.Http;
-using log4net;
 using Newtonsoft.Json;
 using Sintoacct.Ledger.Models;
 

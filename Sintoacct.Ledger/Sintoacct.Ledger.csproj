@@ -209,13 +209,16 @@
     <Compile Include="ClaimsAuthorizeAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\AccountBookApiController.cs" />
+    <Compile Include="Controllers\Api\BaseApiController.cs" />
     <Compile Include="Controllers\Api\LedgerSheetApiController.cs" />
     <Compile Include="Controllers\Api\VoucherApiController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LedgerController.cs" />
     <Compile Include="Controllers\LedgerSheetController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ModelValidation.cs" />
+    <Compile Include="ExceptionHandleAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -241,7 +244,6 @@
     <Compile Include="Services\Utility.cs" />
     <Compile Include="Services\VoucherHelper.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="TraceExceptionHandle.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\awesome\css\font-awesome.css" />

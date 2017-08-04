@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Http;
 using Sintoacct.Ledger.Models;
 using Sintoacct.Ledger.Services;
@@ -9,7 +7,7 @@ using AutoMapper;
 
 namespace Sintoacct.Ledger.Controllers.Api
 {
-    public class VoucherApiController : ApiController
+    public class VoucherApiController : BaseApiController
     {
         private readonly IModelValidation _modelValid;
         private readonly IVoucherHelper _voucher;

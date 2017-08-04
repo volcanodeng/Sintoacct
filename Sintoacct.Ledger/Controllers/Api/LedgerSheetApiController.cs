@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Http;
 using Sintoacct.Ledger.Models;
 using Sintoacct.Ledger.Services;
-using AutoMapper;
 
 namespace Sintoacct.Ledger.Controllers.Api
 {
-    public class LedgerSheetApiController : ApiController
+    public class LedgerSheetApiController : BaseApiController
     {
         private readonly ILedgerSheet _sheet;
         private readonly IModelValidation _modelValid;

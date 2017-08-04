@@ -8,7 +8,7 @@ using Sintoacct.Ledger.Models;
 
 namespace Sintoacct.Ledger.Controllers
 {
-    public class LedgerSheetController : Controller
+    public class LedgerSheetController : BaseController
     {
         public LedgerSheetController()
         {

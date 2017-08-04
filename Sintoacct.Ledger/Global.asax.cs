@@ -31,7 +31,7 @@ namespace Sintoacct.Ledger
             AutofacConfig();
 
             //全局异常处理（异常日志）
-            GlobalConfiguration.Configuration.Services.Add(typeof(IExceptionLogger),new TraceExceptionHandle());
+            //GlobalConfiguration.Configuration.Services.Add(typeof(IExceptionLogger),new TraceExceptionHandle());
 
             //webapi序列化设置（默认是XML格式，现设置为Json）
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.SupportedMediaTypes.Add(new System.Net.Http.Headers.MediaTypeHeaderValue("text/html"));

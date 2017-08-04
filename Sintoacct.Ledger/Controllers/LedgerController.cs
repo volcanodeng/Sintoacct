@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace Sintoacct.Ledger.Controllers
 {
-    public class LedgerController : Controller
+    public class LedgerController : BaseController
     {
         private readonly ClaimsIdentity _identity;
         private readonly ICacheHelper _cache;
