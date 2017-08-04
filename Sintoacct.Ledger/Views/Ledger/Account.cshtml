@@ -1,9 +1,17 @@
 ﻿
+@using System.Collections;
 @using Sintoacct.Ledger.Models;
 @{
     Layout = null;
     List<AccountCategoryViewModel> cates = Model.AccountCategorys;
     List<AuxiliaryTypeViewModel> auxTypes = Model.AuxiliaryTypes;
+    Dictionary<string, string> dict = new Dictionary<string, string>();
+    dict.Add("资产", "fa-car");
+    dict.Add("负债", "fa-credit-card");
+    dict.Add("权益", "fa-certificate");
+    dict.Add("成本", "fa-money");
+    dict.Add("损益", "fa-balance-scale");
+    
 }
 
 
@@ -36,7 +44,7 @@
             @foreach (AccountCategoryViewModel c in cates)
             {
                 <a href="javascript:void(0)" id="cate_@c.AcId" class="easyui-linkbutton cate"
-                   data-options="iconCls:'icon-large-picture',size:'large',iconAlign:'left',toggle:true,group:'g1'"
+                   data-options="iconCls:'fa @dict[c.CategoryName] fa-2x',size:'large',iconAlign:'left',toggle:true,group:'g1'"
                    onclick="cateOnClick(@c.AcId)" style="width:80px;">@c.CategoryName</a>
             }
         </div>
