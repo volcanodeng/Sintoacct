@@ -76,8 +76,8 @@
                         <a class="easyui-linkbutton" id="deleteRec" onclick="delRec()" style="width:70px;">删除分录行</a>
                     </div>
                     <div class="right">
-                        <a class="easyui-linkbutton" id="prev" title="上一张" onclick="prevClick()" data-options="iconCls:'fa fa-chevron-circle-left fa-lg',plain:true" ></a>
-                        <a class="easyui-linkbutton" id="next" title="下一张" onclick="nextClick()" data-options="iconCls:'fa fa-chevron-circle-right fa-lg',plain:true" ></a>
+                        <a class="easyui-linkbutton" id="prev" title="上一张" onclick="prevClick()" data-options="iconCls:'fa fa-chevron-circle-left fa-2x',size:'large',plain:true,width:30,height:30" ></a>
+                        <a class="easyui-linkbutton" id="next" title="下一张" onclick="nextClick()" data-options="iconCls:'fa fa-chevron-circle-right fa-2x',size:'large',plain:true,width:30,height:30" ></a>
                     </div>
                 </div>
                 <div class="voucher_wrap">
@@ -210,6 +210,8 @@
         }
 
         function binding(voucher) {
+            if(voucher == null || voucher == undefined)return;
+
             $("#VId").val(voucher.VId);
             $("#cw").combobox("select", voucher.CwId);
             $("#ss").numberspinner("setValue", voucher.CertWordSN);
