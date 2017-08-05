@@ -88,6 +88,7 @@
 
             <div>
                 <input class="easyui-textbox" id="ParentCode" name="ParentCode" data-options="label:'上级科目'" style="width:90%;height:32px">
+                <input type="hidden" id="ParentAccCode" name="ParentAccCode"  >
             </div>
 
             <div>
@@ -192,6 +193,26 @@
     function appendSub()
     {
         var row = $("#accDatagrid").datagrid("getSelected");
+        
+        $("#acctForm").form("load", {
+            AccCode: row.AccCode + "01",
+            AccName: "",
+            ParentCode: row.AccCode + " " + getParentAcct(row.AccCode),
+            dir: row.Direction,
+            Direction: row.Direction,
+            IsAuxiliary: row.IsAuxiliary ? "on" : "",
+            AuxTypeIds: row.AuxTypeIds,
+            AuxTypeNames: row.AuxTypeNames,
+            IsQuantity: row.IsQuantity ? "on" : "",
+            Unit: row.Unit,
+            AcId: row.AcId,
+            AccId: 0
+        });
+
+        $("#ParentCode").textbox("disabled", true);
+        $("#AcId").combobox("disabled",true);
+
+        $("#editDialog").dialog('open');
     }
 
     function save()
@@ -238,6 +259,10 @@
     {
         $("#auxItems").hide();
         $("#qtyUnit").hide();
+
+        $("#ParentCode").textbox("disabled", false);
+        $("#AcId").combobox("disabled", false);
+
         $('#acctForm').form('clear');
     }
 
