@@ -39,7 +39,13 @@ namespace Sintoacct.Ledger.Services
 
         public List<AccountCategory> GetSubAccountCategory(int mainCateId)
         {
-            return _ledger.AccountCategories.Where(ac => ac.ParentAcId.HasValue && ac.ParentAcId.Value == mainCateId).ToList();
+            var cateList = _ledger.AccountCategories.Where(ac => ac.ParentAcId.HasValue && ac.ParentAcId.Value == mainCateId).ToList();
+            if (cateList.Count == 0)
+            {
+                cateList = _ledger.AccountCategories.Where(ac => ac.AcId == mainCateId).ToList();
+            }
+
+            return cateList;
         }
 
         public AccountCategory GetAccountCategory(int acId)
@@ -133,7 +139,7 @@ namespace Sintoacct.Ledger.Services
                 account.AccCode = vmAccount.AccCode;
                 account.ParentAccCode = vmAccount.ParentAccCode;
 
-                
+                account.AccountBook = _acctBook.GetCurrentBook();
 
                 account.State = AccountState.Normal;
 

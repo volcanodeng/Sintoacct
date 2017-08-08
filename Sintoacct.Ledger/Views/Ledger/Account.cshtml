@@ -194,23 +194,15 @@
     {
         var row = $("#accDatagrid").datagrid("getSelected");
         
-        $("#acctForm").form("load", {
-            AccCode: row.AccCode + "01",
-            AccName: "",
-            ParentCode: row.AccCode + " " + getParentAcct(row.AccCode),
-            dir: row.Direction,
-            Direction: row.Direction,
-            IsAuxiliary: row.IsAuxiliary ? "on" : "",
-            AuxTypeIds: row.AuxTypeIds,
-            AuxTypeNames: row.AuxTypeNames,
-            IsQuantity: row.IsQuantity ? "on" : "",
-            Unit: row.Unit,
-            AcId: row.AcId,
-            AccId: 0
-        });
+        $("#AccCode").textbox("setValue",row.AccCode + "01");
+        $("#ParentAccCode").val(row.AccCode);
+        $("#ParentCode").textbox("setText",row.AccCode + " " + getParentAcct(row.AccCode));
+        $("#AccName").textbox("setValue","");
+        $("#AccId").val(0);
 
-        $("#ParentCode").textbox("disabled", true);
-        $("#AcId").combobox("disabled",true);
+
+        $("#ParentCode").textbox("readonly",true);
+        $("#AcId").combobox("readonly",true);
 
         $("#editDialog").dialog('open');
     }
@@ -260,8 +252,8 @@
         $("#auxItems").hide();
         $("#qtyUnit").hide();
 
-        $("#ParentCode").textbox("disabled", false);
-        $("#AcId").combobox("disabled", false);
+        $("#ParentCode").textbox("readonly",false);
+        $("#AcId").combobox("readonly",false);
 
         $('#acctForm').form('clear');
     }
