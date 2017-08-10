@@ -154,6 +154,8 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/easyui")
+    @Scripts.Render("~/Scripts/jquery.hotkeys.js")
+    
 
     <script type="text/javascript">
 
@@ -171,6 +173,8 @@
         //======初始化=======
         $(function () {
             initData();
+
+            bindHotKeys();
         });
 
 
@@ -185,7 +189,7 @@
         {
             $("#dd").datebox("setValue", globVar.nextDate);
 
-            for (var i = 0; i < 4; i++) $(globVar.vTable).datagrid('appendRow', { VId: 0, Abstract: "", AccId: "", AccountCode: "", Quantity: 0, Price: 0, AccountName: "", Debit: 0, Credit: 0 });
+            for (var i = 0; i < 4; i++) $(globVar.vTable).datagrid('appendRow', { VId: i*(-1), Abstract: "", AccId: "", AccountCode: "", Quantity: 0, Price: 0, AccountName: "", Debit: 0, Credit: 0 });
 
             $(globVar.vTable).datagrid('acceptChanges');
 
@@ -502,6 +506,31 @@
 
         //=========事件响应=====
 
+        //=========热键绑定=====
+
+        function bindHotKeys()
+        {
+            $(document).bind('keydown', "up", hkUp);
+            $(document).bind('keydown', "down", hkDown);
+        }
+
+        function hkUp()
+        {
+            console.log(dgWrapper.editIndex);
+            //if(dgWrapper.editIndex<=0)return false;
+            //onClickCell(dgWrapper.editIndex-1,"Abstract");
+            return false;
+        }
+
+        function hkDown()
+        {
+            console.log(dgWrapper.editIndex);
+            //if(dgWrapper.editIndex>=$(globVar.vTable).datagrid("getRows").length)return false;
+            //onClickCell(dgWrapper.editIndex+1,"Abstract");
+            return false;
+        }
+
+        //=========热键绑定=====
     </script>
     </body>
 </html>
