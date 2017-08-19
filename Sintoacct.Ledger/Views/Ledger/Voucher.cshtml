@@ -107,7 +107,7 @@
                         <thead>
                             <tr>
                                 <th data-options="field:'Abstract',width:280,editor:{type:'textbox',options:{buttonText:'摘要',onClickButton:absClickButton}}" rowspan="2">摘要</th>
-                                <th data-options="field:'AccId',formatter:scFormatter,width:280,editor:{type:'combotree'}" rowspan="2">会计科目</th>
+                                <th data-options="field:'AccId',formatter:scFormatter,width:280,editor:{type:'combotree',options:{editable:true}}" rowspan="2">会计科目</th>
                                 <th>借方金额</th>
                                 <th>贷方金额</th>
                             </tr>
@@ -470,6 +470,10 @@
             $(globVar.vTable).datagrid('getRows')[dgWrapper.editIndex]['AccountName'] = node.attributes.AccName;
         }
 
+        function treeFilter(q,node)
+        {
+            return node.text.toLowerCase().indexOf(q.toLowerCase()) >= 0;
+        }
 
         function fmtAbstract(value, row, index)
         {
@@ -483,7 +487,7 @@
         {
             var ed = $(globVar.vTable).datagrid('getEditor', { index: ind, field: 'AccId' });
             var t = $(ed.target).combotree("tree");
-            t.tree({ onSelect: treeOnSelect });
+            t.tree({ onSelect: treeOnSelect,filter:treeFilter});
 
             $(ed.target).combotree("loadData", globVar.accountData);
         }
@@ -510,25 +514,24 @@
 
         function bindHotKeys()
         {
-            $(document).bind('keydown', "up", hkUp);
-            $(document).bind('keydown', "down", hkDown);
+            $(document).bind('keydown', "return", hkReturn);
         }
 
-        function hkUp()
+        function hkReturn()
         {
-            console.log(dgWrapper.editIndex);
-            //if(dgWrapper.editIndex<=0)return false;
-            //onClickCell(dgWrapper.editIndex-1,"Abstract");
+            var rowCount = $(dgWrapper.dg).datagrid("getRows").length;
+
+            if(rowCount - 1 <= dgWrapper.editIndex)
+            {
+                addRec();
+            }
+
+            onClickCell(rowCount,"Abstract");
+
             return false;
         }
 
-        function hkDown()
-        {
-            console.log(dgWrapper.editIndex);
-            //if(dgWrapper.editIndex>=$(globVar.vTable).datagrid("getRows").length)return false;
-            //onClickCell(dgWrapper.editIndex+1,"Abstract");
-            return false;
-        }
+        
 
         //=========热键绑定=====
     </script>
