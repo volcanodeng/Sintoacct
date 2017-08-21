@@ -23,7 +23,7 @@ namespace Sintoacct.Ledger.Services
             {
                 TreeViewModel<AccountViewModel> accNode = new TreeViewModel<AccountViewModel>();
                 accNode.id = a.AccId.ToString();
-                accNode.text = a.AccName;
+                accNode.text = string.Format("{0} {1}", a.AccCode, a.AccName);
                 accNode.state = "open";
                 accNode.@checked = false;
                 accNode.attributes = Mapper.Map<AccountViewModel>(a);

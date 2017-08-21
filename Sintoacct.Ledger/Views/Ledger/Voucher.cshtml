@@ -472,7 +472,7 @@
 
         function treeFilter(q,node)
         {
-            return node.text.toLowerCase().indexOf(q.toLowerCase()) >= 0;
+            return node.text.toLowerCase().indexOf(q.toLowerCase()) >= 0 || (node.attributes.AccCode !=null && node.attributes.AccCode.toLowerCase().indexOf(q.toLowerCase()) >= 0);
         }
 
         function fmtAbstract(value, row, index)
