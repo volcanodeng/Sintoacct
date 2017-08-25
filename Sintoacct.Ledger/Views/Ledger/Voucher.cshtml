@@ -167,7 +167,8 @@
             cache: "#dataCache",                                         //缓存div容器
             abstractData: @Html.Raw( Model.AbstractsJson),              //摘要数据
             accountData: @Html.Raw( Model.AccountsJson),               //科目数据
-            nextDate:"@Model.NextVoucherDate.ToString("yyyy-MM-dd")"    //下一个凭证的默认日期
+            nextDate:"@Model.NextVoucherDate.ToString("yyyy-MM-dd")",    //下一个凭证的默认日期
+            preAbstract:""                                               //记录前一行摘要的内容，下一行自动粘贴该内容出来
         };
 
         //======初始化=======
@@ -488,8 +489,18 @@
             var ed = $(globVar.vTable).datagrid('getEditor', { index: ind, field: 'AccId' });
             var t = $(ed.target).combotree("tree");
             t.tree({ onSelect: treeOnSelect,filter:treeFilter});
-
             $(ed.target).combotree("loadData", globVar.accountData);
+
+            ed = $(globVar.vTable).datagrid('getEditor', { index: ind, field: 'Abstract' });
+            $(ed.target).textbox("setValue",globVar.preAbstract);
+        }
+
+        function fieldSettingFun(ind,dg)
+        {
+            if(ind == undefined)return;
+
+            var ed = dg.datagrid('getEditor', { index: ind, field: 'Abstract' });
+            globVar.preAbstract = $(ed.target).textbox("getValue");
         }
 
         function dgOnDblClickRow(index, row)
