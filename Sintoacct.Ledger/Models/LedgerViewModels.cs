@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
-using System.Collections.Generic;
-using Newtonsoft.Json.Converters;
 
 namespace Sintoacct.Ledger.Models
 {
@@ -418,26 +418,37 @@ namespace Sintoacct.Ledger.Models
             VoucherDetails = new List<VoucherDetailViewModel>();
         }
 
+        [Display(Name = "主凭证编号")]
         public long VId { get; set; }
 
+        [Display(Name = "凭证字ID")]
         public int CwId { get; set; }
 
+        [Display(Name = "凭证字")]
         public string CertWord { get; set; }
 
+        [Display(Name = "凭证字流水号")]
         public int CertWordSN { get; set; }
 
+        [Display(Name = "凭证日期")]
         public DateTime VoucherDate { get; set; }
 
+        [Display(Name = "凭证账期")]
         public string PaymentTerms { get; set; }
 
+        [Display(Name = "附加单据数")]
         public int InvoiceCount { get; set; }
 
+        [Display(Name = "附加单据文件路径")]
         public string InvoicePath { get; set; }
 
+        [Display(Name = "凭证状态")]
         public int State { get; set; }
 
+        [Display(Name = "凭证创建者")]
         public string Creator { get; set; }
 
+        [Display(Name = "凭证创建时间")]
         public DateTime CreateTime { get; set; }
 
         public string Review { get; set; }
@@ -454,63 +465,80 @@ namespace Sintoacct.Ledger.Models
     /// </summary>
     public class VoucherDetailViewModel
     {
+        [Display(Name = "凭证明细ID")]
         public long VdId { get; set; }
 
+        [Display(Name = "凭证明细—摘要")]
         public string Abstract { get; set; }
 
+        [Display(Name = "凭证明细—科目ID"),Required(ErrorMessage = "请选择凭证科目")]
         public long AccId { get; set; }
 
+        [Display(Name = "凭证明细—科目编号")]
         public string AccountCode { get; set; }
 
+        [Display(Name = "凭证明细—科目名称")]
         public string AccountName { get; set; }
 
+        [Display(Name = "凭证明细—辅助核算—数量")]
         public decimal Quantity { get; set; }
 
+        [Display(Name = "凭证明细—辅助核算—价格")]
         public decimal Price { get; set; }
 
+        [Display(Name = "凭证明细—借方金额")]
         public decimal Debit { get; set; }
 
+        [Display(Name = "凭证明细—贷方金额")]
         public decimal Credit { get; set; }
 
         /// <summary>
         /// 期初余额数量
         /// </summary>
+        [Display(Name = "期初余额数量")]
         public decimal InitialQuantity { get; set; }
 
         /// <summary>
         /// 期初余额
         /// </summary>
+        [Display(Name = "期初余额")]
         public decimal InitialBalance { get; set; }
 
         /// <summary>
         /// 本年累积借方数量
         /// </summary>
+        [Display(Name = "本年累积借方数量")]
         public decimal YtdDebitQuantity { get; set; }
 
         /// <summary>
         /// 本年累积借方金额
         /// </summary>
+        [Display(Name = "本年累积借方金额")]
         public decimal YtdDebit { get; set; }
 
         /// <summary>
         /// 本年累积贷方数量
         /// </summary>
+        [Display(Name = "本年累积贷方数量")]
         public decimal YtdCreditQuantity { get; set; }
 
         /// <summary>
         /// 本年累积贷方金额
         /// </summary>
+        [Display(Name = "本年累积贷方金额")]
         public decimal YtdCredit { get; set; }
 
 
         /// <summary>
         /// 年初余额数量
         /// </summary>
+        [Display(Name = "年初余额数量")]
         public decimal YtdBeginBalanceQuantity { get; set; }
 
         /// <summary>
         /// 年初余额
         /// </summary>
+        [Display(Name = "年初余额")]
         public decimal YtdBeginBalance { get; set; }
     }
 

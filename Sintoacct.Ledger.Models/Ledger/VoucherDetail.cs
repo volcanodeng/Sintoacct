@@ -37,7 +37,7 @@ namespace Sintoacct.Ledger.Models
         /// <summary>
         /// 会计科目id
         /// </summary>
-        [ForeignKey("Account")]
+        [ForeignKey("Account"),Required(ErrorMessage = "凭证科目")]
         public long AccId { get; set; }
 
         /// <summary>
