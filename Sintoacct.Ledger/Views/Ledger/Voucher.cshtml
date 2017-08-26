@@ -58,6 +58,13 @@
    </style>
 </head>
 <body >
+    <div id='Loading' style="position: absolute; z-index: 1000; top: 0px; left: 0px;
+    width: 100%; height: 100%; background: gray; text-align: center;">
+        <h1 style="top: 48%; position: relative;color:white;">
+            加载中···
+        </h1>
+    </div>
+
     <div class="easyui-layout" data-options="fit:true">
         <div data-options="region:'center',title:'记账凭证'" >
             <div class="easyui-panel" style="width:1200px;padding:20px;">
@@ -176,6 +183,8 @@
             initData();
 
             bindHotKeys();
+
+            $(window,top).on('beforeunload',beforeWindowClose);
         });
 
 
@@ -491,8 +500,11 @@
             t.tree({ onSelect: treeOnSelect,filter:treeFilter});
             $(ed.target).combotree("loadData", globVar.accountData);
 
-            ed = $(globVar.vTable).datagrid('getEditor', { index: ind, field: 'Abstract' });
-            $(ed.target).textbox("setValue",globVar.preAbstract);
+            if(row.Abstract == null || row.Abstract == "")
+            {
+                ed = $(globVar.vTable).datagrid('getEditor', { index: ind, field: 'Abstract' });
+                $(ed.target).textbox("setValue",globVar.preAbstract);
+            }
         }
 
         function fieldSettingFun(ind,dg)
@@ -517,6 +529,21 @@
                 top.AddTabIframe('上传原始凭证', '/RichFilemanager/index.html?expandedFolder=' + globVar.voucher[globVar.voucherIndex].InvoicePath + '&vid=' + globVar.voucher[globVar.voucherIndex].VId);
             else
                 top.AddTabIframe('上传原始凭证', '/RichFilemanager/index.html');
+        }
+
+        function beforeWindowClose(event)
+        {
+            var chgRows = $(globVar.vTable).datagrid('getChanges');
+            if(chgRows && chgRows.length>0)
+            {
+                $.messager.confirm('保存', '您还有未保存的内容，需要先保存吗？', function(r){
+                    if (r){
+                        saveVoucher();
+                    }
+                });
+
+                return '您还有未保存的内容，需要先保存吗？';
+            }
         }
 
         //=========事件响应=====
@@ -545,6 +572,11 @@
         
 
         //=========热键绑定=====
+
+
+        $.parser.onComplete = function () {
+            $("#Loading").remove();
+        }
     </script>
     </body>
 </html>

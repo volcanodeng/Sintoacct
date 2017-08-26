@@ -21,6 +21,13 @@
     </style>
 </head>
 <body>
+    <div id='Loading' style="position: absolute; z-index: 1000; top: 0px; left: 0px;
+    width: 100%; height: 100%; background: gray; text-align: center;">
+        <h1 style="top: 48%; position: relative;color:white;">
+            加载中···
+        </h1>
+    </div>
+
     <div class="easyui-layout" data-options="fit:true">
         <div data-options="region:'north',split:false,border:false" style="padding:10px;overflow:hidden;background-color:#F2F2F2;">
             <input id="sv" label="查凭证" panelWidth="320" panelHeight="250" />
@@ -148,6 +155,10 @@
 
     function delVoucher(vid) {
         alert(vid);
+    }
+
+    $.parser.onComplete = function () {
+        $("#Loading").remove();
     }
     </script>
 </body>
