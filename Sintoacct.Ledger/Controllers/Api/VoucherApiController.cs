@@ -7,6 +7,7 @@ using AutoMapper;
 
 namespace Sintoacct.Ledger.Controllers.Api
 {
+    
     public class VoucherApiController : BaseApiController
     {
         private readonly IModelValidation _modelValid;
