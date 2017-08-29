@@ -199,7 +199,7 @@
         {
             $("#dd").datebox("setValue", globVar.nextDate);
 
-            for (var i = 0; i < 4; i++) $(globVar.vTable).datagrid('appendRow', { VId: i*(-1), Abstract: "", AccId: "", AccountCode: "", Quantity: 0, Price: 0, AccountName: "", Debit: 0, Credit: 0 });
+            for (var i = 0; i < 4; i++) $(globVar.vTable).datagrid('appendRow', { VId: i*(-1), Abstract: "", AccId: 0, AccountCode: "", Quantity: 0, Price: 0, AccountName: "", Debit: 0, Credit: 0 });
 
             $(globVar.vTable).datagrid('acceptChanges');
 

@@ -41,10 +41,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         public IHttpActionResult SaveAccountBook(AcctBookViewModels acctBook)
         {
             string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             if(!_modelValid.ValidAccountBookCreate(acctBook,out err))
             {
@@ -60,12 +56,7 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/acctbook/del"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult DeleteAccountBook(AcctBookDelViewModel acctBook)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
-
+            
             _acctBook.Delete(acctBook.AbId);
 
             return Ok(ResMessage.Success());
@@ -92,11 +83,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/acctbook/saveCertword"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult SaveCertWord(CertWordViewModel certWord)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             _certWord.Save(certWord);
 
@@ -107,11 +93,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/acctbook/delCertword"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult DeleteCertWord(CertWordDeleteViewModel certWord)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             if(certWord == null)
             {
@@ -127,11 +108,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/acctbook/setCwDef"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult SetCertWordDefault(CertWordDeleteViewModel certWord)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             _certWord.SetDefault(certWord.CwId);
 
@@ -142,11 +118,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/acctbook/addAuxType"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult AddAuxiliaryType(AuxiliaryTypeViewModel auxType)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             _auxType.Add(auxType.AuxType);
 
@@ -157,11 +128,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/acctbook/delAuxType"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult DeleteAuxiliaryType(AuxiliaryTypeViewModel auxType)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             _auxType.Delete(auxType.AtId);
 
@@ -172,11 +138,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/acctbook/saveAux"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult SaveAuxiliary(AuxiliaryViewModel vmAux)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             _auxType.SaveAuxiliary(vmAux);
 
@@ -187,11 +148,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/acctbook/delAux"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult DeleteAuxiliary(AuxiliaryDeleteViewModel delAux)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             _auxType.DeleteAuxiliary(delAux.AuxId);
 
@@ -202,11 +158,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, Route("api/acctbook/GetAuxOfType")]
         public IHttpActionResult GetAuxiliaryOfType(int auxTypeId)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             List<Auxiliary> auxList = _auxType.GetAuxiliaryOfType(auxTypeId);
 
@@ -221,12 +172,7 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/acctbook/saveAccount"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult SaveAccount(AccountViewModel vmAccount)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
-
+            
             _account.SaveAccount(vmAccount);
 
             return Ok(ResMessage.Success());
@@ -236,11 +182,7 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/acctbook/saveAccountInit"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult SaveAccountInitial(AccountInitViewModel vmAccount)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
+            
 
             _account.SaveAccountInitial(vmAccount.Accounts);
 
@@ -251,11 +193,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, Route("api/acctbook/accountofcate")]
         public IHttpActionResult GetAccountsOfCategory(int acctCateId)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             List<Account> accList = _account.GetAccountsOfCategory(acctCateId);
 
@@ -269,11 +206,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, Route("api/acctbook/accTreeOfCate")]
         public IHttpActionResult GetAccountTreeOfCategory(int acctCateId)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             TreeViewModel<AccountViewModel> accountTree = acctCateId>0 ? _account.GetAccountTreeOfCategory(acctCateId) : _account.GetAccountTree();
 
@@ -285,11 +217,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, Route("api/acctbook/subAccCate")]
         public IHttpActionResult GetSubAccountCategory(int mainCateId)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             List<AccountCategory> accCateList = _account.GetSubAccountCategory(mainCateId);
 
@@ -304,11 +231,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/acctbook/delAccount"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult DeleteAccount(AccountDeleteViewModel vmAccount)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             if(vmAccount==null)
             {
@@ -324,11 +246,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/acctbook/addAuxAccount"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult AddAuxAccount(AuxiliaryAccountViewModel vmAuxAccount)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             _account.AddAuxAccount(vmAuxAccount);
 
@@ -340,11 +257,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, Route("api/acctbook/TrialBalance")]
         public IHttpActionResult GetTrialBalance()
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             DatagridViewModel<TrialBalanceViewModel> TrialBalance = new DatagridViewModel<TrialBalanceViewModel>();
             TrialBalance.rows = _account.TrialBalance();

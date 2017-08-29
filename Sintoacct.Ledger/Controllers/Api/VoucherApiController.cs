@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using System.Web.Http.Filters;
 using Sintoacct.Ledger.Models;
 using Sintoacct.Ledger.Services;
 using AutoMapper;
@@ -24,11 +25,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, Route("api/voucher/myVoucher")]
         public IHttpActionResult GetMyVoucher(long vid)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             VoucherViewModel voucher = Mapper.Map<VoucherViewModel>(_voucher.GetMyVoucher(vid));
             return Ok(voucher);
@@ -38,11 +34,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, Route("api/voucher/myVouchers")]
         public IHttpActionResult GetMyVouchers()
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             var voucher = Mapper.Map<List<VoucherViewModel>>(_voucher.GetMyUnauditVouchers(10));
             return Ok(voucher);
@@ -53,10 +44,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         public IHttpActionResult SaveVoucher(VoucherViewModel voucher)
         {
             string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             //校验借贷是否平衡、凭证字号是否最新、科目是否有效等
             if(!_modelValid.ValidVoucher(voucher,out err))
@@ -76,12 +63,7 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/voucher/audit"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult Audit(VoucherIdViewModel voucher)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
-
+            
             try
             {
                 _voucher.Audit(voucher.VId);
@@ -98,11 +80,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/voucher/del"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult DeleteVoucher(VoucherIdViewModel voucher)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             try
             {
@@ -121,11 +98,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/voucher/SetInvoice"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult SetInvoicePath(VoucherInvoicePathModel invoice)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             try
             {
@@ -151,11 +123,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/voucher/saveAbstract"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult SaveAbstract(AbstractViewModel abs)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             _voucher.SaveAbstract(abs);
 
@@ -166,11 +133,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/voucher/delAbstract"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult DeleteAbstract(AbstractViewModel abs)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             _voucher.DeleteAbstract(abs.AbsId);
 
@@ -182,11 +144,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/voucher/viewVoucher")]
         public IHttpActionResult ViewVoucher(SearchConditionViewModel condition)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             var voucher = _voucher.VoucherToSearchVoucherViewModel(_voucher.SearchVoucher(condition));
             DatagridViewModel<SearchVoucherViewModel> dgsv = new DatagridViewModel<SearchVoucherViewModel>();

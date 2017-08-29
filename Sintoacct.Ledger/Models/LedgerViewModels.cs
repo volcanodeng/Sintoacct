@@ -468,10 +468,10 @@ namespace Sintoacct.Ledger.Models
         [Display(Name = "凭证明细ID")]
         public long VdId { get; set; }
 
-        [Display(Name = "凭证明细—摘要")]
+        [Display(Name = "凭证明细—摘要"),Required(ErrorMessage ="请填写凭证摘要")]
         public string Abstract { get; set; }
 
-        [Display(Name = "凭证明细—科目ID"),Required(ErrorMessage = "请选择凭证科目")]
+        [Display(Name = "凭证明细—科目ID"),Required(ErrorMessage = "请选择会计科目"),Range(1,long.MaxValue,ErrorMessage = "请选择会计科目")]
         public long AccId { get; set; }
 
         [Display(Name = "凭证明细—科目编号")]

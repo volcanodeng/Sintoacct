@@ -40,11 +40,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, Route("api/LedgerSheet/GetMyAccountsInVoucher")]
         public IHttpActionResult GetMyAccountsInVoucher()
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             TreeViewModel<AccountViewModel> accountTree = _sheet.GetMyAccountsInVoucher();
 
@@ -54,12 +49,7 @@ namespace Sintoacct.Ledger.Controllers.Api
         [ClaimsAuthorize("role", "accountant")]
         [HttpGet, HttpPost, Route("api/LedgerSheet/GetDetailSheet")]
         public IHttpActionResult GetDetailSheet(SearchConditionViewModel condition)
-        {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
+        { 
 
             List<DetailSheetViewModels> sheet = _sheet.GetDetailSheet(condition);
             DatagridViewModel<DetailSheetViewModels> dgSheet = new DatagridViewModel<DetailSheetViewModels>();
@@ -73,11 +63,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet,HttpPost, Route("api/LedgerSheet/GetGeneralLedger")]
         public IHttpActionResult GetGeneralLedger(SearchConditionViewModel condition)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             if(string.IsNullOrEmpty( condition.StartPeriod) || string.IsNullOrEmpty(condition.EndPeriod))
             {
@@ -96,11 +81,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, HttpPost, Route("api/LedgerSheet/GetAccountBalance")]
         public IHttpActionResult GetAccountBalance(SearchConditionViewModel condition)
         {
-            string err;
-            if (!_modelValid.Valid(ModelState, out err))
-            {
-                ResMessage.Fail(err);
-            }
 
             if (string.IsNullOrEmpty(condition.StartPeriod) || string.IsNullOrEmpty(condition.EndPeriod))
             {
