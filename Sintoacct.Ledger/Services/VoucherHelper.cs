@@ -146,7 +146,7 @@ namespace Sintoacct.Ledger.Services
                         voucher.VoucherDetails.Add(vDetail);
 
                     vDetail.Abstract = vd.Abstract;
-                    vDetail.Account = _account.GetAccount(vd.AccId);
+                    vDetail.Account = _account.GetAccount(vd.AccId.Value);
                     vDetail.AccountCode = vDetail.Account.AccCode;
                     vDetail.AccountName = vDetail.Account.AccName;
                     vDetail.Quantity = vd.Quantity;
@@ -199,7 +199,7 @@ namespace Sintoacct.Ledger.Services
                 {
                     VoucherDetail vDetail = new VoucherDetail();
                     vDetail.Abstract = vd.Abstract;
-                    vDetail.Account = _account.GetAccount(vd.AccId);
+                    vDetail.Account = _account.GetAccount(vd.AccId.Value);
                     vDetail.AccountCode = vDetail.Account.AccCode;
                     vDetail.AccountName = vDetail.Account.AccName;
                     vDetail.Quantity = vd.Quantity;
@@ -432,7 +432,7 @@ namespace Sintoacct.Ledger.Services
             decimal Debit = 0, Credit = 0;
             foreach (VoucherDetailViewModel d in vmVoucher.VoucherDetails)
             {
-                Account acc = _account.GetAccount(d.AccId);
+                Account acc = _account.GetAccount(d.AccId.Value);
                 if (acc == null) return string.Format("科目无效({1})。摘要：{0}", d.Abstract, d.AccId);
 
                 if(acc.Direction=="借")

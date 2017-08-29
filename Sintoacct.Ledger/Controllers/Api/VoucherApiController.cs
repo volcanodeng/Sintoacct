@@ -25,7 +25,6 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, Route("api/voucher/myVoucher")]
         public IHttpActionResult GetMyVoucher(long vid)
         {
-
             VoucherViewModel voucher = Mapper.Map<VoucherViewModel>(_voucher.GetMyVoucher(vid));
             return Ok(voucher);
         }

@@ -472,7 +472,7 @@ namespace Sintoacct.Ledger.Models
         public string Abstract { get; set; }
 
         [Display(Name = "凭证明细—科目ID"),Required(ErrorMessage = "请选择会计科目"),Range(1,long.MaxValue,ErrorMessage = "请选择会计科目")]
-        public long AccId { get; set; }
+        public long? AccId { get; set; }
 
         [Display(Name = "凭证明细—科目编号")]
         public string AccountCode { get; set; }
