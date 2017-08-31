@@ -37,8 +37,8 @@
                    data-options="fit:true,singleSelect:true,onLoadSuccess:onLoadSuccess,fitColumns:true">
                 <thead>
                     <tr>
-                        <th data-options="field:'VoucherDate',width:60,align:'center',formatter: fmtDate">日期</th>
-                        <th data-options="field:'CertWord',width:30">凭证字号</th>
+                        <th data-options="field:'VoucherDate',width:70,align:'center',formatter: fmtDate">日期</th>
+                        <th data-options="field:'CertWord',width:30,formatter:fmtCertWord">凭证字号</th>
                         <th data-options="field:'Abstract',width:250">摘要</th>
                         <th data-options="field:'Account',width:250">科目</th>
                         <th data-options="field:'Debit',width:50">借方金额</th>
@@ -155,6 +155,11 @@
 
     function delVoucher(vid) {
         alert(vid);
+    }
+
+    function fmtCertWord(value, row, index)
+    {
+        return '<a href="javascript:top.window.AddTabIframe(\'凭证\', \'/ledger/Voucher/' + row["VId"] + '\')" >' + value + '</a>';
     }
 
     $.parser.onComplete = function () {

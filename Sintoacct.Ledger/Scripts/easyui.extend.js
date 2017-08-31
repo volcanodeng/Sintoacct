@@ -226,5 +226,5 @@ function responseHandle(data) {
 
 //datagrid格式化时间，仅显示日期部分
 function fmtDate(value, row, index) {
-    return value.replace(/T00:00:00/, "");
+    return value.replace(/T00:00:00/, "").replace(/T/, " ").substr(0,19);
 }
