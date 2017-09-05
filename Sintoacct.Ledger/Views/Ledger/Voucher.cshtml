@@ -428,7 +428,7 @@
             
             $.messager.prompt('审核凭证','您确定该凭证已录入正确可以通过审核吗?',function(r){
                 if (r){
-                    $.post("/api/voucher/audit", { VId: vid },function (data) {
+                    $.post("/api/voucher/audit", { VId: vid,ReviewOpinion:r },function (data) {
                         if (responseHandle(data)) {
                             loadVoucher($("#VId").val());
                         }

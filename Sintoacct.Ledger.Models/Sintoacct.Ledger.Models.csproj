@@ -65,6 +65,10 @@
     <Compile Include="Ledger\UserBook.cs" />
     <Compile Include="LedgerContext.cs" />
     <Compile Include="LogModel\ExceptionLog.cs" />
+    <Compile Include="Migrations\201709050958215_ModifyVoucher.cs" />
+    <Compile Include="Migrations\201709050958215_ModifyVoucher.Designer.cs">
+      <DependentUpon>201709050958215_ModifyVoucher.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Region.cs" />
@@ -74,6 +78,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201709050958215_ModifyVoucher.resx">
+      <DependentUpon>201709050958215_ModifyVoucher.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SQL\InitData.sql" />
   </ItemGroup>
   <ItemGroup />
