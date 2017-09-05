@@ -64,7 +64,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             
             try
             {
-                _voucher.Audit(voucher.VId);
+                _voucher.Audit(voucher.VId,voucher.ReviewOpinion);
             }
             catch(Exception e)
             {

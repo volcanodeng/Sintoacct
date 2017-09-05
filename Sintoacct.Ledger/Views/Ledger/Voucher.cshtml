@@ -74,7 +74,7 @@
                         <a class="easyui-linkbutton" id="edit" onclick="saveVoucher()" style="width:70px;">保存凭证</a>
                         <a class="easyui-linkbutton" id="delete" onclick="delVoucher()" style="width:70px;">删除凭证</a>
                         @*<a class="easyui-linkbutton" id="print" style="width:70px;">打印</a>*@
-                        @*<a class="easyui-linkbutton" id="audit" onclick="reviewVoucher()" style="width:70px;">审核</a>*@
+                        <a class="easyui-linkbutton" id="audit" onclick="reviewVoucher()" style="width:70px;">审核</a>
                         @*<a class="easyui-linkbutton" id="copy" style="width:70px;">复制</a>*@
                         
                         &nbsp;&nbsp;&nbsp;
@@ -426,7 +426,7 @@
             if(!vid || parseInt( vid) <= 0 ){$.messager.alert('审核凭证','当前凭证不能审核，请先保存凭证。','warning');return;}
 
             
-            $.messager.confirm('审核凭证','您确定该凭证已录入正确可以通过审核吗?',function(r){
+            $.messager.prompt('审核凭证','您确定该凭证已录入正确可以通过审核吗?',function(r){
                 if (r){
                     $.post("/api/voucher/audit", { VId: vid },function (data) {
                         if (responseHandle(data)) {

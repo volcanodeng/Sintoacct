@@ -564,6 +564,8 @@ namespace Sintoacct.Ledger.Models
     public class VoucherIdViewModel
     {
         public long VId { get; set; }
+
+        public string ReviewOpinion { get; set; }
     }
 
     /// <summary>

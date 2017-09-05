@@ -260,7 +260,7 @@ namespace Sintoacct.Ledger.Services
             _ledger.Vouchers.Remove(delVoucher);
         }
 
-        public void Audit(long vid)
+        public void Audit(long vid,string reviewOpinion)
         {
             Voucher voucher = GetMyVoucher(vid);
             if (voucher.State != VoucherState.PaddingAudit) throw new InvalidOperationException("凭证状态不能被审核");
@@ -271,6 +271,9 @@ namespace Sintoacct.Ledger.Services
             if (debit != credit) throw new InvalidOperationException(string.Format("借方（{0}）贷方（{1}）不平！", debit, credit));
 
             voucher.State = VoucherState.Audited;
+            voucher.ReviewOpinion = reviewOpinion;
+            voucher.ReviewTime = DateTime.Now;
+            voucher.Review = ((ClaimsIdentity)_context.User.Identity).GetUserName();
             _ledger.SaveChanges();
         }
 
@@ -485,7 +488,7 @@ namespace Sintoacct.Ledger.Services
 
         void Delete(long vid);
 
-        void Audit(long vid);
+        void Audit(long vid, string reviewOpinion);
 
         VoucherViewModel CopyNew(long vid);
 

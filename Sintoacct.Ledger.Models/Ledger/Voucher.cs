@@ -103,6 +103,12 @@ namespace Sintoacct.Ledger.Models
         public DateTime? ReviewTime { get; set; }
 
         /// <summary>
+        /// 审核意见
+        /// </summary>
+        [MaxLength(1000)]
+        public string ReviewOpinion { get; set; }
+
+        /// <summary>
         /// 凭证明细
         /// </summary>
         public virtual ICollection<VoucherDetail> VoucherDetails { get; set; }
