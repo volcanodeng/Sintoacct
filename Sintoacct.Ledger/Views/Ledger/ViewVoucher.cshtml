@@ -18,6 +18,10 @@
             text-align:center;
             font-weight:bold;
         }
+
+        form div{
+            display:inline-block;
+        }
     </style>
 </head>
 <body>
@@ -30,11 +34,21 @@
 
     <div class="easyui-layout" data-options="fit:true">
         <div data-options="region:'north',split:false,border:false" style="padding:10px;overflow:hidden;background-color:#F2F2F2;">
-            <input id="sv" label="查凭证" panelWidth="320" panelHeight="250" />
+            <form id="sForm" method="post">
+                <div>会计期间：<input class="easyui-combobox" id="StartPeriod" name="StartPeriod" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /> 至 <input class="easyui-combobox" id="EndPeriod" name="EndPeriod" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /></div>
+
+                <div><span style="padding-left:12px;">凭证字：</span><input class="easyui-combobox" name="CertWord" data-options="valueField:'CertWord',textField:'CertWord',url:'/api/acctbook/MyCertWordArray',width:100,height:30,method:'GET'" /></div>
+
+                <div><span style="padding-left:12px;">凭证号：</span><input class="easyui-textbox" name="CertWordSN" data-options="width:220,height:30,prompt:'请输入凭证号或凭证号范围'" /></div>
+
+                <div><span>凭证状态：</span><input class="easyui-combobox" name="VoucherState" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /></div>
+
+                <div ><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#sForm').submit();" style="width:100px;">查询</a></div>
+            </form>
         </div>
         <div data-options="region:'center',border:false" style="padding:10px;">
             <table class="easyui-datagrid"  id="vvList"
-                   data-options="fit:true,singleSelect:true,onLoadSuccess:onLoadSuccess,fitColumns:true">
+                   data-options="fit:true,singleSelect:true,onLoadSuccess:onLoadSuccess,fitColumns:true,toolbar:'#vvListMenu'">
                 <thead>
                     <tr>
                         <th data-options="field:'VoucherDate',width:70,align:'center',formatter: fmtDate">日期</th>
@@ -52,20 +66,13 @@
         </div>
     </div>
 
-    <div id="searchPanel" style="padding:10px;">
-        <form id="sForm" method="post">
-            <div>会计期间：<input class="easyui-combobox" id="StartPeriod" name="StartPeriod" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /> 至 <input class="easyui-combobox" id="EndPeriod" name="EndPeriod" data-options="valueField:'val',textField:'text'"   style="width:100px;height:30px;"/></div>
+    <div id="vvListMenu" >
+        <a href="#" id="addDetail" class="easyui-linkbutton" data-options="plain:false"
+           onclick="top.window.AddTabIframe('录凭证', '/ledger/Voucher')">新增</a>
+        <a href="#" id="editDetail" class="easyui-linkbutton" data-options="plain:false"
+           onclick="print()">打印</a>
 
-            <div><span style="padding-left:12px;">凭证字：</span><input class="easyui-combobox" name="CertWord" data-options="valueField:'CertWord',textField:'CertWord',url:'/api/acctbook/MyCertWordArray',width:100,height:30,method:'GET'" /></div>
-
-            <div><span style="padding-left:12px;">凭证号：</span><input class="easyui-textbox" name="CertWordSN" data-options="width:220,height:30,prompt:'请输入凭证号或凭证号范围'" /></div>
-
-            <div><span>凭证状态：</span><input class="easyui-combobox" name="VoucherState" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;"/></div>
-
-            <div style="width:100%;text-align:center;"><a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript: $('#sForm').submit();" style="width:100px;">查询</a></div>
-        </form>
     </div>
-
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/easyui")
@@ -91,8 +98,6 @@
             $("#EndPeriod").combobox("loadData", data);
         });
 
-        $("#sv").combo();
-        $('#searchPanel').appendTo($('#sv').combo('panel'));
     }
 
     function formOnSubmit() {
