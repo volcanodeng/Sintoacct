@@ -61,10 +61,14 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/voucher/audit"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult Audit(VoucherIdViewModel voucher)
         {
-            
+            string[] vids = voucher.VId.Split(',');
             try
             {
-                _voucher.Audit(voucher.VId,voucher.ReviewOpinion);
+                foreach (string vid in vids)
+                {
+                    long audVid;
+                    if (long.TryParse(vid, out audVid)) _voucher.Audit(audVid, voucher.ReviewOpinion);
+                }
             }
             catch(Exception e)
             {
@@ -78,10 +82,12 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpPost, Route("api/voucher/del"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult DeleteVoucher(VoucherIdViewModel voucher)
         {
-
+            long delVid;
             try
             {
-                _voucher.Delete(voucher.VId);
+                if (long.TryParse(voucher.VId, out delVid)) _voucher.Delete(delVid);
+                else ResMessage.Fail("无效凭证编号");
+
             }
             catch (Exception e)
             {

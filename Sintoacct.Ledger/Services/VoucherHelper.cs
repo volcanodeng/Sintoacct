@@ -378,6 +378,7 @@ namespace Sintoacct.Ledger.Services
                     sv.Credit = vd.Credit;
                     sv.Creator = v.Creator;
                     sv.Review = string.IsNullOrEmpty(v.Review) ? "<未审核>" : v.Review;
+                    sv.ReviewOpinion = v.ReviewOpinion;
                     sv.MergeIndex = j;
                     searchVouchers.Add(sv);
                     i++;

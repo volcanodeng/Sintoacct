@@ -48,17 +48,19 @@
         </div>
         <div data-options="region:'center',border:false" style="padding:10px;">
             <table class="easyui-datagrid"  id="vvList"
-                   data-options="fit:true,singleSelect:true,onLoadSuccess:onLoadSuccess,fitColumns:true,toolbar:'#vvListMenu'">
+                   data-options="fit:true,singleSelect:false,onLoadSuccess:onLoadSuccess,fitColumns:true,toolbar:'#vvListMenu',idField:'VId',selectOnCheck:true">
                 <thead>
                     <tr>
+                        <th data-options="field:'ck',checkbox:true"></th>
                         <th data-options="field:'VoucherDate',width:70,align:'center',formatter: fmtDate">日期</th>
                         <th data-options="field:'CertWord',width:30,formatter:fmtCertWord">凭证字号</th>
                         <th data-options="field:'Abstract',width:250">摘要</th>
-                        <th data-options="field:'Account',width:250">科目</th>
+                        <th data-options="field:'Account',width:200">科目</th>
                         <th data-options="field:'Debit',width:50">借方金额</th>
                         <th data-options="field:'Credit',width:50">贷方金额</th>
                         <th data-options="field:'Creator',width:30,align:'center'">制单人</th>
                         <th data-options="field:'Review',width:30,align:'center'">审核人</th>
+                        <th data-options="field:'ReviewOpinion',width:80,align:'center'">审核意见</th>
                         <th data-options="field:'VId',width:40,align:'center',formatter: fmtOperate">操作</th>
                     </tr>
                 </thead>
@@ -67,11 +69,24 @@
     </div>
 
     <div id="vvListMenu" >
-        <a href="#" id="addDetail" class="easyui-linkbutton" data-options="plain:false"
-           onclick="top.window.AddTabIframe('录凭证', '/ledger/Voucher')">新增</a>
-        <a href="#" id="editDetail" class="easyui-linkbutton" data-options="plain:false"
-           onclick="print()">打印</a>
-
+        <a href="#" id="addVoucher" class="easyui-linkbutton" data-options="plain:false"
+           onclick="top.window.AddTabIframe('录凭证', '/ledger/Voucher')" style="width:70px;">新增</a>
+        <a href="#" id="print" class="easyui-linkbutton" data-options="plain:false"
+           onclick="print()" style="width:70px;">打印</a>
+        <a href="#" id="expExcel" class="easyui-linkbutton" data-options="plain:false"
+           onclick="expExcel()" style="width:70px;">导出</a>
+        <a href="#" id="review" class="easyui-linkbutton" data-options="plain:false"
+           onclick="review()" style="width:70px;">审核</a>
+        <a href="#" class="easyui-splitbutton" data-options="menu:'#moreBtn',plain:false" style="width:70px;">更多</a>
+    </div>
+    <div id="moreBtn" style="width:100px;">
+        <div>反审核</div>
+        <div>整理</div>
+        <div>插入</div>
+        <div>导入</div>
+        <div>批量删除</div>
+        <div>列表打印</div>
+        <div>按模板格式导入</div>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
@@ -142,6 +157,16 @@
                 field: 'VId',
                 rowspan: data.rows[i].RowSpan
             });
+            $(this).datagrid('mergeCells', {
+                index: data.rows[i].MergeIndex,
+                field: 'ck',
+                rowspan: data.rows[i].RowSpan
+            });
+            $(this).datagrid('mergeCells', {
+                index: data.rows[i].MergeIndex,
+                field: 'ReviewOpinion',
+                rowspan: data.rows[i].RowSpan
+            });
         }
     }
 
@@ -165,6 +190,29 @@
     function fmtCertWord(value, row, index)
     {
         return '<a href="javascript:top.window.AddTabIframe(\'凭证\', \'/ledger/Voucher/' + row["VId"] + '\')" >' + value + '</a>';
+    }
+
+
+    function review() {
+
+        var vids = "";
+        var vRows = $("#vvList").datagrid("getSelections");
+        if (!vRows || vRows.length==0) { $.messager.alert('审核凭证', '请选择要审核的凭证。', 'warning'); return; }
+
+        $.each(vRows, function (i, n) {
+            if (vids != "") vids += ",";
+            vids += n.VId;
+        });
+
+        $.messager.prompt('审核凭证', '您确定该凭证已录入正确可以通过审核吗?', function (r) {
+            if (r) {
+                $.post("/api/voucher/audit", { VId: vids, ReviewOpinion: r }, function (data) {
+                    if (responseHandle(data)) {
+                        $('#sForm').submit();
+                    }
+                });
+            }
+        });
     }
 
     $.parser.onComplete = function () {

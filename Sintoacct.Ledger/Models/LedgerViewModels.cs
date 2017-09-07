@@ -563,7 +563,11 @@ namespace Sintoacct.Ledger.Models
     /// </summary>
     public class VoucherIdViewModel
     {
-        public long VId { get; set; }
+        /// <summary>
+        /// vid字符串，逗号分隔。
+        /// </summary>
+        [Required(ErrorMessage ="请选择要审核的凭证")]
+        public string VId { get; set; }
 
         public string ReviewOpinion { get; set; }
     }
@@ -636,6 +640,8 @@ namespace Sintoacct.Ledger.Models
         public string Creator { get; set; }
 
         public string Review { get; set; }
+
+        public string ReviewOpinion { get; set; }
 
         /// <summary>
         /// 用于合并行的行索引
