@@ -169,7 +169,7 @@
         //全局定义
         var globVar = {
             voucher: @Html.Raw( Model.VouchersJson),                    //凭证数据
-            voucherIndex: -1,                                           //当前凭证实例在集合中的索引
+            voucherIndex: @Html.Raw(Model.VoucherIndex),                                           //当前凭证实例在集合中的索引
             vTable: "#voucherTab",                                      //凭证列表名称
             cache: "#dataCache",                                         //缓存div容器
             abstractData: @Html.Raw( Model.AbstractsJson),              //摘要数据
@@ -203,6 +203,8 @@
 
             $(globVar.vTable).datagrid('acceptChanges');
 
+
+            if(globVar.voucherIndex>-1)binding(globVar.voucher[globVar.voucherIndex]);
         }
 
         function newVoucher()
@@ -228,9 +230,10 @@
 
             $("#VId").val(voucher.VId);
             $("#cw").combobox("select", voucher.CwId);
+            $("#dd").datebox("setValue", fmtDate(voucher.VoucherDate));
+            //与numberspinner冲突，屏蔽
+            //onDateChange($("#dd").datebox("getValue"));
             $("#ss").numberspinner("setValue", voucher.CertWordSN);
-            $("#dd").datebox("setValue", voucher.VoucherDate.substr(0, voucher.VoucherDate.indexOf("T")));
-            onDateChange($("#dd").datebox("getValue"));
 
             $("#attCw").numberbox("setValue", voucher.InvoiceCount);
             if (voucher.State == 2) $("#auditMark").show(); else $("#auditMark").hide();

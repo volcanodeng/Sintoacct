@@ -668,5 +668,7 @@ namespace Sintoacct.Ledger.Models
         public string AccountsJson { get; set; }
 
         public DateTime NextVoucherDate { get; set; }
+
+        public int VoucherIndex { get; set; }
     }
 }

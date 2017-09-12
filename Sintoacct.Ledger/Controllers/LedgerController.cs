@@ -111,14 +111,32 @@ namespace Sintoacct.Ledger.Controllers
         }
 
         [ClaimsAuthorize("role", "accountant")]
-        public ActionResult Voucher()
+        public ActionResult Voucher(string id)
         {
+            string pTerms = string.Format("{0}{1}", DateTime.Now.Year, DateTime.Now.Month - 1);
+            if(!string.IsNullOrEmpty(id))
+            {
+                Voucher v= _voucher.GetMyVoucher(Convert.ToInt64(id));
+                pTerms = v.PaymentTerms;
+            }
+            List<VoucherViewModel> vvm = Mapper.Map<List<VoucherViewModel>>(_voucher.GetMyCurrentMonthVouchers(pTerms));
+            int vIndex = -1;
+            if (!string.IsNullOrEmpty(id))
+            {
+                foreach (VoucherViewModel vv in vvm)
+                {
+                    vIndex++;
+                    if (vv.VId == Convert.ToInt64(id)) break;
+                }
+            }
+
             VoucherActionViewModel model = new VoucherActionViewModel();
             model.CertWord = _certWord.GetDefault();
-            model.VouchersJson = JsonConvert.SerializeObject( Mapper.Map<List<VoucherViewModel>>(_voucher.GetMyUnauditVouchers(10)));
+            model.VouchersJson = JsonConvert.SerializeObject( vvm);
             model.AbstractsJson =JsonConvert.SerializeObject( Mapper.Map<List<AbstractViewModel>>(_voucher.GetMyAbstracts()));
             model.AccountsJson = JsonConvert.SerializeObject( _account.GetAccountTree().children);
             model.NextVoucherDate = _voucher.GetNextVoucherDate();
+            model.VoucherIndex = vIndex;
             return View(model);
         }
 

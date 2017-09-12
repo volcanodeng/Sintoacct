@@ -120,6 +120,20 @@ namespace Sintoacct.Ledger.Services
                                    .ToList();
         }
 
+        public List<Voucher> GetMyCurrentMonthVouchers(string PaymentTerms)
+        {
+            _abid = _cache.GetUserCache().AccountBookID;
+
+            //返回当期所有凭证记录
+            return _ledger.Vouchers.Where(v => v.AbId == _abid && v.PaymentTerms == PaymentTerms)
+                                   .OrderByDescending(v => v.VId)
+                                   .Include(v => v.VoucherDetails)
+                                   .Include(v => v.CertificateWord)
+                                   .Include(v => v.Invoices)
+                                   .Include("VoucherDetails.Account")
+                                   .ToList();
+        }
+
         public Voucher Save(VoucherViewModel vmVoucher)
         {
             Voucher voucher = new Voucher();
@@ -484,6 +498,8 @@ namespace Sintoacct.Ledger.Services
         Voucher GetMyVoucher(long vid);
 
         List<Voucher> GetMyUnauditVouchers(int pageSize);
+
+        List<Voucher> GetMyCurrentMonthVouchers(string PaymentTerms);
 
         Voucher Save(VoucherViewModel vmVoucher);
 
