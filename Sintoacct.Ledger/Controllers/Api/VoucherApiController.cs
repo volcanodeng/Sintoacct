@@ -79,6 +79,27 @@ namespace Sintoacct.Ledger.Controllers.Api
         }
 
         [ClaimsAuthorize("role", "accountant-edit")]
+        [HttpPost, Route("api/voucher/unaudit"), System.Web.Mvc.ValidateAntiForgeryToken]
+        public IHttpActionResult Unaudit(VoucherIdViewModel voucher)
+        {
+            string[] vids = voucher.VId.Split(',');
+            try
+            {
+                foreach (string vid in vids)
+                {
+                    long audVid;
+                    if (long.TryParse(vid, out audVid)) _voucher.Unaudit(audVid, voucher.ReviewOpinion);
+                }
+            }
+            catch (Exception e)
+            {
+                ResMessage.Fail(e.Message);
+            }
+
+            return Ok(ResMessage.Success());
+        }
+
+        [ClaimsAuthorize("role", "accountant-edit")]
         [HttpPost, Route("api/voucher/del"), System.Web.Mvc.ValidateAntiForgeryToken]
         public IHttpActionResult DeleteVoucher(VoucherIdViewModel voucher)
         {

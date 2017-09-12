@@ -291,6 +291,18 @@ namespace Sintoacct.Ledger.Services
             _ledger.SaveChanges();
         }
 
+        public void Unaudit(long vid, string reviewOpinion)
+        {
+            Voucher voucher = GetMyVoucher(vid);
+            if (voucher.State != VoucherState.Audited) throw new InvalidOperationException("凭证状态不能被审核");
+
+            voucher.State = VoucherState.PaddingAudit;
+            voucher.ReviewOpinion = reviewOpinion;
+            voucher.ReviewTime = DateTime.Now;
+            voucher.Review = ((ClaimsIdentity)_context.User.Identity).GetUserName();
+            _ledger.SaveChanges();
+        }
+
         public VoucherViewModel CopyNew(long vid)
         {
             Voucher voucher = GetMyVoucher(vid);
@@ -506,6 +518,8 @@ namespace Sintoacct.Ledger.Services
         void Delete(long vid);
 
         void Audit(long vid, string reviewOpinion);
+
+        void Unaudit(long vid, string reviewOpinion);
 
         VoucherViewModel CopyNew(long vid);
 
