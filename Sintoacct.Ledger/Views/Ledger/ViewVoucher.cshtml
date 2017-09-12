@@ -94,6 +94,7 @@
 
     <script type="text/javascript">
 
+        var token = $('@Html.AntiForgeryToken()').val();
 
     $(function () {
         init();
@@ -120,13 +121,13 @@
     }
 
     function formSuccess(data) {
-        
+
         $("#vvList").datagrid("loadData", JSON.parse(data));
-        
+
     }
 
     function onLoadSuccess(data) {
-        
+
         for (var i = 0; i < data.rows.length; i++) {
             $(this).datagrid('mergeCells', {
                 index: data.rows[i].MergeIndex,
@@ -206,7 +207,7 @@
 
         $.messager.prompt('审核凭证', '您确定该凭证已录入正确可以通过审核吗?', function (r) {
             if (r) {
-                $.post("/api/voucher/audit", { VId: vids, ReviewOpinion: r }, function (data) {
+                $.post("/api/voucher/audit", { VId: vids, ReviewOpinion: r ,"__RequestVerificationToken":token}, function (data) {
                     if (responseHandle(data)) {
                         $('#sForm').submit();
                     }

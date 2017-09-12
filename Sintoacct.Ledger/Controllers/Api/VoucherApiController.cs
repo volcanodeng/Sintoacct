@@ -58,7 +58,7 @@ namespace Sintoacct.Ledger.Controllers.Api
         }
 
         [ClaimsAuthorize("role", "accountant-edit")]
-        [HttpPost, Route("api/voucher/audit"), System.Web.Mvc.ValidateAntiForgeryToken]
+        [HttpPost, Route("api/voucher/audit"), ValidateAntiForgeryToken]
         public IHttpActionResult Audit(VoucherIdViewModel voucher)
         {
             string[] vids = voucher.VId.Split(',');

@@ -244,6 +244,7 @@
     <Compile Include="Services\Utility.cs" />
     <Compile Include="Services\VoucherHelper.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ValidateAntiForgeryTokenAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\awesome\css\font-awesome.css" />
