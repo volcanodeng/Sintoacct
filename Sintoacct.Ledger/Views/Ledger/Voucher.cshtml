@@ -166,6 +166,8 @@
 
     <script type="text/javascript">
 
+        var _token = $('@Html.AntiForgeryToken()').val();
+
         //全局定义
         var globVar = {
             voucher: @Html.Raw( Model.VouchersJson),                    //凭证数据
@@ -355,7 +357,8 @@
                         CertWordSn: $("#ss").numberspinner('getValue'),
                         InvoiceCount: $("#attCw").numberbox('getValue'),
                         VoucherDate: $("#dd").datebox("getValue"),
-                        VoucherDetails: changeRows
+                        VoucherDetails: changeRows,
+                        "__RequestVerificationToken":_token
                     },
                     function (data) {
                         if (responseHandle(data)) {
@@ -428,7 +431,7 @@
             var vid = $("#VId").val();
             if(!vid || parseInt( vid) <= 0 ){$.messager.alert('审核凭证','当前凭证不能审核，请先保存凭证。','warning');return;}
 
-            
+
             $.messager.prompt('审核凭证','您确定该凭证已录入正确可以通过审核吗?',function(r){
                 if (r){
                     $.post("/api/voucher/audit", { VId: vid,ReviewOpinion:r },function (data) {
@@ -453,7 +456,7 @@
                     });
                 }
             });
-            
+
         }
 
 
@@ -572,7 +575,7 @@
             return false;
         }
 
-        
+
 
         //=========热键绑定=====
 

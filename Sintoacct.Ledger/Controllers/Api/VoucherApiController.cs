@@ -38,7 +38,7 @@ namespace Sintoacct.Ledger.Controllers.Api
         }
 
         [ClaimsAuthorize("role", "accountant-edit")]
-        [HttpPost, Route("api/voucher/saveVoucher"), System.Web.Mvc.ValidateAntiForgeryToken]
+        [HttpPost, Route("api/voucher/saveVoucher"), ValidateAntiForgeryToken]
         public IHttpActionResult SaveVoucher(VoucherViewModel voucher)
         {
             string err;
