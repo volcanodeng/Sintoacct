@@ -100,15 +100,18 @@ namespace Sintoacct.Ledger.Controllers.Api
         }
 
         [ClaimsAuthorize("role", "accountant-edit")]
-        [HttpPost, Route("api/voucher/del"), System.Web.Mvc.ValidateAntiForgeryToken]
+        [HttpPost, Route("api/voucher/del"), ValidateAntiForgeryToken]
         public IHttpActionResult DeleteVoucher(VoucherIdViewModel voucher)
         {
-            long delVid;
+            string[] vids = voucher.VId.Split(',');
             try
             {
-                if (long.TryParse(voucher.VId, out delVid)) _voucher.Delete(delVid);
-                else ResMessage.Fail("无效凭证编号");
-
+                foreach (string vid in vids)
+                {
+                    long delVid;
+                    if (long.TryParse(vid, out delVid)) _voucher.Delete(delVid);
+                    else ResMessage.Fail(string.Format("无效凭证编号：{0}", vid));
+                }
             }
             catch (Exception e)
             {

@@ -272,6 +272,11 @@ namespace Sintoacct.Ledger.Services
             if (delVoucher.State == VoucherState.Audited) throw new InvalidOperationException("凭证已审核，若要删除请先弃审");
 
             _ledger.Vouchers.Remove(delVoucher);
+            if(_ledger.SaveChanges()>0)
+            {
+                //科目统计数据
+                this.RecalculateAllAccount();
+            }
         }
 
         public void Audit(long vid,string reviewOpinion)

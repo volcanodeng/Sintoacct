@@ -84,7 +84,7 @@
         <div>整理</div>
         <div>插入</div>
         <div>导入</div>
-        <div>批量删除</div>
+        <div onclick="batDelete()">批量删除</div>
         <div>列表打印</div>
         <div>按模板格式导入</div>
     </div>
@@ -185,7 +185,39 @@
     }
 
     function delVoucher(vid) {
-        alert(vid);
+        if (!vid) { $.messager.alert('删除凭证', '请选择要删除的凭证。', 'warning'); return; }
+
+        $.messager.confirm('删除凭证', '您确认要删除此凭证吗？删除后将不可恢复，并会产生断号。', function (r) {
+            if (r) {
+                $.post("/api/voucher/del", { VId: vid,  "__RequestVerificationToken": token }, function (data) {
+                    if (responseHandle(data)) {
+                        $('#sForm').submit();
+                    }
+                });
+            }
+        });
+    }
+
+    function batDelete() {
+
+        var vids = "";
+        var vRows = $("#vvList").datagrid("getSelections");
+        if (!vRows || vRows.length == 0) { $.messager.alert('删除凭证', '请选择要删除的凭证。', 'warning'); return; }
+
+        $.each(vRows, function (i, n) {
+            if (vids != "") vids += ",";
+            vids += n.VId;
+        });
+
+        $.messager.confirm('删除凭证', '您确认要删除此凭证吗？删除后将不可恢复，并会产生断号。', function (r) {
+            if (r) {
+                $.post("/api/voucher/del", { VId: vids,  "__RequestVerificationToken": token }, function (data) {
+                    if (responseHandle(data)) {
+                        $('#sForm').submit();
+                    }
+                });
+            }
+        });
     }
 
     function fmtCertWord(value, row, index)
