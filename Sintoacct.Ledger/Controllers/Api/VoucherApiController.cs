@@ -79,7 +79,7 @@ namespace Sintoacct.Ledger.Controllers.Api
         }
 
         [ClaimsAuthorize("role", "accountant-edit")]
-        [HttpPost, Route("api/voucher/unaudit"), System.Web.Mvc.ValidateAntiForgeryToken]
+        [HttpPost, Route("api/voucher/unaudit"), ValidateAntiForgeryToken]
         public IHttpActionResult Unaudit(VoucherIdViewModel voucher)
         {
             string[] vids = voucher.VId.Split(',');
@@ -88,7 +88,7 @@ namespace Sintoacct.Ledger.Controllers.Api
                 foreach (string vid in vids)
                 {
                     long audVid;
-                    if (long.TryParse(vid, out audVid)) _voucher.Unaudit(audVid, voucher.ReviewOpinion);
+                    if (long.TryParse(vid, out audVid)) _voucher.Unaudit(audVid);
                 }
             }
             catch (Exception e)

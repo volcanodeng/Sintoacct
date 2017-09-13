@@ -80,7 +80,7 @@
         <a href="#" class="easyui-splitbutton" data-options="menu:'#moreBtn',plain:false" style="width:70px;">更多</a>
     </div>
     <div id="moreBtn" style="width:100px;">
-        <div>反审核</div>
+        <div onclick="unreview()">反审核</div>
         <div>整理</div>
         <div>插入</div>
         <div>导入</div>
@@ -94,7 +94,7 @@
 
     <script type="text/javascript">
 
-        var token = $('@Html.AntiForgeryToken()').val();
+    var token = $('@Html.AntiForgeryToken()').val();
 
     $(function () {
         init();
@@ -208,6 +208,28 @@
         $.messager.prompt('审核凭证', '您确定该凭证已录入正确可以通过审核吗?', function (r) {
             if (r) {
                 $.post("/api/voucher/audit", { VId: vids, ReviewOpinion: r ,"__RequestVerificationToken":token}, function (data) {
+                    if (responseHandle(data)) {
+                        $('#sForm').submit();
+                    }
+                });
+            }
+        });
+    }
+
+    function unreview() {
+
+        var vids = "";
+        var vRows = $("#vvList").datagrid("getSelections");
+        if (!vRows || vRows.length == 0) { $.messager.alert('凭证反审核', '请选择要反审核的凭证。', 'warning'); return; }
+
+        $.each(vRows, function (i, n) {
+            if (vids != "") vids += ",";
+            vids += n.VId;
+        });
+
+        $.messager.confirm('凭证反审核', '您确定要反审核这些凭证吗?', function (r) {
+            if (r) {
+                $.post("/api/voucher/unaudit", { VId: vids, "__RequestVerificationToken": token }, function (data) {
                     if (responseHandle(data)) {
                         $('#sForm').submit();
                     }
