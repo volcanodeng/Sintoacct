@@ -28,7 +28,7 @@
     <div class="easyui-layout" data-options="fit:true">
         <div data-options="region:'north',split:false,border:false" style="padding:10px;overflow:hidden;background-color:#F2F2F2;">
             <form id="sForm" method="post">
-                <div>会计期间：<input class="easyui-combobox" id="StartPeriod" name="StartPeriod" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /> 至 <input class="easyui-combobox" id="EndPeriod" name="EndPeriod" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /></div>
+                <div>会计期间：<input class="easyui-combobox" id="StartPeriod" name="StartPeriod" data-options="valueField:'val',textField:'text'" style="width:120px;height:30px;" /> 至 <input class="easyui-combobox" id="EndPeriod" name="EndPeriod" data-options="valueField:'val',textField:'text'" style="width:120px;height:30px;" /></div>
 
                 <div><span>凭证字：</span><input class="easyui-combobox" name="CertWord" data-options="valueField:'CertWord',textField:'CertWord',url:'/api/acctbook/MyCertWordArray',width:100,height:30,method:'GET'" /></div>
 
@@ -84,8 +84,9 @@
         });
 
         $.get("/api/LedgerSheet/GetMyPaymentTerms", null, function (data) {
-            $("#StartPeriod").combobox("loadData", data);
+            $("#StartPeriod").combobox("loadData", data); 
             $("#EndPeriod").combobox("loadData", data);
+            $("#StartPeriod,#EndPeriod").combobox("select", data[data.length - 1].val);
         });
     }
 
@@ -104,9 +105,8 @@
 
     }
 
-    function onTreeClick(node)
-    {
-        //$("#vvList").datagrid("load", { accid : node.id});
+    function onTreeClick(node) {
+        
         $("#AccId").val(node.id);
 
         btnSubmit();
