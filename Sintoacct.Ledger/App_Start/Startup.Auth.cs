@@ -3,7 +3,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.Google;
+using Microsoft.Owin.Security;
 using Owin;
 using Sintoacct.Ledger.Models;
 
@@ -26,7 +26,8 @@ namespace Sintoacct.Ledger
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
-                //CookieSecure = CookieSecureOption.Never,
+                AuthenticationMode= AuthenticationMode.Active,
+                CookieSecure = CookieSecureOption.Always,
                 Provider = new CookieAuthenticationProvider
                 {
                     // 当用户登录时使应用程序可以验证安全戳。
