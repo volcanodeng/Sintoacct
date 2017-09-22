@@ -44,5 +44,16 @@ namespace Sintoacct.Ledger.Controllers
         {
             return View();
         }
+
+
+        /// <summary>
+        /// 凭证汇总表
+        /// </summary>
+        /// <returns></returns>
+        [ClaimsAuthorize("role", "accountant")]
+        public ActionResult VoucherSummary()
+        {
+            return View();
+        }
     }
 }

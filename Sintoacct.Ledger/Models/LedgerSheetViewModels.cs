@@ -97,4 +97,20 @@ namespace Sintoacct.Ledger.Models
 
         public decimal CreditBalance { get; set; }
     }
+
+    /// <summary>
+    /// 凭证汇总表
+    /// </summary>
+    public class VoucherSummaryViewModels
+    {
+        public long AccId { get; set; }
+
+        public string AccountCode { get; set; }
+
+        public string AccountName { get; set; }
+
+        public decimal Debit { get; set; }
+
+        public decimal Credit { get; set; }
+    }
 }

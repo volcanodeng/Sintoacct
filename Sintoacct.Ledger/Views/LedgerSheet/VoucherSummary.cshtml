@@ -1,0 +1,130 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/easyui")
+
+    <style type="text/css">
+        form div {
+            padding: 5px;
+        }
+
+        
+
+        .datagrid-header-row td div{
+            text-align: center !important;
+            font-weight: bold;
+        }
+
+        form div{
+            display:inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'north',split:false,border:false" style="padding:10px;overflow:hidden;background-color:#F2F2F2;">
+            <form id="sForm" method="post">
+                <div>汇总日期：<input class="easyui-datebox" id="StartPeriod" name="StartPeriod" type="text" style="width:100px;height:30px;" /> 至 <input class="easyui-datebox" id="EndPeriod" name="EndPeriod" type="text" style="width:100px;height:30px;" /></div>
+
+                <div><span style="padding-left:12px;">凭证字：</span><input class="easyui-combobox" name="CertWord" data-options="valueField:'CertWord',textField:'CertWord',url:'/api/acctbook/MyCertWordArray',width:100,height:30,method:'GET'" /></div>
+
+                <div><span style="padding-left:12px;">凭证号：</span><input class="easyui-textbox" name="CertWordSN" data-options="width:220,height:30,prompt:'请输入凭证号或凭证号范围'" /></div>
+
+                <div><span>凭证状态：</span><input class="easyui-combobox" name="VoucherState" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /></div>
+
+                <div ><a href="javascript:void(0)" id="btnSearch" class="easyui-linkbutton" data-options="iconCls:'fa fa-search fa-lg'" onclick="javascript: $('#sForm').submit();" style="width:100px;">查询</a></div>
+            </form>
+        </div>
+        <div data-options="region:'center',border:true" style="padding:10px;">
+            <table class="easyui-datagrid" id="vvList"
+                   data-options="fit:true,singleSelect:true,fitColumns:true,onLoadSuccess:onLoadSuccess">
+                <thead>
+                    <tr>
+                        <th data-options="field:'AccountCode',width:50,align:'center'">科目编码</th>
+                        <th data-options="field:'AccountName',width:150,align:'center'">科目名称</th>
+                        <th data-options="field:'Debit',width:80,align:'center'">借方金额</th>
+                        <th data-options="field:'Credit',width:60,align:'center'">贷方金额</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/easyui")
+
+    <script type="text/javascript">
+
+    $(function () {
+        init();
+    });
+
+    function init()
+    {
+        $("#sForm").form({
+            url: "/api/LedgerSheet/GetGeneralLedger/",
+            onSubmit: formOnSubmit,
+            success: formSuccess
+        });
+
+
+        $.get("/api/LedgerSheet/GetMyPaymentTerms", null, function (data) {
+            $("#StartPeriod").combobox("loadData", data);
+            $("#EndPeriod").combobox("loadData", data);
+            $("#StartPeriod,#EndPeriod").combobox("select", data[data.length - 1].val);
+            $('#sForm').submit();
+        });
+    }
+
+    function formOnSubmit() {
+        return $(this).form('validate');
+    }
+
+    function formSuccess(data) {
+        if (responseHandle(data)) {
+            $("#vvList").datagrid("loadData", []);
+            $("#vvList").datagrid("loadData", JSON.parse(data));
+        }
+    }
+
+    function onTreeClick(node)
+    {
+        $("#vvList").datagrid("load", { accid : node.id});
+    }
+
+    function zeroFormatter(value, row, index)
+    {
+        if (value == 0) return "";
+        else return '<span style="font-weight:bolder;">' + parseFloat(value).toFixed(2) + "</span>";
+    }
+
+    function onLoadSuccess(data) {
+
+        for (var i = 0; i < data.rows.length; i++) {
+            $(this).datagrid('mergeCells', {
+                index: data.rows[i].MergeIndex,
+                field: 'AccountCode',
+                rowspan: data.rows[i].RowSpan
+            });
+
+            $(this).datagrid('mergeCells', {
+                index: data.rows[i].MergeIndex,
+                field: 'AccountName',
+                rowspan: data.rows[i].RowSpan
+            });
+
+            
+        }
+    }
+
+    </script>
+    
+</body>
+</html>

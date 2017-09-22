@@ -433,6 +433,15 @@ namespace Sintoacct.Ledger.Services
         }
 
         #endregion
+
+        #region 凭证汇总表
+
+        public List<VoucherSummaryViewModels> GetVoucherSummary(SearchConditionViewModel condition)
+        {
+            return new List<VoucherSummaryViewModels>();
+        }
+
+        #endregion
     }
 
     public interface ILedgerSheet : IDependency

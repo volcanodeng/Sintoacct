@@ -415,6 +415,7 @@
     <Content Include="Views\LedgerSheet\DetailAccount.cshtml" />
     <Content Include="Views\LedgerSheet\GeneralLedger.cshtml" />
     <Content Include="Views\LedgerSheet\AccountBalance.cshtml" />
+    <Content Include="Views\LedgerSheet\VoucherSummary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
