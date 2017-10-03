@@ -13,6 +13,8 @@ namespace Sintoacct.Ledger
     /// </summary>
     public class ExceptionHandleAttribute : ActionFilterAttribute, IExceptionFilter
     {
+        
+
         public void OnException(ExceptionContext filterContext)
         {
             CommonContext common = new CommonContext();

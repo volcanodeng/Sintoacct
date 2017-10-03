@@ -27,6 +27,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -429,6 +430,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Sintoacct.BizProgress.Models\Sintoacct.BizProgress.Models.csproj">
+      <Project>{6a136f40-df3c-42ed-9bde-114082f48ccf}</Project>
+      <Name>Sintoacct.BizProgress.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sintoacct.Ledger.Models\Sintoacct.Ledger.Models.csproj">
       <Project>{3436245a-99d8-41ec-851a-fdee246f5292}</Project>
       <Name>Sintoacct.Ledger.Models</Name>

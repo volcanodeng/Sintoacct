@@ -68,7 +68,7 @@ namespace Sintoacct.Ledger
             builder.RegisterType<LedgerContext>().InstancePerLifetimeScope();
             var common = new CommonContext();
             common.Database.Initialize(false);
-            builder.RegisterType<CommonContext>().InstancePerLifetimeScope();
+            //builder.RegisterType<CommonContext>().InstancePerLifetimeScope();
 
             // WebAPI - Register your Web API controllers
             builder.RegisterApiControllers(assembly);
