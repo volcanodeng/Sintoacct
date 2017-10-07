@@ -1,0 +1,41 @@
+﻿
+<div id="layout-wrapper" class="easyui-layout" data-options="fit:true">
+
+    <div data-options="region:'west',collapsible:true" title="系统功能" style="width:150px;">
+
+        <div class="easyui-menu" data-options="inline:true,fit:true">
+            <div data-options="iconCls:'fa fa-credit-card fa-lg'" style="font-weight:bolder;" onclick="AddTabIframe('业务进度', '/BizProgress/BizProgress/')">
+                业务进度
+            </div>
+            <div data-options="iconCls:'fa fa-file-text-o fa-lg'" style="font-weight:bolder;" onclick="AddTabIframe('客户列表', '/Customer/Customers/')">
+                客户列表
+            </div>
+            <div data-options="iconCls:'fa fa-line-chart fa-lg'" style="font-weight:bolder;">
+                <span>数据配置</span>
+                <div>
+                    <div onclick="AddTabIframe('业务类别', '/BizProgress/Category/')">业务类别</div>
+                    <div onclick="AddTabIframe('业务项目', '/BizProgress/BizItem/')">业务项目</div>
+                    <div onclick="AddTabIframe('工作步骤', '/BizProgress/BizSteps/')">工作步骤</div>
+                </div>
+            </div>
+            <div class="menu-sep"></div>
+            <div data-options="iconCls:'fa fa-cog fa-lg'" style="font-weight:bolder;">
+                <span>营销推广</span>
+                <div>
+                    <div onclick="AddTabIframe('客户费用设置', '/Customer/CostSetting/')">客户费用设置</div>
+                    <div onclick="AddTabHref('客户推广链', '/Customer/MarketingChain/')">客户推广链</div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div data-options="region:'center'" style="padding:5px;background:#eee;">
+        <div class="easyui-tabs" id="tab_wrapper" data-options="fit:true">
+            <div title="首页">
+
+            </div>
+        </div>
+    </div>
+
+</div>

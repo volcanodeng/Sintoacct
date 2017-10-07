@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sintoacct.BizProgress.Models
+namespace Sintoacct.Progress.Models
 {
     /// <summary>
     /// 业务大类
@@ -32,7 +32,7 @@ namespace Sintoacct.BizProgress.Models
         public int SortIndex { get; set; }
 
             
-        public virtual ICollection<BizSubCategory> SubCategorys { get; set; }
+        public virtual ICollection<BizItems> SubCategorys { get; set; }
 
         public virtual ICollection<BizSteps> BizSteps { get; set; }
 

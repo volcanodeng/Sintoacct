@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sintoacct.BizProgress.Models
+namespace Sintoacct.Progress.Models
 {
     [Table("T_Prog_BizSteps")]
     public class BizSteps

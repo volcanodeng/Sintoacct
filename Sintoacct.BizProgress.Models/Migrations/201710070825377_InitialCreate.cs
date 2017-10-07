@@ -1,4 +1,4 @@
-namespace Sintoacct.BizProgress.Models.Migrations
+namespace Sintoacct.Progress.Models.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -25,7 +25,7 @@ namespace Sintoacct.BizProgress.Models.Migrations
                         CusId = c.Long(nullable: false),
                         ContractTime = c.DateTime(nullable: false),
                         CateId = c.Int(nullable: false),
-                        SubCateId = c.Int(nullable: false),
+                        ItemId = c.Int(nullable: false),
                         StepId = c.Int(nullable: false),
                         ProgressDesc = c.String(maxLength: 500),
                         Remark = c.String(),
@@ -36,10 +36,10 @@ namespace Sintoacct.BizProgress.Models.Migrations
                 .ForeignKey("dbo.T_Prog_BizCategory", t => t.CateId)
                 .ForeignKey("dbo.T_Prog_BizSteps", t => t.StepId)
                 .ForeignKey("dbo.T_Prog_Customers", t => t.CusId)
-                .ForeignKey("dbo.T_Prog_BizSubCategory", t => t.SubCateId)
+                .ForeignKey("dbo.T_Prog_BizItems", t => t.ItemId)
                 .Index(t => t.CusId)
                 .Index(t => t.CateId)
-                .Index(t => t.SubCateId)
+                .Index(t => t.ItemId)
                 .Index(t => t.StepId);
             
             CreateTable(
@@ -87,7 +87,7 @@ namespace Sintoacct.BizProgress.Models.Migrations
                 .PrimaryKey(t => t.PromId);
             
             CreateTable(
-                "dbo.T_Prog_ProgressImage)",
+                "dbo.T_Prog_ProgressImage",
                 c => new
                     {
                         ImgId = c.Long(nullable: false, identity: true),
@@ -100,44 +100,63 @@ namespace Sintoacct.BizProgress.Models.Migrations
                 .Index(t => t.BizId);
             
             CreateTable(
-                "dbo.T_Prog_BizSubCategory",
+                "dbo.T_Prog_BizItems",
                 c => new
                     {
-                        SubCateId = c.Int(nullable: false, identity: true),
-                        SubCategoryName = c.String(maxLength: 50),
+                        ItemId = c.Int(nullable: false, identity: true),
+                        ItemName = c.String(maxLength: 50),
                         SortIndex = c.Int(nullable: false),
+                        CateId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.ItemId)
+                .ForeignKey("dbo.T_Prog_BizCategory", t => t.CateId, cascadeDelete: true)
+                .Index(t => t.CateId);
+            
+            CreateTable(
+                "dbo.T_Prog_CustomerCost",
+                c => new
+                    {
+                        CusId = c.Long(nullable: false),
+                        ItemId = c.Int(nullable: false),
                         AmountReceivable = c.Decimal(nullable: false, precision: 18, scale: 2),
                         PreferentialAmount = c.Decimal(nullable: false, precision: 18, scale: 2),
                         AmountReceived = c.Decimal(nullable: false, precision: 18, scale: 2),
                         CollectionDays = c.String(maxLength: 100),
-                        CateId = c.Int(nullable: false),
+                        CreditingType = c.String(maxLength: 10),
                     })
-                .PrimaryKey(t => t.SubCateId)
-                .ForeignKey("dbo.T_Prog_BizCategory", t => t.CateId, cascadeDelete: true)
-                .Index(t => t.CateId);
+                .PrimaryKey(t => new { t.CusId, t.ItemId })
+                .ForeignKey("dbo.T_Prog_BizItems", t => t.ItemId, cascadeDelete: true)
+                .ForeignKey("dbo.T_Prog_Customers", t => t.CusId, cascadeDelete: true)
+                .Index(t => t.CusId)
+                .Index(t => t.ItemId);
             
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.T_Prog_BizProgress", "SubCateId", "dbo.T_Prog_BizSubCategory");
-            DropForeignKey("dbo.T_Prog_BizSubCategory", "CateId", "dbo.T_Prog_BizCategory");
-            DropForeignKey("dbo.T_Prog_ProgressImage)", "BizId", "dbo.T_Prog_BizProgress");
+            DropForeignKey("dbo.T_Prog_CustomerCost", "CusId", "dbo.T_Prog_Customers");
+            DropForeignKey("dbo.T_Prog_CustomerCost", "ItemId", "dbo.T_Prog_BizItems");
+            DropForeignKey("dbo.T_Prog_BizProgress", "ItemId", "dbo.T_Prog_BizItems");
+            DropForeignKey("dbo.T_Prog_BizItems", "CateId", "dbo.T_Prog_BizCategory");
+            DropForeignKey("dbo.T_Prog_ProgressImage", "BizId", "dbo.T_Prog_BizProgress");
             DropForeignKey("dbo.T_Prog_BizProgress", "CusId", "dbo.T_Prog_Customers");
             DropForeignKey("dbo.T_Prog_Customers", "PromId", "dbo.T_Prog_BizPromotion");
             DropForeignKey("dbo.T_Prog_BizProgress", "StepId", "dbo.T_Prog_BizSteps");
             DropForeignKey("dbo.T_Prog_BizSteps", "CateId", "dbo.T_Prog_BizCategory");
             DropForeignKey("dbo.T_Prog_BizProgress", "CateId", "dbo.T_Prog_BizCategory");
-            DropIndex("dbo.T_Prog_BizSubCategory", new[] { "CateId" });
-            DropIndex("dbo.T_Prog_ProgressImage)", new[] { "BizId" });
+            DropIndex("dbo.T_Prog_CustomerCost", new[] { "ItemId" });
+            DropIndex("dbo.T_Prog_CustomerCost", new[] { "CusId" });
+            DropIndex("dbo.T_Prog_BizItems", new[] { "CateId" });
+            DropIndex("dbo.T_Prog_ProgressImage", new[] { "BizId" });
             DropIndex("dbo.T_Prog_Customers", new[] { "PromId" });
             DropIndex("dbo.T_Prog_BizSteps", new[] { "CateId" });
             DropIndex("dbo.T_Prog_BizProgress", new[] { "StepId" });
-            DropIndex("dbo.T_Prog_BizProgress", new[] { "SubCateId" });
+            DropIndex("dbo.T_Prog_BizProgress", new[] { "ItemId" });
             DropIndex("dbo.T_Prog_BizProgress", new[] { "CateId" });
             DropIndex("dbo.T_Prog_BizProgress", new[] { "CusId" });
-            DropTable("dbo.T_Prog_BizSubCategory");
-            DropTable("dbo.T_Prog_ProgressImage)");
+            DropTable("dbo.T_Prog_CustomerCost");
+            DropTable("dbo.T_Prog_BizItems");
+            DropTable("dbo.T_Prog_ProgressImage");
             DropTable("dbo.T_Prog_BizPromotion");
             DropTable("dbo.T_Prog_Customers");
             DropTable("dbo.T_Prog_BizSteps");

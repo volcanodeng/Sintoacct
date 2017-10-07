@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sintoacct.BizProgress.Models
+namespace Sintoacct.Progress.Models
 {
     [Table("T_Prog_BizProgress")]
     public class BizProgress
@@ -48,12 +48,12 @@ namespace Sintoacct.BizProgress.Models
         /// 小类id
         /// </summary>
         [ForeignKey("SubCategory")]
-        public int SubCateId { get; set; }
+        public int ItemId { get; set; }
 
         /// <summary>
         /// 业务小类
         /// </summary>
-        public BizSubCategory SubCategory { get; set; }
+        public BizItems BizItem { get; set; }
 
         /// <summary>
         /// 业务步骤id
@@ -93,5 +93,16 @@ namespace Sintoacct.BizProgress.Models
         /// </summary>
         [MaxLength(100)]
         public string BizOperations { get; set; }
+
+        /// <summary>
+        /// 创建者
+        /// </summary>
+        [MaxLength(50)]
+        public string Creator { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime? CreateTime { get; set; }
     }
 }

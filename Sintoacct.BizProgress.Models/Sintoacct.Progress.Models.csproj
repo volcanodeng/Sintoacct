@@ -7,10 +7,11 @@
     <ProjectGuid>{6A136F40-DF3C-42ED-9BDE-114082F48CCF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sintoacct.BizProgress.Models</RootNamespace>
-    <AssemblyName>Sintoacct.BizProgress.Models</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RootNamespace>Sintoacct.Progress.Models</RootNamespace>
+    <AssemblyName>Sintoacct.Progress.Models</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -52,11 +53,16 @@
     <Compile Include="BizProgressContext.cs" />
     <Compile Include="BizPromotion.cs" />
     <Compile Include="BizSteps.cs" />
-    <Compile Include="BizSubCategory.cs" />
+    <Compile Include="BizItems.cs" />
+    <Compile Include="CustomerCost.cs" />
     <Compile Include="Customers.cs" />
-    <Compile Include="Migrations\201710031613343_InitialCreate.cs" />
-    <Compile Include="Migrations\201710031613343_InitialCreate.Designer.cs">
-      <DependentUpon>201710031613343_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201710070825377_InitialCreate.cs" />
+    <Compile Include="Migrations\201710070825377_InitialCreate.Designer.cs">
+      <DependentUpon>201710070825377_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710071227422_ModifyBizProgress.cs" />
+    <Compile Include="Migrations\201710071227422_ModifyBizProgress.Designer.cs">
+      <DependentUpon>201710071227422_ModifyBizProgress.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ProgressImage.cs" />
@@ -67,8 +73,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201710031613343_InitialCreate.resx">
-      <DependentUpon>201710031613343_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201710070825377_InitialCreate.resx">
+      <DependentUpon>201710070825377_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710071227422_ModifyBizProgress.resx">
+      <DependentUpon>201710071227422_ModifyBizProgress.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

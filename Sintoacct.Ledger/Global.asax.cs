@@ -10,6 +10,7 @@ using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using System.Reflection;
 using Sintoacct.Ledger.Models;
+using Sintoacct.Progress.Models;
 using System.Web.Http.ExceptionHandling;
 
 namespace Sintoacct.Ledger
@@ -69,6 +70,9 @@ namespace Sintoacct.Ledger
             var common = new CommonContext();
             common.Database.Initialize(false);
             //builder.RegisterType<CommonContext>().InstancePerLifetimeScope();
+
+            //注入BizProgressContext
+            builder.RegisterType<BizProgressContext>().InstancePerLifetimeScope();
 
             // WebAPI - Register your Web API controllers
             builder.RegisterApiControllers(assembly);
