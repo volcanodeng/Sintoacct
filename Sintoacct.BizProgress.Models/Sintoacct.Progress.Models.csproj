@@ -56,13 +56,9 @@
     <Compile Include="BizItems.cs" />
     <Compile Include="CustomerCost.cs" />
     <Compile Include="Customers.cs" />
-    <Compile Include="Migrations\201710070825377_InitialCreate.cs" />
-    <Compile Include="Migrations\201710070825377_InitialCreate.Designer.cs">
-      <DependentUpon>201710070825377_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201710071227422_ModifyBizProgress.cs" />
-    <Compile Include="Migrations\201710071227422_ModifyBizProgress.Designer.cs">
-      <DependentUpon>201710071227422_ModifyBizProgress.cs</DependentUpon>
+    <Compile Include="Migrations\201710081003566_InitialCreate.cs" />
+    <Compile Include="Migrations\201710081003566_InitialCreate.Designer.cs">
+      <DependentUpon>201710081003566_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ProgressImage.cs" />
@@ -73,11 +69,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201710070825377_InitialCreate.resx">
-      <DependentUpon>201710070825377_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201710071227422_ModifyBizProgress.resx">
-      <DependentUpon>201710071227422_ModifyBizProgress.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201710081003566_InitialCreate.resx">
+      <DependentUpon>201710081003566_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

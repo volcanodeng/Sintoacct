@@ -20,9 +20,14 @@ namespace Sintoacct.Ledger.BizProgressServices
             _identity = context.User.Identity as ClaimsIdentity;
         }
 
+        public List<BizProgress> GetMyBizProgresses(int pageIndex,int pageSize)
+        {
+            return _context.BizProgress.Where(p => p.Creator == _identity.GetUserName()).Skip(pageIndex * pageSize).Take(pageSize).OrderByDescending(p => p.BizId).ToList();
+        }
+
         public List<BizProgress> GetMyBizProgresses()
         {
-            return _context.BizProgress.Where(p => p.Creator == _identity.GetUserName()).Take(50).OrderBy(p=>p.BizId).ToList();
+            return this.GetMyBizProgresses(0, 50);
         }
 
         public BizProgress GetBizProgress(long bizId)
@@ -38,7 +43,7 @@ namespace Sintoacct.Ledger.BizProgressServices
         public BizProgress AddOrUpdate(BizProgressViewModel bizProg)
         {
             BizProgress prog = null;
-            if(bizProg.BizId>0)
+            if (bizProg.BizId > 0)
             {
                 prog = this.GetBizProgress(bizProg.BizId);
             }
@@ -46,6 +51,8 @@ namespace Sintoacct.Ledger.BizProgressServices
             {
                 prog = new BizProgress();
             }
+
+            prog.CusId = bizProg.CusId;
 
             return prog;
         }

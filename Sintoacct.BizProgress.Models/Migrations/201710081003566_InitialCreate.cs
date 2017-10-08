@@ -18,6 +18,19 @@ namespace Sintoacct.Progress.Models.Migrations
                 .PrimaryKey(t => t.CateId);
             
             CreateTable(
+                "dbo.T_Prog_BizItems",
+                c => new
+                    {
+                        ItemId = c.Int(nullable: false, identity: true),
+                        ItemName = c.String(maxLength: 50),
+                        SortIndex = c.Int(nullable: false),
+                        CateId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.ItemId)
+                .ForeignKey("dbo.T_Prog_BizCategory", t => t.CateId, cascadeDelete: true)
+                .Index(t => t.CateId);
+            
+            CreateTable(
                 "dbo.T_Prog_BizProgress",
                 c => new
                     {
@@ -31,12 +44,14 @@ namespace Sintoacct.Progress.Models.Migrations
                         Remark = c.String(),
                         BizManager = c.String(maxLength: 50),
                         BizOperations = c.String(maxLength: 100),
+                        Creator = c.String(maxLength: 50),
+                        CreateTime = c.DateTime(),
                     })
                 .PrimaryKey(t => t.BizId)
                 .ForeignKey("dbo.T_Prog_BizCategory", t => t.CateId)
+                .ForeignKey("dbo.T_Prog_BizItems", t => t.ItemId)
                 .ForeignKey("dbo.T_Prog_BizSteps", t => t.StepId)
                 .ForeignKey("dbo.T_Prog_Customers", t => t.CusId)
-                .ForeignKey("dbo.T_Prog_BizItems", t => t.ItemId)
                 .Index(t => t.CusId)
                 .Index(t => t.CateId)
                 .Index(t => t.ItemId)
@@ -100,19 +115,6 @@ namespace Sintoacct.Progress.Models.Migrations
                 .Index(t => t.BizId);
             
             CreateTable(
-                "dbo.T_Prog_BizItems",
-                c => new
-                    {
-                        ItemId = c.Int(nullable: false, identity: true),
-                        ItemName = c.String(maxLength: 50),
-                        SortIndex = c.Int(nullable: false),
-                        CateId = c.Int(nullable: false),
-                    })
-                .PrimaryKey(t => t.ItemId)
-                .ForeignKey("dbo.T_Prog_BizCategory", t => t.CateId, cascadeDelete: true)
-                .Index(t => t.CateId);
-            
-            CreateTable(
                 "dbo.T_Prog_CustomerCost",
                 c => new
                     {
@@ -136,17 +138,16 @@ namespace Sintoacct.Progress.Models.Migrations
         {
             DropForeignKey("dbo.T_Prog_CustomerCost", "CusId", "dbo.T_Prog_Customers");
             DropForeignKey("dbo.T_Prog_CustomerCost", "ItemId", "dbo.T_Prog_BizItems");
-            DropForeignKey("dbo.T_Prog_BizProgress", "ItemId", "dbo.T_Prog_BizItems");
-            DropForeignKey("dbo.T_Prog_BizItems", "CateId", "dbo.T_Prog_BizCategory");
             DropForeignKey("dbo.T_Prog_ProgressImage", "BizId", "dbo.T_Prog_BizProgress");
             DropForeignKey("dbo.T_Prog_BizProgress", "CusId", "dbo.T_Prog_Customers");
             DropForeignKey("dbo.T_Prog_Customers", "PromId", "dbo.T_Prog_BizPromotion");
             DropForeignKey("dbo.T_Prog_BizProgress", "StepId", "dbo.T_Prog_BizSteps");
             DropForeignKey("dbo.T_Prog_BizSteps", "CateId", "dbo.T_Prog_BizCategory");
+            DropForeignKey("dbo.T_Prog_BizProgress", "ItemId", "dbo.T_Prog_BizItems");
             DropForeignKey("dbo.T_Prog_BizProgress", "CateId", "dbo.T_Prog_BizCategory");
+            DropForeignKey("dbo.T_Prog_BizItems", "CateId", "dbo.T_Prog_BizCategory");
             DropIndex("dbo.T_Prog_CustomerCost", new[] { "ItemId" });
             DropIndex("dbo.T_Prog_CustomerCost", new[] { "CusId" });
-            DropIndex("dbo.T_Prog_BizItems", new[] { "CateId" });
             DropIndex("dbo.T_Prog_ProgressImage", new[] { "BizId" });
             DropIndex("dbo.T_Prog_Customers", new[] { "PromId" });
             DropIndex("dbo.T_Prog_BizSteps", new[] { "CateId" });
@@ -154,13 +155,14 @@ namespace Sintoacct.Progress.Models.Migrations
             DropIndex("dbo.T_Prog_BizProgress", new[] { "ItemId" });
             DropIndex("dbo.T_Prog_BizProgress", new[] { "CateId" });
             DropIndex("dbo.T_Prog_BizProgress", new[] { "CusId" });
+            DropIndex("dbo.T_Prog_BizItems", new[] { "CateId" });
             DropTable("dbo.T_Prog_CustomerCost");
-            DropTable("dbo.T_Prog_BizItems");
             DropTable("dbo.T_Prog_ProgressImage");
             DropTable("dbo.T_Prog_BizPromotion");
             DropTable("dbo.T_Prog_Customers");
             DropTable("dbo.T_Prog_BizSteps");
             DropTable("dbo.T_Prog_BizProgress");
+            DropTable("dbo.T_Prog_BizItems");
             DropTable("dbo.T_Prog_BizCategory");
         }
     }

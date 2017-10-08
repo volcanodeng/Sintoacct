@@ -32,7 +32,7 @@ namespace Sintoacct.Progress.Models
         public int SortIndex { get; set; }
 
             
-        public virtual ICollection<BizItems> SubCategorys { get; set; }
+        public virtual ICollection<BizItems> BizItems { get; set; }
 
         public virtual ICollection<BizSteps> BizSteps { get; set; }
 

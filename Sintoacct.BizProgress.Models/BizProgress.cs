@@ -47,7 +47,7 @@ namespace Sintoacct.Progress.Models
         /// <summary>
         /// 小类id
         /// </summary>
-        [ForeignKey("SubCategory")]
+        [ForeignKey("BizItem")]
         public int ItemId { get; set; }
 
         /// <summary>

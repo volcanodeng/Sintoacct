@@ -209,6 +209,7 @@
     <Compile Include="AutoMapperConfiguration.cs" />
     <Compile Include="BizProgressServices\AdminRoleClaims.cs" />
     <Compile Include="BizProgressServices\BizProgress.cs" />
+    <Compile Include="BizProgressServices\BizSetting.cs" />
     <Compile Include="ClaimsAuthorizeAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\AccountBookApiController.cs" />
