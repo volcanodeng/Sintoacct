@@ -210,6 +210,7 @@
     <Compile Include="BizProgressServices\AdminRoleClaims.cs" />
     <Compile Include="BizProgressServices\BizProgress.cs" />
     <Compile Include="BizProgressServices\BizSetting.cs" />
+    <Compile Include="BizProgressServices\IBizSetting.cs" />
     <Compile Include="ClaimsAuthorizeAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\AccountBookApiController.cs" />
@@ -233,6 +234,7 @@
     <Compile Include="LogInjectionModule.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BizProgress\BizProgressViewModel.cs" />
+    <Compile Include="Models\BizProgress\BizSettingViewModel.cs" />
     <Compile Include="Models\CacheModels.cs" />
     <Compile Include="Models\EasyuiViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -430,6 +432,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Controllers\Api\BizProgress\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

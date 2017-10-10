@@ -34,7 +34,7 @@
                 <div><span style="padding-left:12px;">业务单号：</span><input class="easyui-textbox"  name="BizNo" style="width:100px;height:30px;" /> </div>
                 <div><span style="padding-left:12px;">客户名称：</span><input class="easyui-textbox"  name="CusName" style="width:100px;height:30px;" /></div>
 
-                <div><span style="padding-left:12px;">业务类别：</span><input class="easyui-combobox" name="CertWord" data-options="valueField:'CertWord',textField:'CertWord',url:'/api/acctbook/MyCertWordArray',width:100,height:30,method:'GET'" /></div>
+                <div><span style="padding-left:12px;">业务类别：</span><input class="easyui-combobox" name="BizCate" data-options="valueField:'CateId',textField:'CategoryName',url:'/BizSetting/GetBizCategories',width:100,height:30,method:'GET'" /></div>
 
                 <div><span style="padding-left:12px;">凭证号：</span><input class="easyui-textbox" name="CertWordSN" data-options="width:220,height:30,prompt:'请输入凭证号或凭证号范围'" /></div>
 
@@ -52,10 +52,10 @@
                         <th data-options="field:'AccountName',width:150,align:'center'">科目名称</th>
                         <th data-options="field:'Period',width:80,align:'center'">期间</th>
                         <th data-options="field:'Abstract',width:60,align:'center'">摘要</th>
-                        <th data-options="field:'Debit',width:60,formatter:zeroFormatter,align:'right'">借方</th>
-                        <th data-options="field:'Credit',width:60,formatter:zeroFormatter,align:'right'">贷方</th>
+                        <th data-options="field:'Debit',width:60,align:'right'">借方</th>
+                        <th data-options="field:'Credit',width:60,align:'right'">贷方</th>
                         <th data-options="field:'Direction',width:40,align:'center'">方向</th>
-                        <th data-options="field:'Balance',width:60,align:'right',formatter:zeroFormatter">余额</th>
+                        <th data-options="field:'Balance',width:60,align:'right'">余额</th>
                     </tr>
                 </thead>
             </table>
@@ -66,7 +66,10 @@
     @Scripts.Render("~/bundles/easyui")
 
     <script type="text/javascript">
+        function onLoadSuccess(data)
+        {
 
+        }
     </script>
 
 </body>

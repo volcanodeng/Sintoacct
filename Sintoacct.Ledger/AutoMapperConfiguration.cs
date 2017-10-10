@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using AutoMapper;
 using Sintoacct.Ledger.Models;
+using Sintoacct.Progress.Models;
 
 namespace Sintoacct.Ledger
 {
@@ -35,6 +36,14 @@ namespace Sintoacct.Ledger
                 cfg.CreateMap<SourceDocument, VoucherInvoiceViewModel>();
 
                 cfg.CreateMap<AbstractTemp, AbstractViewModel>();
+
+
+
+                //============BizProgress===============
+                cfg.CreateMap<BizCategory, BizCategoryViewModel>();
+                cfg.CreateMap<BizItems, BizItemViewModel>();
+                cfg.CreateMap<BizSteps, BizStepsViewModel>();
+
             });
         }
     }

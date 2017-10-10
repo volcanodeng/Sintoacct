@@ -6,7 +6,7 @@ using Sintoacct.Progress.Models;
 
 namespace Sintoacct.Ledger.BizProgressServices
 {
-    public class BizSetting
+    public class BizSetting : IBizSetting
     {
         private readonly BizProgressContext _context;
 
@@ -19,5 +19,17 @@ namespace Sintoacct.Ledger.BizProgressServices
         {
             return _context.BizCategories.Include("BizItems").Include("BizSteps").OrderBy(c=>c.SortIndex).ToList();
         }
+
+        public List<BizItems> GetBizItems()
+        {
+            return _context.BizItems.OrderBy(i => i.SortIndex).ToList();
+        }
+
+        public List<BizSteps> GetSteps()
+        {
+            return _context.BizSteps.OrderBy(s => s.SortIndex).ToList();
+        }
     }
+
+
 }
