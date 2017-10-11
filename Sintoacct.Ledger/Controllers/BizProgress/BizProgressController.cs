@@ -42,9 +42,6 @@ namespace Sintoacct.Ledger.Controllers
             return View();
         }
 
-        public JsonResult GetCategory()
-        {
-            return Json(null);
-        }
+        
     }
 }

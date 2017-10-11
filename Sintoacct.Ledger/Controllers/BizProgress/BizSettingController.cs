@@ -21,10 +21,9 @@ namespace Sintoacct.Ledger.Controllers.BizProgress
             _bizSetting = bizSetting;
         }
 
-        [HttpPost,HttpGet]
         public JsonResult GetBizCategories()
         {
-            return Json(Mapper.Map <List<BizCategoryViewModel>>(_bizSetting.GetBizCategories()));
+            return Json(Mapper.Map <List<BizCategoryViewModel>>(_bizSetting.GetBizCategories()),JsonRequestBehavior.AllowGet);
         }
     }
 }

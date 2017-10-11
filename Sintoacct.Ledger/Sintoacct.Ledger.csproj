@@ -371,6 +371,7 @@
     <Content Include="Scripts\jquery.easyui.min.js" />
     <Content Include="Scripts\jquery.easyui.mobile.js" />
     <Content Include="Scripts\jquery.hotkeys.js" />
+    <Content Include="Scripts\jquery.uploadPreview.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -433,6 +434,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\Api\BizProgress\" />
+    <Folder Include="Views\BizSetting\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

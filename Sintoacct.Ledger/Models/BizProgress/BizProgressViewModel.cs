@@ -35,6 +35,23 @@ namespace Sintoacct.Ledger.Models
 
         public string BizOperations { get; set; }
 
+        public string PromPerson { get; set; }
+
+        public decimal? AmountReceivable { get; set; }
+
+        public decimal? AmountReceived { get; set; }
+
+        public decimal? AmountUnreceived
+        {
+            get
+            {
+                if (AmountReceivable.HasValue && AmountReceived.HasValue) return AmountReceivable.Value - AmountReceived.Value;
+                else
+                    return null;
+            }
+        }
+
+
         public string Creator { get; set; }
 
         public DateTime? CreateTime { get; set; }
