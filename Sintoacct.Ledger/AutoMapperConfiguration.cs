@@ -44,6 +44,8 @@ namespace Sintoacct.Ledger
                 cfg.CreateMap<BizItems, BizItemViewModel>();
                 cfg.CreateMap<BizSteps, BizStepsViewModel>();
 
+                cfg.CreateMap<Customers, BizCustomerViewModel>();
+
             });
         }
     }
