@@ -254,3 +254,6 @@ paket-files/
 # RichFileManager
 RichFilemanager/
 /Sintoacct.Ledger/log.txt
+/Sintoacct.Ledger/Content/awesome/less
+/Sintoacct.Ledger/Content/awesome/scss
+/Sintoacct.Ledger/Content/awesome/HELP-US-OUT.txt

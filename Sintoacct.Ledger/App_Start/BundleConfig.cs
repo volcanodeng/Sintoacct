@@ -38,9 +38,12 @@ namespace Sintoacct.Ledger
                       "~/Content/site.css",
                       "~/Content/easyui.css"));
 
-            bundles.Add(new StyleBundle("~/Content/easyui").Include(
+            //font-awesome不支持压缩
+            Bundle css = new StyleBundle("~/Content/easyui").Include(
                       "~/Content/easyui.css",
-                      "~/Content/awesome/css/font-awesome.min.css"));
+                      "~/Content/awesome/css/font-awesome.min.css");
+            css.Transforms.Clear();
+            bundles.Add(css);
         }
     }
 }

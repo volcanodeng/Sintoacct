@@ -72,6 +72,8 @@ namespace Sintoacct.Ledger
             //builder.RegisterType<CommonContext>().InstancePerLifetimeScope();
 
             //注入BizProgressContext
+            var prog = new BizProgressContext();
+            prog.Database.Initialize(false);
             builder.RegisterType<BizProgressContext>().InstancePerLifetimeScope();
 
             // WebAPI - Register your Web API controllers
