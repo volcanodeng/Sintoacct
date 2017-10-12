@@ -29,4 +29,19 @@ namespace Sintoacct.Ledger.Models
 
         public string OpName { get; set; }
     }
+
+    public class BizPromotionViewModel
+    {
+        public long PromId { get; set; }
+
+        public long? ParentPromId { get; set; }
+
+        public string OpName { get; set; }
+
+        public string WeixinOpenId { get; set; }
+
+        public int PromLevel { get; set; }
+
+        public string PromChain { get; set; }
+    }
 }

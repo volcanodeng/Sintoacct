@@ -60,6 +60,10 @@
     <Compile Include="Migrations\201710081003566_InitialCreate.Designer.cs">
       <DependentUpon>201710081003566_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201710120957165_ModifyBizPromotion.cs" />
+    <Compile Include="Migrations\201710120957165_ModifyBizPromotion.Designer.cs">
+      <DependentUpon>201710120957165_ModifyBizPromotion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ProgressImage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,6 +75,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201710081003566_InitialCreate.resx">
       <DependentUpon>201710081003566_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710120957165_ModifyBizPromotion.resx">
+      <DependentUpon>201710120957165_ModifyBizPromotion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

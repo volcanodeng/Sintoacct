@@ -17,13 +17,19 @@ namespace Sintoacct.Progress.Models
         [Key]
         public long PromId { get; set; }
 
-        public long ParentPromId { get; set; }
+        public long? ParentPromId { get; set; }
 
         /// <summary>
         /// 推广人员名称
         /// </summary>
         [MaxLength(50)]
         public string OpName { get; set; }
+
+        /// <summary>
+        /// 推广人的微信id
+        /// </summary>
+        public string WeixinOpenId { get; set; }
+
 
         /// <summary>
         /// 推广级别

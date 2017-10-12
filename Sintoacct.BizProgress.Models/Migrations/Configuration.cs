@@ -14,19 +14,8 @@ namespace Sintoacct.Progress.Models.Migrations
 
         protected override void Seed(Sintoacct.Progress.Models.BizProgressContext context)
         {
-            //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
-
+            
+            /*
             context.BizCategories.AddOrUpdate(
                 new BizCategory { CategoryName = "工商业务", SortIndex = 1 },
                 new BizCategory { CategoryName = "代理记账", SortIndex = 2 },
@@ -230,6 +219,7 @@ namespace Sintoacct.Progress.Models.Migrations
                 new BizSteps { StepName = "客户回访", SortIndex = 1, CateId = 5 }
 
                 );
+            */
         }
     }
 }

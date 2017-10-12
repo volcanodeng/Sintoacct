@@ -7,11 +7,133 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title></title>
+    @Styles.Render("~/Content/easyui")
+    <style type="text/css">
+        form div {
+            padding: 5px;
+            display: inline-block;
+        }
+
+        form span {
+            padding-left:12px;
+        }
+
+        .datagrid-header-row td div {
+            text-align: center !important;
+            font-weight: bold;
+        }
+
+        
+    </style>
+
 </head>
 <body>
-    <div>
-    
+    <div class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'north',split:false,border:false" style="padding:10px;overflow:hidden;background-color:#F2F2F2;">
+            <form id="sForm" method="post">
+                <div><span >客户编号：</span><input class="easyui-textbox" name="CusId" data-options="width:220,height:30" /></div>
+
+                <div><span >客户名称：</span><input class="easyui-textbox" name="CustomerName" data-options="width:220,height:30" /></div>
+
+                <div><span>联系电话：</span><input class="easyui-textbox" name="Phone" data-options="width:220,height:30" /></div>
+
+                <div><a href="#"  class="easyui-linkbutton" data-options="iconCls:'fa fa-search fa-lg'" onclick="formSubmit()" style="width:100px;">查询</a></div>
+            </form>
+        </div>
+        <div data-options="region:'center',border:true" style="padding:10px;">
+            <table class="easyui-datagrid" id="vvList"
+                   data-options="fit:true,singleSelect:true,fitColumns:true,onLoadSuccess:onLoadSuccess">
+                <thead>
+                    <tr>
+                        <th data-options="field:'CusId',width:50,align:'center'">客户编码</th>
+                        <th data-options="field:'CustomerName',width:150,align:'center'">客户名称</th>
+                        <th data-options="field:'CustomerAddress',width:80,align:'center'">住所</th>
+                        <th data-options="field:'BusinessAddress',width:60,align:'center'">实际经营地</th>
+                        <th data-options="field:'Contacts',width:60,align:'right'">联系人</th>
+                        <th data-options="field:'Phone',width:60,align:'right'">联系电话</th>
+                        <th data-options="field:'Email',width:40,align:'center'">邮箱</th>
+                        <th data-options="field:'WeixinNick',width:60,align:'right'">微信</th>
+                        <th data-options="field:'Level',width:60,align:'right'">客户级别</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/easyui")
+
+    <script type="text/javascript">
+
+    $(function () {
+        init();
+    });
+
+    function init()
+    {
+        $("#sForm").form({
+            url: "/api/LedgerSheet/GetGeneralLedger/",
+            onSubmit: formOnSubmit,
+            success: formSuccess
+        });
+
+
+        $.get("/api/LedgerSheet/GetMyPaymentTerms", null, function (data) {
+            $("#StartPeriod").combobox("loadData", data);
+            $("#EndPeriod").combobox("loadData", data);
+            $("#StartPeriod,#EndPeriod").combobox("select", data[data.length - 1].val);
+            $('#sForm').submit();
+        });
+    }
+
+    function formOnSubmit() {
+        return $(this).form('validate');
+    }
+
+    function formSuccess(data) {
+        if (responseHandle(data)) {
+            $("#vvList").datagrid("loadData", []);
+            $("#vvList").datagrid("loadData", JSON.parse(data));
+        }
+    }
+
+    function formSubmit()
+    {
+        $('#sForm').submit();
+    }
+
+    function onTreeClick(node)
+    {
+        $("#vvList").datagrid("load", { accid : node.id});
+    }
+
+    function zeroFormatter(value, row, index)
+    {
+        if (value == 0) return "";
+        else return '<span style="font-weight:bolder;">' + parseFloat(value).toFixed(2) + "</span>";
+    }
+
+    function onLoadSuccess(data) {
+
+        for (var i = 0; i < data.rows.length; i++) {
+            $(this).datagrid('mergeCells', {
+                index: data.rows[i].MergeIndex,
+                field: 'AccountCode',
+                rowspan: data.rows[i].RowSpan
+            });
+
+            $(this).datagrid('mergeCells', {
+                index: data.rows[i].MergeIndex,
+                field: 'AccountName',
+                rowspan: data.rows[i].RowSpan
+            });
+
+
+        }
+    }
+
+    </script>
+
 </body>
 </html>

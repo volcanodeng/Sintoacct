@@ -1,14 +1,11 @@
 ﻿@{
     Layout = null;
 }
-
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     @Styles.Render("~/Content/easyui")
-
     <style type="text/css">
         form div {
             padding: 5px;
@@ -25,59 +22,73 @@
             display: inline-block;
         }
 
-        form ul {list-style-type:none;list-style-position:outside;padding:0px;}
-        form li{padding:12px; position:relative;}
-        form label {width:80px;margin-top: 3px;display:inline-block;float:left;padding:3px;font-size:14px;}
+        form ul {
+            list-style-type: none;
+            list-style-position: outside;
+            padding: 0px;
+        }
+
+        form li {
+            padding: 12px;
+            position: relative;
+        }
+
+        form label {
+            width: 80px;
+            margin-top: 3px;
+            display: inline-block;
+            float: left;
+            padding: 3px;
+            font-size: 14px;
+        }
 
         #image-preview {
-  width: 100px;
-  height: 100px;
-  position: relative;
-  overflow: hidden;
-  background-color: #ffffff;
-  color: #ecf0f1;
-}
-#image-preview input {
-  line-height: 200px;
-  font-size: 200px;
-  position: absolute;
-  opacity: 0;
-  z-index: 10;
-}
-#image-preview label {
-  position: absolute;
-  z-index: 5;
-  opacity: 0.8;
-  cursor: pointer;
-  background-color: #bdc3c7;
-  width: 100px;
-  height: 50px;
-  font-size: 20px;
-  line-height: 50px;
-  text-transform: uppercase;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-  text-align: center;
-}
+            width: 200px;
+            height: 100px;
+            position: relative;
+            overflow: hidden;
+            background-color: #ffffff;
+            color: #ecf0f1;
+        }
+
+            #image-preview input {
+                line-height: 200px;
+                font-size: 200px;
+                position: absolute;
+                opacity: 0;
+                z-index: 10;
+            }
+
+            #image-preview label {
+                position: absolute;
+                z-index: 5;
+                opacity: 0.5;
+                cursor: pointer;
+                background-color: #bdc3c7;
+                width: 100px;
+                height: 50px;
+                font-size: 20px;
+                line-height: 50px;
+                text-transform: uppercase;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                margin: auto;
+                text-align: center;
+            }
     </style>
-    
+
 </head>
 <body>
     <div class="easyui-layout" data-options="fit:true">
         <div data-options="region:'north',split:false,border:false" style="padding:10px;overflow:hidden;background-color:#F2F2F2;">
             <form id="sForm" method="post">
-                <div><span style="padding-left:12px;">业务单号：</span><input class="easyui-textbox"  name="BizNo" style="width:100px;height:30px;" /> </div>
-                <div><span style="padding-left:12px;">客户名称：</span><input class="easyui-textbox"  name="CusName" style="width:100px;height:30px;" /></div>
-
+                <div><span style="padding-left:12px;">业务单号：</span><input class="easyui-textbox" name="BizNo" style="width:100px;height:30px;" /> </div>
+                <div><span style="padding-left:12px;">客户名称：</span><input class="easyui-textbox" name="CusName" style="width:100px;height:30px;" /></div>
                 <div><span style="padding-left:12px;">业务类别：</span><input class="easyui-combobox" name="BizCate" data-options="valueField:'CateId',textField:'CategoryName',url:'/BizSetting/GetBizCategories',width:100,height:30" /></div>
-
                 <div><span style="padding-left:12px;">进度描述：</span><input class="easyui-textbox" name="ProgDesc" data-options="width:220,height:30" /></div>
-
                 <div><span>业务项目：</span><input class="easyui-combobox" name="BizItem" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /></div>
-
                 <div><a href="javascript:void(0)" id="btnSearch" class="easyui-linkbutton" data-options="iconCls:'fa fa-search fa-lg'" onclick="javascript: $('#sForm').submit();" style="width:100px;">查询</a></div>
             </form>
         </div>
@@ -106,13 +117,11 @@
             </table>
         </div>
     </div>
-
     <div id="dgToolbar">
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-plus fa-lg',plain:true" onclick="add()">新增业务进度</a>
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="edit()">修改业务进度</a>
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="del()">删除业务进度</a>
     </div>
-
 
     <div id="dialogBiz" class="easyui-dialog" title="业务进度" style="width:500px;height:500px;"
          data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnBiz'">
@@ -128,13 +137,13 @@
                     <label for="signTime">签约时间:</label>
                     <input id="signTime" name="signTime" class="easyui-datebox"
                            data-options="prompt:'请输入签约时间',required:true,width:260,height:35,missingMessage:'请输入签约时间'" />
-                    
+
                 </li>
                 <li>
                     <label for="cate">业务大类:</label>
                     <input id="cate" name="cate" class="easyui-combobox"
                            data-options="prompt:'请选择业务大类',required:true,width:260,height:35,missingMessage:'请选择业务大类',editable:false,valueField:'CateId',textField:'CategoryName',onSelect:cateOnSelect" />
-                    
+
                 </li>
                 <li>
                     <label for="item">业务项目:</label>
@@ -154,10 +163,10 @@
                            data-options="prompt:'请输入进度描述',required:true,width:260,height:105,missingMessage:'请输入进度描述',multiline:true" />
 
                 </li>
-                <li >
+                <li>
                     <label for="image-preview">证据图片:</label>
-                    <div id="image-preview" >
-                        <label for="image-upload" id="image-label" >选择图片</label>
+                    <div id="image-preview">
+                        <label for="image-upload" id="image-label">选择图片</label>
                         <input type="file" name="image-upload" id="image-upload" />
                     </div>
                 </li>
@@ -185,8 +194,8 @@
                            data-options="prompt:'请输入备注',required:true,width:260,height:105,missingMessage:'请输入备注',multiline:true" />
 
                 </li>
-                
-                
+
+
             </ul>
         </form>
     </div>
@@ -195,7 +204,6 @@
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-floppy-o fa-lg',plain:false,width:70" onclick="saveBiz()">保存</a>
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-times fa-lg',plain:false,width:70" onclick="closeBiz()">关闭</a>
     </div>
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/easyui")
     <script type="text/javascript" src="~/Scripts/jquery.uploadPreview.min.js"></script>
@@ -213,10 +221,11 @@
             });
 
             $.uploadPreview({
-                input_field: "#image-upload",   // Default: .image-upload
-                preview_box: "#image-preview",  // Default: .image-preview
-                label_field: "#image-label",    // Default: .image-label
-                no_label: false                 // Default: false
+                input_field: "#image-upload",
+                preview_box: "#image-preview",
+                label_field: "#image-label",
+                label_default: "选择图片",
+                label_selected: "修改图片"
             });
 
         }
@@ -230,41 +239,43 @@
 
         }
 
-        function onLoadSuccess(data)
-        {
+        function onLoadSuccess(data) {
 
         }
 
-        function cateOnSelect(data)
-        {
+        function cateOnSelect(data) {
 
         }
 
-        function itemOnSelect(data)
-        {
+        function itemOnSelect(data) {
 
         }
 
-        function stepOnSelect(data)
-        {
+        function stepOnSelect(data) {
 
         }
 
-        function closeBiz()
-        {
+        function closeBiz() {
             $("#dialogBiz").dialog("close");
         }
 
-        function saveBiz()
-        {
+        function saveBiz() {
             $('#bizForm').submit();
         }
 
         function add() {
             $("#bizForm").form("clear");
+
+            $.uploadPreview({
+                input_field: "#image-upload",
+                preview_box: "#image-preview",
+                label_field: "#image-label",
+                label_default: "选择图片",
+                label_selected: "修改图片"
+            });
+
             $("#dialogBiz").dialog("open");
         }
     </script>
-
 </body>
 </html>

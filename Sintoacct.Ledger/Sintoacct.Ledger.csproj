@@ -217,6 +217,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\AccountBookApiController.cs" />
     <Compile Include="Controllers\Api\BaseApiController.cs" />
+    <Compile Include="Controllers\Api\BizProgress\BizCustomerApiController.cs" />
+    <Compile Include="Controllers\Api\BizProgress\BizProgressApiController.cs" />
     <Compile Include="Controllers\Api\LedgerSheetApiController.cs" />
     <Compile Include="Controllers\Api\VoucherApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -436,7 +438,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\Api\BizProgress\" />
     <Folder Include="Views\BizSetting\" />
   </ItemGroup>
   <ItemGroup>
