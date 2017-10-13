@@ -3,6 +3,7 @@ using log4net;
 using Sintoacct.Ledger.Models;
 using Sintoacct.Ledger.Services;
 using System;
+using Sintoacct.Ledger.BizProgressServices;
 
 namespace Sintoacct.Ledger.Controllers
 {
@@ -12,16 +13,23 @@ namespace Sintoacct.Ledger.Controllers
         private readonly ICompanyHelper _company;
         private readonly IVoucherHelper _voucher;
         private readonly IAccountBookHelper _accountBook;
+        private readonly IBizSetting _setting;
+        private readonly IBizCustomer _customer;
 
         public ModelValidation(ILog log,
                                ICompanyHelper company,
                                IVoucherHelper voucher,
-                               IAccountBookHelper accountBook)
+                               IAccountBookHelper accountBook,
+                               IBizSetting setting,
+                               IBizCustomer customer)
         {
             _log = log;
             _company = company;
             _voucher = voucher;
             _accountBook = accountBook;
+
+            _setting = setting;
+            _customer = customer;
         }
 
         public bool ValidAccountBookCreate(AcctBookViewModels acctBook,out string err)
@@ -61,6 +69,40 @@ namespace Sintoacct.Ledger.Controllers
 
             return (err == string.Empty ? true : false);
         }
+
+        public bool ValidBizProgress(BizProgressViewModel progress,out string err)
+        {
+            err = string.Empty;
+
+            if (progress.CusId <= 0 || progress.ItemId <= 0 || progress.StepId <= 0)
+            {
+                err = "必选项无效";
+                return false;
+            }
+
+            if (_customer.GetCustomer(progress.CusId) == null ||
+               _setting.GetBizItem(progress.ItemId) == null ||
+               _setting.GetStep(progress.StepId) == null)
+            {
+                err = "必选项为空";
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool ValidBizCustomer(BizCustomerViewModel customer,out string err)
+        {
+            err = string.Empty;
+
+            if(_customer.GetCustomer(customer.CusId)==null)
+            {
+                err = "推荐人为空";
+                return false;
+            }
+
+            return true;
+        }
     }
 
     public interface IModelValidation : IDependency
@@ -69,5 +111,9 @@ namespace Sintoacct.Ledger.Controllers
         bool ValidAccountBookCreate(AcctBookViewModels acctBook, out string err);
 
         bool ValidVoucher(VoucherViewModel voucher, out string err);
+
+        bool ValidBizProgress(BizProgressViewModel progress, out string err);
+
+        bool ValidBizCustomer(BizCustomerViewModel customer, out string err);
     }
 }

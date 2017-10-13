@@ -9,5 +9,8 @@ namespace Sintoacct.Ledger.BizProgressServices
         List<BizCategory> GetBizCategories();
         List<BizItems> GetBizItems();
         List<BizSteps> GetSteps();
+        BizCategory GetBizCategory(int cateId);
+        BizItems GetBizItem(int itemId);
+        BizSteps GetStep(int stepId);
     }
 }

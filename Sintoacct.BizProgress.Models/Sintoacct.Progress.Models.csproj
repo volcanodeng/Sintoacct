@@ -64,6 +64,10 @@
     <Compile Include="Migrations\201710120957165_ModifyBizPromotion.Designer.cs">
       <DependentUpon>201710120957165_ModifyBizPromotion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201710130242461_ModifyCustomers.cs" />
+    <Compile Include="Migrations\201710130242461_ModifyCustomers.Designer.cs">
+      <DependentUpon>201710130242461_ModifyCustomers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ProgressImage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -78,6 +82,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201710120957165_ModifyBizPromotion.resx">
       <DependentUpon>201710120957165_ModifyBizPromotion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710130242461_ModifyCustomers.resx">
+      <DependentUpon>201710130242461_ModifyCustomers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

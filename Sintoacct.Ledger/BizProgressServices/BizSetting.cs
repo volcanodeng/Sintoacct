@@ -20,14 +20,29 @@ namespace Sintoacct.Ledger.BizProgressServices
             return _context.BizCategories.Include("BizItems").Include("BizSteps").OrderBy(c=>c.SortIndex).ToList();
         }
 
+        public BizCategory GetBizCategory(int cateId)
+        {
+            return _context.BizCategories.Include("BizItems").Include("BizSteps").Where(c => c.CateId == cateId).FirstOrDefault();
+        }
+
         public List<BizItems> GetBizItems()
         {
             return _context.BizItems.OrderBy(i => i.SortIndex).ToList();
         }
 
+        public BizItems GetBizItem(int itemId)
+        {
+            return _context.BizItems.Where(i => i.ItemId == itemId).FirstOrDefault();
+        }
+
         public List<BizSteps> GetSteps()
         {
             return _context.BizSteps.OrderBy(s => s.SortIndex).ToList();
+        }
+        
+        public BizSteps GetStep(int stepId)
+        {
+            return _context.BizSteps.Where(s => s.StepId == stepId).FirstOrDefault();
         }
     }
 

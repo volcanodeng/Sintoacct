@@ -73,18 +73,13 @@
     function init()
     {
         $("#sForm").form({
-            url: "/api/LedgerSheet/GetGeneralLedger/",
+            url: "/api/BizCustomer/SaveBizCustomer/",
             onSubmit: formOnSubmit,
             success: formSuccess
         });
 
 
-        $.get("/api/LedgerSheet/GetMyPaymentTerms", null, function (data) {
-            $("#StartPeriod").combobox("loadData", data);
-            $("#EndPeriod").combobox("loadData", data);
-            $("#StartPeriod,#EndPeriod").combobox("select", data[data.length - 1].val);
-            $('#sForm').submit();
-        });
+        
     }
 
     function formOnSubmit() {

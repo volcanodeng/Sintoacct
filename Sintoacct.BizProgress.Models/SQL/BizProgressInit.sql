@@ -196,3 +196,9 @@ INSERT INTO [T_Prog_BizSteps] ([StepId],[StepName],[SortIndex],[CateId]) values 
 INSERT INTO [T_Prog_BizSteps] ([StepId],[StepName],[SortIndex],[CateId]) values (110,N'资料归还',1,5)
 INSERT INTO [T_Prog_BizSteps] ([StepId],[StepName],[SortIndex],[CateId]) values (111,N'客户回访',1,5)
 SET IDENTITY_INSERT [T_Prog_BizSteps] OFF
+
+
+
+/*初始化角色*/
+insert into [Sintoacct.Ledger].dbo.AspNetRoles values('EB4F86F5-B307-466D-B7DD-B3400F1E7FEA','business')
+insert into [Sintoacct.Ledger].dbo.AspNetRoles values('0284200F-F702-41D2-8E86-FB94B091271A','progress-record')

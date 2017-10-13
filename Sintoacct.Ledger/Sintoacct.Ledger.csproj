@@ -209,9 +209,10 @@
     <Compile Include="AutoMapperConfiguration.cs" />
     <Compile Include="BizProgressServices\AdminRoleClaims.cs" />
     <Compile Include="BizProgressServices\BizCustomer.cs" />
-    <Compile Include="BizProgressServices\BizProgress.cs" />
+    <Compile Include="BizProgressServices\BizProgressService.cs" />
     <Compile Include="BizProgressServices\BizSetting.cs" />
     <Compile Include="BizProgressServices\IBizCustomer.cs" />
+    <Compile Include="BizProgressServices\IBizProgressService.cs" />
     <Compile Include="BizProgressServices\IBizSetting.cs" />
     <Compile Include="ClaimsAuthorizeAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -219,6 +220,7 @@
     <Compile Include="Controllers\Api\BaseApiController.cs" />
     <Compile Include="Controllers\Api\BizProgress\BizCustomerApiController.cs" />
     <Compile Include="Controllers\Api\BizProgress\BizProgressApiController.cs" />
+    <Compile Include="Controllers\Api\BizProgress\BizSettingApiController.cs" />
     <Compile Include="Controllers\Api\LedgerSheetApiController.cs" />
     <Compile Include="Controllers\Api\VoucherApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
