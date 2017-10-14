@@ -28,36 +28,36 @@ namespace Sintoacct.Ledger.BizProgressServices
             _setting = setting;
         }
 
-        public List<BizProgress> GetMyBizProgresses(int pageIndex,int pageSize)
+        public List<WorkOrder> GetMyBizProgresses(int pageIndex,int pageSize)
         {
-            return _context.BizProgress.Where(p => p.Creator == _identity.GetUserName()).Skip(pageIndex * pageSize).Take(pageSize).OrderByDescending(p => p.BizId).ToList();
+            return _context.BizProgress.Where(p => p.Creator == _identity.GetUserName()).Skip(pageIndex * pageSize).Take(pageSize).OrderByDescending(p => p.WoId).ToList();
         }
 
-        public List<BizProgress> GetMyBizProgresses()
+        public List<WorkOrder> GetMyBizProgresses()
         {
             return this.GetMyBizProgresses(0, 50);
         }
 
-        public BizProgress GetBizProgress(long bizId)
+        public WorkOrder GetBizProgress(long bizId)
         {
-            return _context.BizProgress.Where(p => p.BizId == bizId).FirstOrDefault();
+            return _context.BizProgress.Where(p => p.WoId == bizId).FirstOrDefault();
         }
 
-        public BizProgress GetMyBizProgress(long bizId)
+        public WorkOrder GetMyBizProgress(long bizId)
         {
-            return _context.BizProgress.Where(p => p.Creator == _identity.GetUserName() && p.BizId == bizId).FirstOrDefault();
+            return _context.BizProgress.Where(p => p.Creator == _identity.GetUserName() && p.WoId == bizId).FirstOrDefault();
         }
 
-        public BizProgress SaveProgress(BizProgressViewModel bizProg)
+        public WorkOrder SaveProgress(BizProgressViewModel bizProg)
         {
-            BizProgress prog = null;
+            WorkOrder prog = null;
             if (bizProg.BizId > 0)
             {
                 prog = this.GetBizProgress(bizProg.BizId);
             }
             else
             {
-                prog = new BizProgress();
+                prog = new WorkOrder();
                 prog.CreateTime = DateTime.Now;
                 prog.Creator = _identity.GetUserName();
             }
@@ -66,13 +66,13 @@ namespace Sintoacct.Ledger.BizProgressServices
             prog.Customer = _customer.GetCustomer(bizProg.CusId);
             prog.ContractTime = bizProg.ContractTime;
 
-            prog.BizCategory = _setting.GetBizCategory(bizProg.CateId);
+            //prog.BizCategory = _setting.GetBizCategory(bizProg.CateId);
 
-            prog.BizItem = _setting.GetBizItem(bizProg.ItemId);
+            //prog.BizItem = _setting.GetBizItem(bizProg.ItemId);
 
-            prog.BizStep = _setting.GetStep(bizProg.StepId);
+            //prog.BizStep = _setting.GetStep(bizProg.StepId);
 
-            prog.ProgressDesc = bizProg.ProgressDesc;
+            //prog.ProgressDesc = bizProg.ProgressDesc;
 #warning 上传文件保存逻辑（本地文件或七牛文件服务器）
 
             prog.Remark = bizProg.Remark;

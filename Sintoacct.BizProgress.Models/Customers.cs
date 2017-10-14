@@ -38,7 +38,7 @@ namespace Sintoacct.Progress.Models
 
         public BizPromotion Promotions { get; set; }
 
-        public virtual ICollection<BizProgress> BizProgress { get; set; }
+        public virtual ICollection<WorkOrder> BizProgress { get; set; }
 
     }
 }

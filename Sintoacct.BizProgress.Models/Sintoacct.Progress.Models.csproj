@@ -49,12 +49,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BizCategory.cs" />
-    <Compile Include="BizProgress.cs" />
+    <Compile Include="WorkOrder.cs" />
     <Compile Include="BizProgressContext.cs" />
     <Compile Include="BizPromotion.cs" />
     <Compile Include="BizSteps.cs" />
     <Compile Include="BizItems.cs" />
-    <Compile Include="CustomerCost.cs" />
+    <Compile Include="WorkOrderPayment.cs" />
     <Compile Include="Customers.cs" />
     <Compile Include="Migrations\201710130959173_InitialCreate.cs" />
     <Compile Include="Migrations\201710130959173_InitialCreate.Designer.cs">
@@ -63,6 +63,8 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ProgressImage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WorkOrderItem.cs" />
+    <Compile Include="WorkProgress.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

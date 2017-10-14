@@ -6,7 +6,7 @@ namespace Sintoacct.Progress.Models
     {
         public BizProgressContext() : base("name=BizProgressConnection") { }
 
-        public DbSet<BizProgress> BizProgress { get; set; }
+        public DbSet<WorkOrder> BizProgress { get; set; }
 
         public DbSet<BizCategory> BizCategories { get; set; }
 
@@ -20,16 +20,16 @@ namespace Sintoacct.Progress.Models
 
         public DbSet<Customers> Customers { get; set; }
 
-        public DbSet<CustomerCost> CustomerCost { get; set; }
+        public DbSet<WorkOrderPayment> CustomerCost { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<BizProgress>().HasRequired(s => s.BizStep).WithMany(p => p.BizProgress).WillCascadeOnDelete(false);
-            modelBuilder.Entity<BizProgress>().HasRequired(s => s.BizItem).WithMany(p => p.BizProgress).WillCascadeOnDelete(false);
-            modelBuilder.Entity<BizProgress>().HasRequired(s => s.BizCategory).WithMany(p => p.BizProgress).WillCascadeOnDelete(false);
-            modelBuilder.Entity<BizProgress>().HasRequired(s => s.Customer).WithMany(p => p.BizProgress).WillCascadeOnDelete(false);
+            //modelBuilder.Entity<WorkOrder>().HasRequired(s => s.BizStep).WithMany(p => p.BizProgress).WillCascadeOnDelete(false);
+            //modelBuilder.Entity<WorkOrder>().HasRequired(s => s.BizItem).WithMany(p => p.BizProgress).WillCascadeOnDelete(false);
+            //modelBuilder.Entity<WorkOrder>().HasRequired(s => s.BizCategory).WithMany(p => p.BizProgress).WillCascadeOnDelete(false);
+            //modelBuilder.Entity<WorkOrder>().HasRequired(s => s.Customer).WithMany(p => p.BizProgress).WillCascadeOnDelete(false);
         }
     }
 }

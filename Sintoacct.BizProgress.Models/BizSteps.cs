@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,11 +15,11 @@ namespace Sintoacct.Progress.Models
 
         public int SortIndex { get; set; }
 
-        [ForeignKey("BizCategory")]
-        public int CateId { get; set; }
+        [ForeignKey("BizItem")]
+        public int ItemId { get; set; }
 
-        public BizCategory BizCategory { get; set; }
+        public BizItems BizItem { get; set; }
 
-        public virtual ICollection<BizProgress> BizProgress { get; set; }
+        public virtual ICollection<WorkOrder> WorkOrders { get; set; }
     }
 }

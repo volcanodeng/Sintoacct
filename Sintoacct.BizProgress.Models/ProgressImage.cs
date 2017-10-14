@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sintoacct.Progress.Models
@@ -18,9 +13,9 @@ namespace Sintoacct.Progress.Models
 
         public string ServerImageName { get; set; }
 
-        [ForeignKey("BizProgress")]
-        public long BizId { get; set; }
+        [ForeignKey("WorkProgress")]
+        public long ProgId { get; set; }
 
-        public BizProgress BizProgress { get; set; }
+        public WorkProgress WorkProgress { get; set; }
     }
 }

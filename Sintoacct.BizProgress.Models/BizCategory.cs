@@ -34,8 +34,6 @@ namespace Sintoacct.Progress.Models
             
         public virtual ICollection<BizItems> BizItems { get; set; }
 
-        public virtual ICollection<BizSteps> BizSteps { get; set; }
 
-        public virtual ICollection<BizProgress> BizProgress { get; set; }
     }
 }
