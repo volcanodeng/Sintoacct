@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Sintoacct.Ledger.Models
 {
-    public class BizProgressViewModel
+    public class WorkOrderViewModel
     {
-        public long BizId { get; set; }
+        public long WoId { get; set; }
 
         public long CusId { get; set; }
 
@@ -13,21 +13,7 @@ namespace Sintoacct.Ledger.Models
 
         public DateTime ContractTime { get; set; }
 
-        public int CateId { get; set; }
-
-        public string CategoryName { get; set; }
-
-        public int ItemId { get; set; }
-
-        public string ItemName { get; set; }
-
-        public int StepId { get; set; }
-
-        public string StepName { get; set; }
-
-        public string ProgressDesc { get; set; }
-
-        public List<string> Images { get; set; }
+        public ICollection<BizItemViewModel> Items { get; set; }
 
         public string Remark { get; set; }
 
@@ -37,23 +23,15 @@ namespace Sintoacct.Ledger.Models
 
         public string PromPerson { get; set; }
 
-        public decimal? AmountReceivable { get; set; }
+        public decimal AmountReceivable { get; set; }
 
-        public decimal? AmountReceived { get; set; }
+        public decimal PreferentialAmount { get; set; }
 
-        public decimal? AmountUnreceived
-        {
-            get
-            {
-                if (AmountReceivable.HasValue && AmountReceived.HasValue) return AmountReceivable.Value - AmountReceived.Value;
-                else
-                    return null;
-            }
-        }
+        public decimal AmountReceived { get; set; }
 
 
         public string Creator { get; set; }
 
-        public DateTime? CreateTime { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 }

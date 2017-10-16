@@ -16,16 +16,16 @@ namespace Sintoacct.Ledger.Models.Migrations
 
         protected override void Seed(Sintoacct.Ledger.Models.LedgerContext context)
         {
-            string sqlInit = "";
-            using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("Sintoacct.Ledger.Models.SQL.InitData.sql"))
-            {
-                using (StreamReader sr = new StreamReader(s,System.Text.Encoding.Unicode))
-                {
-                    sqlInit = sr.ReadToEnd();
+            //string sqlInit = "";
+            //using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("Sintoacct.Ledger.Models.SQL.InitData.sql"))
+            //{
+            //    using (StreamReader sr = new StreamReader(s,System.Text.Encoding.Unicode))
+            //    {
+            //        sqlInit = sr.ReadToEnd();
 
-                    sr.Close();
-                }
-            }
+            //        sr.Close();
+            //    }
+            //}
 
             //context.Database.ExecuteSqlCommand(sqlInit);
         }

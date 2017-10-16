@@ -36,7 +36,7 @@ namespace Sintoacct.Progress.Models
         /// <summary>
         /// 业务办理（业务项目）
         /// </summary>
-        public virtual ICollection<WorkOrderItem> WorkOrderItem { get; set; }
+        public virtual ICollection<WorkOrderItem> WorkOrderItems { get; set; }
 
         /// <summary>
         /// 备注（特殊要求）
@@ -79,11 +79,16 @@ namespace Sintoacct.Progress.Models
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime? CreateTime { get; set; }
+        public DateTime CreateTime { get; set; }
 
         /// <summary>
         /// 工单支付记录
         /// </summary>
         public virtual ICollection<WorkOrderPayment> WorkOrderPayments { get; set; }
+
+        /// <summary>
+        /// 工单对应的工作进度
+        /// </summary>
+        public virtual ICollection<WorkProgress> WorkProgresses { get; set; }
     }
 }

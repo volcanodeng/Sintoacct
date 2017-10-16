@@ -25,13 +25,13 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, HttpPost, Route("api/BizProgress/GetMyBizProgresses")]
         public IHttpActionResult GetMyBizProgresses()
         {
-            var progList = _progress.GetMyBizProgresses();
-            return Ok(Mapper.Map<BizProgressViewModel>(progList));
+            var progList = _progress.GetMyWorkOrders();
+            return Ok(Mapper.Map<WorkOrderViewModel>(progList));
         }
 
         [ClaimsAuthorize("role", "progress-record")]
         [HttpGet, HttpPost, Route("api/BizProgress/SaveBizProgress")]
-        public IHttpActionResult SaveBizProgress(BizProgressViewModel progress)
+        public IHttpActionResult SaveBizProgress(WorkOrderViewModel progress)
         {
             string err;
             if(!_modelValid.ValidBizProgress(progress,out err))
@@ -39,7 +39,7 @@ namespace Sintoacct.Ledger.Controllers.Api
                 ResMessage.Fail(err);
             }
 
-            _progress.SaveProgress(progress);
+            _progress.SaveWorkOrder(progress);
             
             return Ok(ResMessage.Success());
         }

@@ -28,32 +28,32 @@ namespace Sintoacct.Ledger.BizProgressServices
             _setting = setting;
         }
 
-        public List<WorkOrder> GetMyBizProgresses(int pageIndex,int pageSize)
+        public List<WorkOrder> GetMyWorkOrders(int pageIndex,int pageSize)
         {
-            return _context.BizProgress.Where(p => p.Creator == _identity.GetUserName()).Skip(pageIndex * pageSize).Take(pageSize).OrderByDescending(p => p.WoId).ToList();
+            return _context.WorkOrders.Where(p => p.Creator == _identity.GetUserName()).Skip(pageIndex * pageSize).Take(pageSize).OrderByDescending(p => p.WoId).ToList();
         }
 
-        public List<WorkOrder> GetMyBizProgresses()
+        public List<WorkOrder> GetMyWorkOrders()
         {
-            return this.GetMyBizProgresses(0, 50);
+            return this.GetMyWorkOrders(0, 50);
         }
 
-        public WorkOrder GetBizProgress(long bizId)
+        public WorkOrder GetWorkOrder(long bizId)
         {
-            return _context.BizProgress.Where(p => p.WoId == bizId).FirstOrDefault();
+            return _context.WorkOrders.Where(p => p.WoId == bizId).FirstOrDefault();
         }
 
-        public WorkOrder GetMyBizProgress(long bizId)
+        public WorkOrder GetMyWorkOrder(long bizId)
         {
-            return _context.BizProgress.Where(p => p.Creator == _identity.GetUserName() && p.WoId == bizId).FirstOrDefault();
+            return _context.WorkOrders.Where(p => p.Creator == _identity.GetUserName() && p.WoId == bizId).FirstOrDefault();
         }
 
-        public WorkOrder SaveProgress(BizProgressViewModel bizProg)
+        public WorkOrder SaveWorkOrder(WorkOrderViewModel bizProg)
         {
             WorkOrder prog = null;
-            if (bizProg.BizId > 0)
+            if (bizProg.WoId > 0)
             {
-                prog = this.GetBizProgress(bizProg.BizId);
+                prog = this.GetWorkOrder(bizProg.WoId);
             }
             else
             {
@@ -80,7 +80,7 @@ namespace Sintoacct.Ledger.BizProgressServices
             prog.BizManager = bizProg.BizManager;
             prog.BizOperations = bizProg.BizOperations;
 
-            _context.BizProgress.AddOrUpdate(prog);
+            _context.WorkOrders.AddOrUpdate(prog);
             _context.SaveChanges();
 
             return prog;

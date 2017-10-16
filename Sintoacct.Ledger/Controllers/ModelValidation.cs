@@ -70,19 +70,17 @@ namespace Sintoacct.Ledger.Controllers
             return (err == string.Empty ? true : false);
         }
 
-        public bool ValidBizProgress(BizProgressViewModel progress,out string err)
+        public bool ValidBizProgress(WorkOrderViewModel progress,out string err)
         {
             err = string.Empty;
 
-            if (progress.CusId <= 0 || progress.ItemId <= 0 || progress.StepId <= 0)
+            if (progress.CusId <= 0 )
             {
                 err = "必选项无效";
                 return false;
             }
 
-            if (_customer.GetCustomer(progress.CusId) == null ||
-               _setting.GetBizItem(progress.ItemId) == null ||
-               _setting.GetStep(progress.StepId) == null)
+            if (_customer.GetCustomer(progress.CusId) == null)
             {
                 err = "必选项为空";
                 return false;
@@ -112,7 +110,7 @@ namespace Sintoacct.Ledger.Controllers
 
         bool ValidVoucher(VoucherViewModel voucher, out string err);
 
-        bool ValidBizProgress(BizProgressViewModel progress, out string err);
+        bool ValidBizProgress(WorkOrderViewModel progress, out string err);
 
         bool ValidBizCustomer(BizCustomerViewModel customer, out string err);
     }

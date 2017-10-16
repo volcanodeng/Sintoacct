@@ -49,6 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BizCategory.cs" />
+    <Compile Include="Migrations\201710161106194_InitialCreate.cs" />
+    <Compile Include="Migrations\201710161106194_InitialCreate.Designer.cs">
+      <DependentUpon>201710161106194_InitialCreate.cs</DependentUpon>
+    </Compile>
     <Compile Include="WorkOrder.cs" />
     <Compile Include="BizProgressContext.cs" />
     <Compile Include="BizPromotion.cs" />
@@ -56,10 +60,6 @@
     <Compile Include="BizItems.cs" />
     <Compile Include="WorkOrderPayment.cs" />
     <Compile Include="Customers.cs" />
-    <Compile Include="Migrations\201710130959173_InitialCreate.cs" />
-    <Compile Include="Migrations\201710130959173_InitialCreate.Designer.cs">
-      <DependentUpon>201710130959173_InitialCreate.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ProgressImage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,8 +74,8 @@
     <Content Include="SQL\BizProgressInit.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201710130959173_InitialCreate.resx">
-      <DependentUpon>201710130959173_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201710161106194_InitialCreate.resx">
+      <DependentUpon>201710161106194_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

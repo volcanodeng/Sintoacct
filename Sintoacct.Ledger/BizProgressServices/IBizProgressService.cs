@@ -6,10 +6,10 @@ namespace Sintoacct.Ledger.BizProgressServices
 {
     public interface IBizProgressService : IDependency
     {
-        WorkOrder GetBizProgress(long bizId);
-        WorkOrder GetMyBizProgress(long bizId);
-        List<WorkOrder> GetMyBizProgresses();
-        List<WorkOrder> GetMyBizProgresses(int pageIndex, int pageSize);
-        WorkOrder SaveProgress(BizProgressViewModel bizProg);
+        WorkOrder GetWorkOrder(long bizId);
+        WorkOrder GetMyWorkOrder(long bizId);
+        List<WorkOrder> GetMyWorkOrders();
+        List<WorkOrder> GetMyWorkOrders(int pageIndex, int pageSize);
+        WorkOrder SaveWorkOrder(WorkOrderViewModel bizProg);
     }
 }

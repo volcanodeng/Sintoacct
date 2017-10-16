@@ -13,7 +13,7 @@ namespace Sintoacct.Progress.Models.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201710130959173_InitialCreate"; }
+            get { return "201710161106194_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

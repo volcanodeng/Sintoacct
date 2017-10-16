@@ -66,5 +66,15 @@ namespace Sintoacct.Progress.Models
         /// 图片文件保存到七牛，数据库仅保存访问地址
         /// </summary>
         public virtual ICollection<ProgressImage> Images { get; set; } 
+
+        /// <summary>
+        /// 记录人
+        /// </summary>
+        public string Creator { get; set; }
+
+        /// <summary>
+        /// 记录时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
     }
 }
