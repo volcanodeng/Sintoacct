@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Data.Entity.Validation;
 using Sintoacct.Ledger.Models;
 using Newtonsoft.Json;
 
@@ -17,7 +18,7 @@ namespace Sintoacct.Ledger
 
         public void OnException(ExceptionContext filterContext)
         {
-            CommonContext common = new CommonContext();
+            LedgerContext context = new LedgerContext();
 
             ExceptionLog exception = new ExceptionLog();
             exception.RequestUrl = filterContext.HttpContext.Request.RawUrl;
@@ -25,8 +26,9 @@ namespace Sintoacct.Ledger
             exception.ExceptionMessage = filterContext.Exception.Message;
             exception.ExceptionDetail = JsonConvert.SerializeObject(filterContext.Exception);
             exception.LogTime = System.DateTime.Now;
-            common.Exceptions.Add(exception);
-            common.SaveChanges();
+            context.Exceptions.Add(exception);
+            context.SaveChanges();
+            
         }
     }
 }

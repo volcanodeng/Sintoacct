@@ -84,11 +84,11 @@
     <div class="easyui-layout" data-options="fit:true">
         <div data-options="region:'north',split:false,border:false" style="padding:10px;overflow:hidden;background-color:#F2F2F2;">
             <form id="sForm" method="post">
-                <div><span style="padding-left:12px;">业务单号：</span><input class="easyui-textbox" name="BizNo" style="width:100px;height:30px;" /> </div>
+                <div><span style="padding-left:12px;">工作单号：</span><input class="easyui-textbox" name="WoId" style="width:100px;height:30px;" /> </div>
                 <div><span style="padding-left:12px;">客户名称：</span><input class="easyui-textbox" name="CusName" style="width:100px;height:30px;" /></div>
-                <div><span style="padding-left:12px;">业务类别：</span><input class="easyui-combobox" name="BizCate" data-options="valueField:'CateId',textField:'CategoryName',url:'/BizSetting/GetBizCategories',width:100,height:30" /></div>
-                <div><span style="padding-left:12px;">进度描述：</span><input class="easyui-textbox" name="ProgDesc" data-options="width:220,height:30" /></div>
-                <div><span>业务项目：</span><input class="easyui-combobox" name="BizItem" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /></div>
+                <div><span style="padding-left:12px;">业务类别：</span><input class="easyui-combobox" name="BizCate" data-options="valueField:'CateId',textField:'CategoryName',url:'/BizSetting/GetBizCategories',width:100,height:30,onSelect:cateSearchOnSelect,editable:false" /></div>
+                <div><span style="padding-left:12px;">业务项目：</span><input class="easyui-combobox" id="BizItem" name="BizItem" data-options="valueField:'ItemId',textField:'ItemName',width:150,height:30,editable:false" /></div>
+                <div><span style="padding-left:12px;">进度描述：</span><input class="easyui-textbox" name="ProgDesc" data-options="width:150,height:30" /></div>
                 <div><a href="javascript:void(0)" id="btnSearch" class="easyui-linkbutton" data-options="iconCls:'fa fa-search fa-lg'" onclick="javascript: $('#sForm').submit();" style="width:100px;">查询</a></div>
             </form>
         </div>
@@ -97,18 +97,14 @@
                    data-options="fit:true,singleSelect:true,fitColumns:true,onLoadSuccess:onLoadSuccess,idField:'BizId',toolbar:'#dgToolbar'">
                 <thead>
                     <tr>
-                        <th data-options="field:'BizId',width:50,align:'center'">业务单号</th>
+                        <th data-options="field:'BizId',width:50,align:'center'">工作单号</th>
                         <th data-options="field:'CustomerName',width:150,align:'center'">客户名称</th>
                         <th data-options="field:'ContractTime',width:80,align:'center'">签约时间</th>
-                        <th data-options="field:'CategoryName',width:60,align:'center'">业务大类</th>
                         <th data-options="field:'ItemName',width:60,align:'right'">业务项目</th>
-                        <th data-options="field:'StepName',width:60,align:'right'">业务进度</th>
-                        <th data-options="field:'ProgressDesc',width:40,align:'center'">进度描述</th>
-                        <th data-options="field:'Images',width:60,align:'right'">证据图片</th>
+                        <th data-options="field:'Remark',width:60,align:'right'">客户要求</th>
                         <th data-options="field:'BizManager',width:60,align:'right'">业务主管</th>
-                        <th data-options="field:'BizOperations',width:60,align:'right'">业务员</th>
+                        <th data-options="field:'BizManager',width:60,align:'right'">业务人员</th>
                         <th data-options="field:'PromPerson',width:60,align:'right'">推广人员</th>
-                        <th data-options="field:'Remark',width:60,align:'right'">备注</th>
                         <th data-options="field:'AmountReceivable',width:60,align:'right'">应收金额</th>
                         <th data-options="field:'AmountReceived',width:60,align:'right'">已收金额</th>
                         <th data-options="field:'AmountUnreceived',width:60,align:'right'">未收金额</th>
@@ -116,14 +112,37 @@
                 </thead>
             </table>
         </div>
+        <div data-options="region:'south',border:true,split:true" style="padding:10px;height:400px;">
+            <table class="easyui-datagrid" id="progList"
+                   data-options="fit:true,singleSelect:true,fitColumns:true,rownumbers:true,idField:'ProgId',toolbar:'#progToolbar'">
+                <thead>
+                    <tr>
+                        <th data-options="field:'BizId',width:50,align:'center'">完成时间</th>
+                        <th data-options="field:'CustomerName',width:150,align:'center'">工作进度</th>
+                        <th data-options="field:'ContractTime',width:80,align:'center'">办理结果</th>
+                        <th data-options="field:'ItemName',width:60,align:'right'">凭证图片</th>
+                        <th data-options="field:'Remark',width:60,align:'right'">记录人</th>
+                        <th data-options="field:'BizManager',width:60,align:'right'">记录时间</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
     <div id="dgToolbar">
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-plus fa-lg',plain:true" onclick="add()">新增业务进度</a>
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="edit()">修改业务进度</a>
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="del()">删除业务进度</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-plus fa-lg',plain:true" onclick="add()">新增工单</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="edit()">修改工单</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="del()">删除工单</a>
+    </div>
+    <div id="progToolbar">
+        <div><span style="padding-left:12px;">业务项目：</span><input class="easyui-combobox" id="BizItem" name="BizItem" data-options="valueField:'ItemId',textField:'ItemName',width:200,height:30,editable:false" /></div>
+        <div>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-plus fa-lg',plain:true" onclick="add()">新增进度</a>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="edit()">修改进度</a>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="del()">删除进度</a>
+        </div>
     </div>
 
-    <div id="dialogBiz" class="easyui-dialog" title="业务进度" style="width:500px;height:500px;"
+    <div id="dialogBiz" class="easyui-dialog" title="工单信息" style="width:500px;height:600px;"
          data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnBiz'">
         <form method="post" id="bizForm" enctype="multipart/form-data">
             <ul>
@@ -139,12 +158,61 @@
                            data-options="prompt:'请输入签约时间',required:true,width:260,height:35,missingMessage:'请输入签约时间'" />
 
                 </li>
+                
                 <li>
-                    <label for="cate">业务大类:</label>
-                    <input id="cate" name="cate" class="easyui-combobox"
-                           data-options="prompt:'请选择业务大类',required:true,width:260,height:35,missingMessage:'请选择业务大类',editable:false,valueField:'CateId',textField:'CategoryName',onSelect:cateOnSelect" />
+                    <label for="item">业务项目:</label>
+                    <input id="item" name="item" class="easyui-combobox"
+                           data-options="prompt:'请选择业务项目',required:true,width:260,height:35,missingMessage:'请选择业务项目',editable:false,valueField:'ItemId',textField:'ItemName',onSelect:itemOnSelect,url:'/BizSetting/GetAllBizItems',groupField:'CategoryName',groupPosition:'sticky',multiple:true" />
 
                 </li>
+                <li>
+                    <label for="desc">客户要求:</label>
+                    <input id="desc" name="desc" class="easyui-textbox"
+                           data-options="prompt:'请输入客户要求',required:true,width:260,height:105,missingMessage:'请输入客户要求',multiline:true" />
+
+                </li>
+                <li>
+                    <label for="manager">业务主管:</label>
+                    <input id="manager" name="manager" class="easyui-combobox"
+                           data-options="prompt:'请选择业务主管',required:true,width:260,height:35,missingMessage:'请选择业务主管',editable:false,valueField:'userid',textField:'username'" />
+
+                </li>
+                <li>
+                    <label for="operations">业务员:</label>
+                    <input id="operations" name="operations" class="easyui-combobox"
+                           data-options="prompt:'请选择业务员',required:true,multiple:true,width:260,height:35,missingMessage:'请选择业务员',editable:false,valueField:'userid',textField:'username'" />
+
+                </li>
+                <li>
+                    <label for="promotion">推广人员:</label>
+                    <input id="promotion" name="promotion" class="easyui-combobox"
+                           data-options="prompt:'请选择推广人员',required:true,width:260,height:35,missingMessage:'请选择推广人员',editable:false,valueField:'userid',textField:'username'" />
+
+                </li>
+                
+
+
+            </ul>
+        </form>
+    </div>
+
+    <div id="dialogProg" class="easyui-dialog" title="业务进度" style="width:500px;height:500px;"
+         data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnProg'">
+        <form method="post" id="progForm" enctype="multipart/form-data">
+            <ul>
+                <li>
+                    <label for="customer">客户名称:</label>
+                    <input id="customer" name="customer" class="easyui-combobox"
+                           data-options="prompt:'请选择业务对应的客户',required:true,width:260,height:35,missingMessage:'请选择业务对应的客户',valueField:'CusId',textField:'CustomerName',url:'/Customer/GetCustomers'" />
+
+                </li>
+                <li>
+                    <label for="signTime">签约时间:</label>
+                    <input id="signTime" name="signTime" class="easyui-datebox"
+                           data-options="prompt:'请输入签约时间',required:true,width:260,height:35,missingMessage:'请输入签约时间'" />
+
+                </li>
+
                 <li>
                     <label for="item">业务项目:</label>
                     <input id="item" name="item" class="easyui-combobox"
@@ -204,6 +272,10 @@
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-floppy-o fa-lg',plain:false,width:70" onclick="saveBiz()">保存</a>
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-times fa-lg',plain:false,width:70" onclick="closeBiz()">关闭</a>
     </div>
+    <div id="btnProg">
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-floppy-o fa-lg',plain:false,width:70" onclick="saveBiz()">保存</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-times fa-lg',plain:false,width:70" onclick="closeBiz()">关闭</a>
+    </div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/easyui")
     <script type="text/javascript" src="~/Scripts/jquery.uploadPreview.min.js"></script>
@@ -237,6 +309,12 @@
         function formSuccess(data) {
             $("#vvList").datagrid("reload");
 
+        }
+
+        function cateSearchOnSelect(record)
+        {
+            $("#BizItem").combobox("clear");
+            $("#BizItem").combobox("reload", "/BizSetting/GetBizItemInCate/" + record.CateId);
         }
 
         function onLoadSuccess(data) {

@@ -67,9 +67,6 @@ namespace Sintoacct.Ledger
             //ledger.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
             //builder.RegisterInstance(ledger).As<LedgerContext>();
             builder.RegisterType<LedgerContext>().InstancePerLifetimeScope();
-            var common = new CommonContext();
-            common.Database.Initialize(false);
-            //builder.RegisterType<CommonContext>().InstancePerLifetimeScope();
 
             //注入BizProgressContext
             var prog = new BizProgressContext();

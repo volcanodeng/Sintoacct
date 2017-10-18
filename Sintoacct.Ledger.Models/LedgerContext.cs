@@ -36,6 +36,8 @@ namespace Sintoacct.Ledger.Models
 
         public DbSet<SourceDocument> SourceDocument { get; set; }
 
+        public DbSet<ExceptionLog> Exceptions { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             //Database.SetInitializer(new CreateDatabaseIfNotExists<LedgerContext>());

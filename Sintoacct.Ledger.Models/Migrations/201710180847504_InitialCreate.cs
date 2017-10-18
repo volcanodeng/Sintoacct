@@ -262,6 +262,19 @@ namespace Sintoacct.Ledger.Models.Migrations
                 .ForeignKey("dbo.T_Account_Book", t => t.AbId, cascadeDelete: true)
                 .Index(t => t.AbId);
             
+            CreateTable(
+                "dbo.T_Exception_Log",
+                c => new
+                    {
+                        LogId = c.Long(nullable: false, identity: true),
+                        RequestUrl = c.String(maxLength: 500),
+                        RequestDetail = c.String(),
+                        ExceptionMessage = c.String(maxLength: 500),
+                        ExceptionDetail = c.String(),
+                        LogTime = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.LogId);
+            
         }
         
         public override void Down()
@@ -302,6 +315,7 @@ namespace Sintoacct.Ledger.Models.Migrations
             DropIndex("dbo.T_Account", new[] { "AcId" });
             DropIndex("dbo.T_Account_Book", new[] { "ComId" });
             DropIndex("dbo.T_Abstract_Temp", new[] { "AbId" });
+            DropTable("dbo.T_Exception_Log");
             DropTable("dbo.T_Voucher_Detail_Template");
             DropTable("dbo.T_User_Book");
             DropTable("dbo.T_Region");

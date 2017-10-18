@@ -49,7 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommonContext.cs" />
     <Compile Include="Ledger\AccountBook.cs" />
     <Compile Include="Ledger\AbstractTemp.cs" />
     <Compile Include="Ledger\Account.cs" />
@@ -65,9 +64,9 @@
     <Compile Include="Ledger\UserBook.cs" />
     <Compile Include="LedgerContext.cs" />
     <Compile Include="LogModel\ExceptionLog.cs" />
-    <Compile Include="Migrations\201709170335172_InitialCreate.cs" />
-    <Compile Include="Migrations\201709170335172_InitialCreate.Designer.cs">
-      <DependentUpon>201709170335172_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201710180847504_InitialCreate.cs" />
+    <Compile Include="Migrations\201710180847504_InitialCreate.Designer.cs">
+      <DependentUpon>201710180847504_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -78,8 +77,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201709170335172_InitialCreate.resx">
-      <DependentUpon>201709170335172_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201710180847504_InitialCreate.resx">
+      <DependentUpon>201710180847504_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SQL\InitData.sql" />
   </ItemGroup>

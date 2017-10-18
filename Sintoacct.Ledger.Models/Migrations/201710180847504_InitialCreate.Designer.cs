@@ -13,7 +13,7 @@ namespace Sintoacct.Ledger.Models.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201709170335172_InitialCreate"; }
+            get { return "201710180847504_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

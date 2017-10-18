@@ -41,7 +41,9 @@ namespace Sintoacct.Ledger
 
                 //============BizProgress===============
                 cfg.CreateMap<BizCategory, BizCategoryViewModel>();
-                cfg.CreateMap<BizItems, BizItemViewModel>();
+                cfg.CreateMap<BizItems, BizItemViewModel>()
+                .ForMember(dest => dest.CateId, opt => opt.MapFrom(src => src.BizCategory.CateId))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.BizCategory.CategoryName));
                 cfg.CreateMap<BizSteps, BizStepsViewModel>();
 
                 cfg.CreateMap<Customers, BizCustomerViewModel>();

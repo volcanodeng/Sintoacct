@@ -15,7 +15,7 @@ namespace Sintoacct.Ledger.Models
 
         public string RequestDetail { get; set; }
 
-        [MaxLength(200)]
+        [MaxLength(500)]
         public string ExceptionMessage { get; set; }
 
         public string ExceptionDetail { get; set; }

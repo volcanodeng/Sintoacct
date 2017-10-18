@@ -11,6 +11,7 @@ namespace Sintoacct.Ledger.BizProgressServices
         List<BizSteps> GetSteps();
         BizCategory GetBizCategory(int cateId);
         BizItems GetBizItem(int itemId);
+        List<BizItems> GetBizItemsInCate(int cateId);
         BizSteps GetStep(int stepId);
     }
 }

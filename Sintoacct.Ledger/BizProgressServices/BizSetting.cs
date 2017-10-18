@@ -17,7 +17,7 @@ namespace Sintoacct.Ledger.BizProgressServices
 
         public List<BizCategory> GetBizCategories()
         {
-            return _context.BizCategories.Include("BizItems").Include("BizSteps").OrderBy(c=>c.SortIndex).ToList();
+            return _context.BizCategories.Include("BizItems").OrderBy(c=>c.SortIndex).ToList();
         }
 
         public BizCategory GetBizCategory(int cateId)
@@ -27,12 +27,17 @@ namespace Sintoacct.Ledger.BizProgressServices
 
         public List<BizItems> GetBizItems()
         {
-            return _context.BizItems.OrderBy(i => i.SortIndex).ToList();
+            return _context.BizItems.Include("BizCategory").OrderBy(i => i.CateId).ThenBy(i => i.SortIndex).ToList();
         }
 
         public BizItems GetBizItem(int itemId)
         {
-            return _context.BizItems.Where(i => i.ItemId == itemId).FirstOrDefault();
+            return _context.BizItems.Include("BizCategory").Where(i => i.ItemId == itemId).FirstOrDefault();
+        }
+
+        public List<BizItems> GetBizItemsInCate(int cateId)
+        {
+            return _context.BizItems.Include("BizCategory").Where(i => i.CateId == cateId).OrderBy(i => i.CateId).ThenBy(i => i.SortIndex).ToList();
         }
 
         public List<BizSteps> GetSteps()

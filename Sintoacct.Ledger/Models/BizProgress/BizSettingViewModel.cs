@@ -26,6 +26,10 @@ namespace Sintoacct.Ledger.Models
         public string ItemName { get; set; }
 
         public int SortIndex { get; set; }
+
+        public int CateId { get; set; }
+
+        public string CategoryName { get; set; }
     }
 
     public class BizStepsViewModel

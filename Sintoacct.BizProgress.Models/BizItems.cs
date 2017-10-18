@@ -33,5 +33,7 @@ namespace Sintoacct.Progress.Models
         public BizCategory BizCategory { get; set; }
 
         public virtual ICollection<WorkOrder> WorkOrders { get; set; }
+
+        public virtual ICollection<BizSteps> BizSteps { get; set; }
     }
 }

@@ -49,9 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BizCategory.cs" />
-    <Compile Include="Migrations\201710161106194_InitialCreate.cs" />
-    <Compile Include="Migrations\201710161106194_InitialCreate.Designer.cs">
-      <DependentUpon>201710161106194_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201710180415026_InitialCreate.cs" />
+    <Compile Include="Migrations\201710180415026_InitialCreate.Designer.cs">
+      <DependentUpon>201710180415026_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="WorkOrder.cs" />
     <Compile Include="BizProgressContext.cs" />
@@ -74,8 +74,8 @@
     <Content Include="SQL\BizProgressInit.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201710161106194_InitialCreate.resx">
-      <DependentUpon>201710161106194_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201710180415026_InitialCreate.resx">
+      <DependentUpon>201710180415026_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

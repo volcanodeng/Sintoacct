@@ -25,5 +25,15 @@ namespace Sintoacct.Ledger.Controllers.BizProgress
         {
             return Json(Mapper.Map <List<BizCategoryViewModel>>(_bizSetting.GetBizCategories()),JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult GetBizItemInCate(int id)
+        {
+            return Json(Mapper.Map<List<BizItemViewModel>>(_bizSetting.GetBizItemsInCate(id)),JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetAllBizItems()
+        {
+            return Json(Mapper.Map<List<BizItemViewModel>>(_bizSetting.GetBizItems()));
+        }
     }
 }
