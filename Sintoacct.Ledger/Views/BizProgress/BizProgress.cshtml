@@ -144,7 +144,7 @@
 
     <div id="dialogBiz" class="easyui-dialog" title="工单信息" style="width:500px;height:600px;"
          data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnBiz'">
-        <form method="post" id="bizForm" enctype="multipart/form-data">
+        <form method="post" id="bizForm" >
             <ul>
                 <li>
                     <label for="customer">客户名称:</label>
@@ -174,19 +174,19 @@
                 <li>
                     <label for="manager">业务主管:</label>
                     <input id="manager" name="manager" class="easyui-combobox"
-                           data-options="prompt:'请选择业务主管',required:true,width:260,height:35,missingMessage:'请选择业务主管',editable:false,valueField:'userid',textField:'username'" />
+                           data-options="prompt:'请选择业务主管',required:true,width:260,height:35,missingMessage:'请选择业务主管',editable:false,valueField:'UserId',textField:'UserName'" />
 
                 </li>
                 <li>
                     <label for="operations">业务员:</label>
                     <input id="operations" name="operations" class="easyui-combobox"
-                           data-options="prompt:'请选择业务员',required:true,multiple:true,width:260,height:35,missingMessage:'请选择业务员',editable:false,valueField:'userid',textField:'username'" />
+                           data-options="prompt:'请选择业务员',required:true,multiple:true,width:260,height:35,missingMessage:'请选择业务员',editable:false,valueField:'UserId',textField:'UserName'" />
 
                 </li>
                 <li>
                     <label for="promotion">推广人员:</label>
                     <input id="promotion" name="promotion" class="easyui-combobox"
-                           data-options="prompt:'请选择推广人员',required:true,width:260,height:35,missingMessage:'请选择推广人员',editable:false,valueField:'userid',textField:'username'" />
+                           data-options="prompt:'请选择推广人员',required:true,width:260,height:35,missingMessage:'请选择推广人员',editable:false,valueField:'UserId',textField:'UserName'" />
 
                 </li>
                 
@@ -281,6 +281,10 @@
     <script type="text/javascript" src="~/Scripts/jquery.uploadPreview.min.js"></script>
     <script type="text/javascript">
 
+        var global = {
+            bizPerson:null
+        };
+
         $(function () {
             init();
         });
@@ -300,6 +304,10 @@
                 label_selected: "修改图片"
             });
 
+            $.post("/BizProgress/GetBizPersons", null, function (data) {
+                global.bizPerson = data;
+                $("#manager,#operations,#promotion").combobox("loadData", global.bizPerson);
+            });
         }
 
         function formOnSubmit() {

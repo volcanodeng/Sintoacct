@@ -53,6 +53,10 @@
     <Compile Include="Migrations\201710180415026_InitialCreate.Designer.cs">
       <DependentUpon>201710180415026_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201710191043473_ModifyCustomers.cs" />
+    <Compile Include="Migrations\201710191043473_ModifyCustomers.Designer.cs">
+      <DependentUpon>201710191043473_ModifyCustomers.cs</DependentUpon>
+    </Compile>
     <Compile Include="WorkOrder.cs" />
     <Compile Include="BizProgressContext.cs" />
     <Compile Include="BizPromotion.cs" />
@@ -76,6 +80,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201710180415026_InitialCreate.resx">
       <DependentUpon>201710180415026_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710191043473_ModifyCustomers.resx">
+      <DependentUpon>201710191043473_ModifyCustomers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

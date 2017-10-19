@@ -21,8 +21,6 @@ namespace Sintoacct.Ledger.Controllers
             _customer = customer;
         }
 
-        
-
         public ActionResult Customers()
         {
             return View();

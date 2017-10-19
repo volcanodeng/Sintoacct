@@ -34,4 +34,10 @@ namespace Sintoacct.Ledger.Models
 
         public DateTime CreateTime { get; set; }
     }
+
+    public class BizPersonViewModel
+    {
+        public string UserId { get; set; }
+        public string UserName { get; set; }
+    }
 }

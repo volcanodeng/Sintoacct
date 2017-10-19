@@ -38,9 +38,7 @@ namespace Sintoacct.Ledger.BizProgressServices
             else
             {
                 cust = new Customers();
-                //校验推荐人的id有效性
-                if (customer.PromId.HasValue && this.GetPromotion(customer.PromId.Value) != null)
-                    cust.PromId = customer.PromId;
+                cust.PromId = customer.PromId;
             }
             cust.CustomerName = customer.CustomerName;
             cust.CustomerAddress = customer.CustomerAddress;

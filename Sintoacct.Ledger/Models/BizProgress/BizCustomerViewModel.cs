@@ -25,7 +25,7 @@ namespace Sintoacct.Ledger.Models
 
         public int Level { get; set; }
 
-        public long? PromId { get; set; }
+        public string PromId { get; set; }
 
         public string OpName { get; set; }
     }

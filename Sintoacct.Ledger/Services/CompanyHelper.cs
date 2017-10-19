@@ -34,6 +34,24 @@ namespace Sintoacct.Ledger.Services
         {
             return _ledger.Companys.Where(c => c.ComName == name).FirstOrDefault();
         }
+
+        public List<BizPersonViewModel> GetBizPersons()
+        {
+            string sql = "select UserId," +
+                         "(select [ClaimValue] from AspNetUserClaims uc1 where uc1.UserId=uc.UserId and [ClaimType]='name') as UserName " +
+                         "from AspNetUserClaims uc where [ClaimType]='role' and [ClaimValue]='business' and " +
+                         "not exists(select 1 from AspNetUserClaims uc2 where uc2.UserId=uc.UserId and [ClaimValue]='IdentityManagerAdministrator')";
+            return _ledger.Database.SqlQuery<BizPersonViewModel>(sql).ToList();
+        }
+
+        public BizPersonViewModel GetBizPerson(Guid userid)
+        {
+            string sql = "select [id] as UserId,username as UserName " +
+                         string.Format("from AspNetUsers where [Id]='{0}'", userid.ToString("D"));
+
+            return _ledger.Database.SqlQuery<BizPersonViewModel>(sql).FirstOrDefault();
+
+        }
     }
 
     public interface ICompanyHelper : IDependency
@@ -41,5 +59,11 @@ namespace Sintoacct.Ledger.Services
         Company Edit(Company editCom);
 
         Company GetCompanyByName(string name);
+
+        List<BizPersonViewModel> GetBizPersons();
+
+        BizPersonViewModel GetBizPerson(Guid userid);
     }
+
+    
 }

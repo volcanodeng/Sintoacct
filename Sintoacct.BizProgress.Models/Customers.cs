@@ -33,10 +33,9 @@ namespace Sintoacct.Progress.Models
 
         public int Level { get; set; }
 
-        [ForeignKey("Promotions")]
-        public long? PromId { get; set; }
+        
+        public string PromId { get; set; }
 
-        public BizPromotion Promotions { get; set; }
 
         public virtual ICollection<WorkOrder> BizProgress { get; set; }
 

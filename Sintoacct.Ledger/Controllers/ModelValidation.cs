@@ -92,8 +92,8 @@ namespace Sintoacct.Ledger.Controllers
         public bool ValidBizCustomer(BizCustomerViewModel customer,out string err)
         {
             err = string.Empty;
-
-            if(_customer.GetCustomer(customer.CusId)==null)
+            Guid uid;
+            if(!Guid.TryParse(customer.PromId,out uid) || _company.GetBizPerson(uid)==null)
             {
                 err = "推荐人为空";
                 return false;

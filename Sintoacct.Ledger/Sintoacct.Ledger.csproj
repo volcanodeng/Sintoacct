@@ -207,7 +207,6 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="AutoMapperConfiguration.cs" />
-    <Compile Include="BizProgressServices\AdminRoleClaims.cs" />
     <Compile Include="BizProgressServices\BizCustomer.cs" />
     <Compile Include="BizProgressServices\BizProgressService.cs" />
     <Compile Include="BizProgressServices\BizSetting.cs" />
