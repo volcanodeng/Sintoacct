@@ -22,16 +22,16 @@ namespace Sintoacct.Ledger.Controllers.Api
         }
 
         [ClaimsAuthorize("role", "business")]
-        [HttpGet, HttpPost, Route("api/BizProgress/GetMyBizProgresses")]
-        public IHttpActionResult GetMyBizProgresses()
+        [HttpGet, HttpPost, Route("api/BizProgress/GetMyWorkOrders")]
+        public IHttpActionResult GetMyWorkOrders()
         {
             var progList = _progress.GetMyWorkOrders();
-            return Ok(Mapper.Map<WorkOrderViewModel>(progList));
+            return Ok(Mapper.Map<List<WorkOrderViewModel>>(progList));
         }
 
         [ClaimsAuthorize("role", "progress-record")]
-        [HttpGet, HttpPost, Route("api/BizProgress/SaveBizProgress")]
-        public IHttpActionResult SaveBizProgress(WorkOrderViewModel progress)
+        [HttpGet, HttpPost, Route("api/BizProgress/SaveWorkOrder")]
+        public IHttpActionResult SaveWorkOrder(WorkOrderViewModel progress)
         {
             string err;
             if(!_modelValid.ValidBizProgress(progress,out err))

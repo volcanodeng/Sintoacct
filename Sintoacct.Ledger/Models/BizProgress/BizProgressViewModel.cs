@@ -13,7 +13,9 @@ namespace Sintoacct.Ledger.Models
 
         public DateTime ContractTime { get; set; }
 
-        public ICollection<BizItemViewModel> Items { get; set; }
+        public string BizItemIds { get; set; }
+
+        public string BizItemNames { get; set; }
 
         public string Remark { get; set; }
 

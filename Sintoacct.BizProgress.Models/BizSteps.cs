@@ -20,8 +20,6 @@ namespace Sintoacct.Progress.Models
 
         public BizItems BizItem { get; set; }
 
-        public virtual ICollection<WorkOrderItem> WorkOrdersItems { get; set; }
-
         public virtual ICollection<WorkProgress> WorkProgresses { get; set; }
     }
 }

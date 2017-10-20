@@ -80,7 +80,7 @@
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="del()">删除客户</a>
     </div>
 
-    <div id="dialogCus" class="easyui-dialog" title="客户信息" style="width:500px;height:600px;"
+    <div id="dialogCus" class="easyui-dialog" title="客户信息" style="width:500px;height:650px;"
          data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnCus'">
         <form method="post" id="cusForm" >
             <ul>
@@ -157,6 +157,8 @@
 
     $(function () {
         init();
+
+        formSubmit();
     });
 
     function init()
@@ -192,7 +194,8 @@
 
     function cusFormSuccess(data) {
         if (responseHandle(data)) {
-            $('#sForm').submit();
+            formSubmit();
+            closeBiz();
         }
     }
 

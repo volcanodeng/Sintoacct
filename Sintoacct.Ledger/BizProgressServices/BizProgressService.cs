@@ -30,7 +30,13 @@ namespace Sintoacct.Ledger.BizProgressServices
 
         public List<WorkOrder> GetMyWorkOrders(int pageIndex,int pageSize)
         {
-            return _context.WorkOrders.Where(p => p.Creator == _identity.GetUserName()).Skip(pageIndex * pageSize).Take(pageSize).OrderByDescending(p => p.WoId).ToList();
+            string curUser = _identity.GetUserName();
+            return _context.WorkOrders
+                           .Where(p => p.Creator == curUser)
+                           .OrderByDescending(p => p.WoId)
+                           .Skip(pageIndex * pageSize)
+                           .Take(pageSize)
+                           .ToList();
         }
 
         public List<WorkOrder> GetMyWorkOrders()
@@ -48,42 +54,48 @@ namespace Sintoacct.Ledger.BizProgressServices
             return _context.WorkOrders.Where(p => p.Creator == _identity.GetUserName() && p.WoId == bizId).FirstOrDefault();
         }
 
-        public WorkOrder SaveWorkOrder(WorkOrderViewModel bizProg)
+        public WorkOrder SaveWorkOrder(WorkOrderViewModel workOrder)
         {
-            WorkOrder prog = null;
-            if (bizProg.WoId > 0)
+            WorkOrder wo = null;
+            if (workOrder.WoId > 0)
             {
-                prog = this.GetWorkOrder(bizProg.WoId);
+                wo = this.GetWorkOrder(workOrder.WoId);
             }
             else
             {
-                prog = new WorkOrder();
-                prog.CreateTime = DateTime.Now;
-                prog.Creator = _identity.GetUserName();
+                wo = new WorkOrder();
+                wo.CreateTime = DateTime.Now;
+                wo.Creator = _identity.GetUserName();
+            }
+
+            //业务项目
+            WorkOrderItem[] woItems = wo.WorkOrderItems.ToArray();
+            for (int i = woItems.Count() - 1; i >= 0; i--)
+            {
+                //先删除旧记录
+                wo.WorkOrderItems.Remove(woItems[i]);
+            }
+            string[] items = workOrder.BizItemIds.Split(',');
+            foreach(string i in items)
+            {
+                //添加新记录
+                WorkOrderItem woi = new WorkOrderItem();
+                woi.WorkOrder = wo;
+                woi.BizItem = _setting.GetBizItem(Convert.ToInt32(i));
+                wo.WorkOrderItems.Add(woi);
             }
 
             //校验客户编号的有效性
-            prog.Customer = _customer.GetCustomer(bizProg.CusId);
-            prog.ContractTime = bizProg.ContractTime;
+            wo.Customer = _customer.GetCustomer(workOrder.CusId);
+            wo.ContractTime = workOrder.ContractTime;
+            wo.Remark = workOrder.Remark;
+            wo.BizManager = workOrder.BizManager;
+            wo.BizOperations = workOrder.BizOperations;
 
-            //prog.BizCategory = _setting.GetBizCategory(bizProg.CateId);
-
-            //prog.BizItem = _setting.GetBizItem(bizProg.ItemId);
-
-            //prog.BizStep = _setting.GetStep(bizProg.StepId);
-
-            //prog.ProgressDesc = bizProg.ProgressDesc;
-#warning 上传文件保存逻辑（本地文件或七牛文件服务器）
-
-            prog.Remark = bizProg.Remark;
-
-            prog.BizManager = bizProg.BizManager;
-            prog.BizOperations = bizProg.BizOperations;
-
-            _context.WorkOrders.AddOrUpdate(prog);
+            _context.WorkOrders.AddOrUpdate(wo);
             _context.SaveChanges();
 
-            return prog;
+            return wo;
         }
     }
 }

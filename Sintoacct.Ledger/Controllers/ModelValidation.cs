@@ -70,17 +70,17 @@ namespace Sintoacct.Ledger.Controllers
             return (err == string.Empty ? true : false);
         }
 
-        public bool ValidBizProgress(WorkOrderViewModel progress,out string err)
+        public bool ValidBizProgress(WorkOrderViewModel workOrder,out string err)
         {
             err = string.Empty;
 
-            if (progress.CusId <= 0 )
+            if (workOrder.CusId <= 0 )
             {
                 err = "必选项无效";
                 return false;
             }
 
-            if (_customer.GetCustomer(progress.CusId) == null)
+            if (_customer.GetCustomer(workOrder.CusId) == null)
             {
                 err = "必选项为空";
                 return false;

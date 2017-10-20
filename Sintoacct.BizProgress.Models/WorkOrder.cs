@@ -11,6 +11,13 @@ namespace Sintoacct.Progress.Models
     [Table("T_Prog_WorkOrder")]
     public class WorkOrder
     {
+        public WorkOrder()
+        {
+            this.WorkOrderItems = new List<WorkOrderItem>();
+            this.WorkOrderPayments = new List<WorkOrderPayment>();
+            this.WorkProgresses = new List<WorkProgress>();
+        }
+
         /// <summary>
         /// 工作单号
         /// </summary>

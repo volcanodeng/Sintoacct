@@ -52,7 +52,7 @@ namespace Sintoacct.Ledger.BizProgressServices
             _context.Customers.AddOrUpdate(cust);
             _context.SaveChanges();
 
-            return null;
+            return cust;
         }
 
 
