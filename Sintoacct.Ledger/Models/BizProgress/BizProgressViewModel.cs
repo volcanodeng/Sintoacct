@@ -23,11 +23,13 @@ namespace Sintoacct.Ledger.Models
 
         public string BizOperations { get; set; }
 
-        public string PromPerson { get; set; }
+        public string Recommend { get; set; }
 
-        public decimal AmountReceivable { get; set; }
+        public decimal CommercialExpense { get; set; }
 
         public decimal PreferentialAmount { get; set; }
+
+        public decimal AdvanceExpenditure { get; set; }
 
         public decimal AmountReceived { get; set; }
 

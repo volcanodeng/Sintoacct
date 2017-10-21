@@ -49,9 +49,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BizCategory.cs" />
-    <Compile Include="Migrations\201710201011249_InitialCreate.cs" />
-    <Compile Include="Migrations\201710201011249_InitialCreate.Designer.cs">
-      <DependentUpon>201710201011249_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201710210214045_InitialCreate.cs" />
+    <Compile Include="Migrations\201710210214045_InitialCreate.Designer.cs">
+      <DependentUpon>201710210214045_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710210219527_ModifyWorkOrder.cs" />
+    <Compile Include="Migrations\201710210219527_ModifyWorkOrder.Designer.cs">
+      <DependentUpon>201710210219527_ModifyWorkOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710210715361_ModifyBizItems.cs" />
+    <Compile Include="Migrations\201710210715361_ModifyBizItems.Designer.cs">
+      <DependentUpon>201710210715361_ModifyBizItems.cs</DependentUpon>
     </Compile>
     <Compile Include="WorkOrder.cs" />
     <Compile Include="BizProgressContext.cs" />
@@ -74,8 +82,14 @@
     <Content Include="SQL\BizProgressInit.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201710201011249_InitialCreate.resx">
-      <DependentUpon>201710201011249_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201710210214045_InitialCreate.resx">
+      <DependentUpon>201710210214045_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710210219527_ModifyWorkOrder.resx">
+      <DependentUpon>201710210219527_ModifyWorkOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710210715361_ModifyBizItems.resx">
+      <DependentUpon>201710210715361_ModifyBizItems.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

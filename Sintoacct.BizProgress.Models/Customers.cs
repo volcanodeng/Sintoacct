@@ -22,16 +22,10 @@ namespace Sintoacct.Progress.Models
         [MaxLength(50)]
         public string Contacts { get; set; }
 
-        [MaxLength(20)]
+        [MaxLength(20),Required]
         public string Phone { get; set; }
 
-        [MaxLength(50)]
-        public string Email { get; set; }
-
-        [MaxLength(50)]
-        public string WeixinNick { get; set; }
-
-        public int Level { get; set; }
+        public int? Level { get; set; }
 
         
         public string PromId { get; set; }

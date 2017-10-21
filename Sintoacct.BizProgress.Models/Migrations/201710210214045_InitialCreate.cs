@@ -53,6 +53,7 @@ namespace Sintoacct.Progress.Models.Migrations
                         StepId = c.Int(nullable: false),
                         CompletedTime = c.DateTime(),
                         ResultDesc = c.String(maxLength: 100),
+                        AdvanceExpenditure = c.Decimal(nullable: false, precision: 18, scale: 2),
                         Creator = c.String(),
                         CreateTime = c.DateTime(nullable: false),
                     })
@@ -87,8 +88,9 @@ namespace Sintoacct.Progress.Models.Migrations
                         Remark = c.String(),
                         BizManager = c.String(maxLength: 50),
                         BizOperations = c.String(maxLength: 100),
-                        AmountReceivable = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        CommercialExpense = c.Decimal(nullable: false, precision: 18, scale: 2),
                         PreferentialAmount = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        AdvanceExpenditure = c.Decimal(nullable: false, precision: 18, scale: 2),
                         AmountReceived = c.Decimal(nullable: false, precision: 18, scale: 2),
                         Creator = c.String(maxLength: 50),
                         CreateTime = c.DateTime(nullable: false),
@@ -109,10 +111,8 @@ namespace Sintoacct.Progress.Models.Migrations
                         CustomerAddress = c.String(maxLength: 200),
                         BusinessAddress = c.String(maxLength: 200),
                         Contacts = c.String(maxLength: 50),
-                        Phone = c.String(maxLength: 20),
-                        Email = c.String(maxLength: 50),
-                        WeixinNick = c.String(maxLength: 50),
-                        Level = c.Int(nullable: false),
+                        Phone = c.String(nullable: false, maxLength: 20),
+                        Level = c.Int(),
                         PromId = c.String(),
                     })
                 .PrimaryKey(t => t.CusId);

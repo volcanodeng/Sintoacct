@@ -62,6 +62,11 @@ namespace Sintoacct.Progress.Models
         public string ResultDesc { get; set; }
 
         /// <summary>
+        /// 代垫费用
+        /// </summary>
+        public decimal AdvanceExpenditure { get; set; }
+
+        /// <summary>
         /// 凭证图片。
         /// 图片文件保存到七牛，数据库仅保存访问地址
         /// </summary>

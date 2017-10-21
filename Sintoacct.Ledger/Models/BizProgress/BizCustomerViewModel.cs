@@ -19,11 +19,7 @@ namespace Sintoacct.Ledger.Models
 
         public string Phone { get; set; }
 
-        public string Email { get; set; }
-
-        public string WeixinNick { get; set; }
-
-        public int Level { get; set; }
+        public int? Level { get; set; }
 
         public string PromId { get; set; }
 

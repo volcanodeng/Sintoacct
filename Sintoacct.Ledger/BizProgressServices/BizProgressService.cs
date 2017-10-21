@@ -82,6 +82,7 @@ namespace Sintoacct.Ledger.BizProgressServices
                 WorkOrderItem woi = new WorkOrderItem();
                 woi.WorkOrder = wo;
                 woi.BizItem = _setting.GetBizItem(Convert.ToInt32(i));
+                wo.CommercialExpense += woi.BizItem.ServicePrice;
                 wo.WorkOrderItems.Add(woi);
             }
 
@@ -91,6 +92,8 @@ namespace Sintoacct.Ledger.BizProgressServices
             wo.Remark = workOrder.Remark;
             wo.BizManager = workOrder.BizManager;
             wo.BizOperations = workOrder.BizOperations;
+            wo.Recommend = workOrder.Recommend;
+            wo.PreferentialAmount = workOrder.PreferentialAmount;
 
             _context.WorkOrders.AddOrUpdate(wo);
             _context.SaveChanges();

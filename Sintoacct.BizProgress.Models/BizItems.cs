@@ -27,6 +27,11 @@ namespace Sintoacct.Progress.Models
         /// </summary>
         public int SortIndex { get; set; }
 
+        /// <summary>
+        /// 业务项目价格
+        /// </summary>
+        public decimal ServicePrice { get; set; }
+
         [ForeignKey("BizCategory")]
         public int CateId { get; set; }
 

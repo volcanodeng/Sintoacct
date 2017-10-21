@@ -27,6 +27,8 @@ namespace Sintoacct.Ledger.Models
 
         public int SortIndex { get; set; }
 
+        public decimal ServicePrice { get; set; }
+
         public int CateId { get; set; }
 
         public string CategoryName { get; set; }

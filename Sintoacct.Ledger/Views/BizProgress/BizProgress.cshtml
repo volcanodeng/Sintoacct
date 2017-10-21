@@ -11,8 +11,6 @@
             padding: 5px;
         }
 
-
-
         .datagrid-header-row td div {
             text-align: center !important;
             font-weight: bold;
@@ -23,7 +21,7 @@
         }
 
         form ul {
-            list-style-type: none;
+            list-style-type:  none;
             list-style-position: outside;
             padding: 0px;
         }
@@ -34,7 +32,7 @@
         }
 
         form label {
-            width: 80px;
+            width: 70px;
             margin-top: 3px;
             display: inline-block;
             float: left;
@@ -104,17 +102,18 @@
                    data-options="fit:true,singleSelect:true,fitColumns:true,idField:'WoId',toolbar:'#dgToolbar',url:'/api/BizProgress/GetMyWorkOrders/'">
                 <thead>
                     <tr>
-                        <th data-options="field:'WoId',align:'center'">工作单号</th>
-                        <th data-options="field:'CustomerName',align:'center'">客户名称</th>
-                        <th data-options="field:'ContractTime',align:'center'">签约时间</th>
-                        <th data-options="field:'BizItemNames',align:'right'">业务项目</th>
-                        <th data-options="field:'Remark',align:'right'">客户要求</th>
-                        <th data-options="field:'BizManager',align:'right'">业务主管</th>
-                        <th data-options="field:'BizOperations',align:'right'">业务人员</th>
-                        <th data-options="field:'PromPerson',align:'right'">推广人员</th>
-                        <th data-options="field:'AmountReceivable',align:'right'">应收金额</th>
-                        <th data-options="field:'AmountReceived',align:'right'">已收金额</th>
-                        <th data-options="field:'AmountReceived',align:'right'">未收金额</th>
+                        <th data-options="field:'WoId',align:'center',width:30">工作单号</th>
+                        <th data-options="field:'CustomerName',align:'center',width:100">客户名称</th>
+                        <th data-options="field:'ContractTime',align:'center',width:70">签约时间</th>
+                        <th data-options="field:'BizItemNames',align:'right',width:100">业务项目</th>
+                        <th data-options="field:'Remark',align:'right',width:100">客户要求</th>
+                        <th data-options="field:'BizManager',align:'right',width:50">业务主管</th>
+                        <th data-options="field:'BizOperations',align:'right',width:70">业务人员</th>
+                        <th data-options="field:'PromPerson',align:'right',width:50">推广人员</th>
+                        <th data-options="field:'CommercialExpense',align:'right',width:50">业务费用</th>
+                        <th data-options="field:'PreferentialAmount',align:'right',width:50">优惠金额</th>
+                        <th data-options="field:'AdvanceExpenditure',align:'right',width:50">代垫支出</th>
+                        <th data-options="field:'AmountReceived',align:'right',width:50">已收金额</th>
                     </tr>
                 </thead>
             </table>
@@ -149,54 +148,67 @@
         </div>
     </div>
 
-    <div id="dialogBiz" class="easyui-dialog" title="工单信息" style="width:500px;height:600px;"
+    <div id="dialogBiz" class="easyui-dialog" title="工单信息" style="width:750px;height:500px;"
          data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnBiz'">
         <form method="post" id="woForm" >
             <ul>
                 <li>
-                    <label for="CusId">客户名称:</label>
-                    <input id="CusId" name="CusId" class="easyui-combobox"
-                           data-options="prompt:'请选择业务对应的客户',required:true,width:260,height:35,missingMessage:'请选择业务对应的客户',valueField:'CusId',textField:'CustomerName',url:'/Customer/GetCustomers'" />
+                    <div>
+                        <label for="CusId">客户名称:</label>
+                        <input id="CusId" name="CusId" class="easyui-combobox"
+                               data-options="prompt:'请选择业务对应的客户',required:true,width:255,height:35,missingMessage:'请选择业务对应的客户',valueField:'CusId',textField:'CustomerName',url:'/Customer/GetCustomers'" />
+                    </div>
+                    <div>
+                        <label for="ContractTime">签约时间:</label>
+                        <input id="ContractTime" name="ContractTime" class="easyui-datebox"
+                               data-options="prompt:'请输入签约时间',required:true,width:255,height:35,missingMessage:'请输入签约时间'" />
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <label for="item">业务项目:</label>
+                        <input id="item" class="easyui-tagbox"
+                               data-options="prompt:'请选择业务项目',width:600,height:35,missingMessage:'请选择业务项目',editable:false,valueField:'ItemId',textField:'ItemName',groupField:'CategoryName',groupPosition:'sticky',limitToList:true,hasDownArrow: true,onChange:itemOnChange" />
+                        <input type="hidden" id="BizItemIds" name="BizItemIds" />
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <label for="Remark">客户要求:</label>
+                        <input id="Remark" name="Remark" class="easyui-textbox"
+                               data-options="prompt:'请输入客户要求',width:600,height:60,missingMessage:'请输入客户要求',multiline:true" />
+                    </div>
+                </li>
+                <li>
+                    <div><label for="CommercialExpense">业务费用:</label>
+                    <input id="CommercialExpense" name="CommercialExpense" class="easyui-numberbox" value="0.00"
+                                data-options="width:255,height:35,editable:false,precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'¥'" /></div>
+                    <div>
+                        <label for="PreferentialAmount">优惠金额:</label>
+                        <input id="PreferentialAmount" name="PreferentialAmount" class="easyui-numberbox" value="0.00"
+                               data-options="prompt:'请输入优惠金额',required:true,width:255,height:35,missingMessage:'请输入优惠金额',precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'¥'" />
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <label for="mgr">业务主管:</label>
+                        <input id="mgr" name="mgr" class="easyui-combobox"
+                               data-options="prompt:'请选择业务主管',required:true,width:140,height:35,missingMessage:'请选择业务主管',editable:false,valueField:'UserId',textField:'UserName'" />
+                        <input type="hidden" id="BizManager" name="BizManager" />
+                    </div>
+                    <div>
+                        <label for="ops">业务员:</label>
+                        <input id="ops" name="ops" class="easyui-combobox"
+                               data-options="prompt:'请选择业务员',required:true,multiple:true,width:140,height:35,missingMessage:'请选择业务员',editable:false,valueField:'UserId',textField:'UserName'" />
+                        <input type="hidden" id="BizOperations" name="BizOperations" />
+                    </div>
+                    <div>
+                        <label for="PromPerson">推广人员:</label>
+                        <input id="PromPerson" name="PromPerson" class="easyui-combobox"
+                               data-options="prompt:'请选择推广人员',required:true,width:140,height:35,missingMessage:'请选择推广人员',editable:false,valueField:'UserId',textField:'UserName'" />
 
+                    </div>
                 </li>
-                <li>
-                    <label for="ContractTime">签约时间:</label>
-                    <input id="ContractTime" name="ContractTime" class="easyui-datebox"
-                           data-options="prompt:'请输入签约时间',required:true,width:260,height:35,missingMessage:'请输入签约时间'" />
-
-                </li>
-                
-                <li>
-                    <label for="item">业务项目:</label>
-                    <input id="item"  class="easyui-combobox"
-                           data-options="prompt:'请选择业务项目',required:true,width:260,height:35,missingMessage:'请选择业务项目',editable:false,valueField:'ItemId',textField:'ItemName',url:'/BizSetting/GetAllBizItems',groupField:'CategoryName',groupPosition:'sticky',multiple:true" />
-                    <input type="hidden" id="BizItemIds" name="BizItemIds" />
-                </li>
-                <li>
-                    <label for="Remark">客户要求:</label>
-                    <input id="Remark" name="Remark" class="easyui-textbox"
-                           data-options="prompt:'请输入客户要求',required:true,width:260,height:105,missingMessage:'请输入客户要求',multiline:true" />
-
-                </li>
-                <li>
-                    <label for="mgr">业务主管:</label>
-                    <input id="mgr" name="mgr" class="easyui-combobox"
-                           data-options="prompt:'请选择业务主管',required:true,width:260,height:35,missingMessage:'请选择业务主管',editable:false,valueField:'UserId',textField:'UserName'" />
-                    <input type="hidden" id="BizManager" name="BizManager" />
-                </li>
-                <li>
-                    <label for="ops">业务员:</label>
-                    <input id="ops" name="ops" class="easyui-combobox"
-                           data-options="prompt:'请选择业务员',required:true,multiple:true,width:260,height:35,missingMessage:'请选择业务员',editable:false,valueField:'UserId',textField:'UserName'" />
-                    <input type="hidden" id="BizOperations" name="BizOperations" />
-                </li>
-                <li>
-                    <label for="PromPerson">推广人员:</label>
-                    <input id="PromPerson" name="PromPerson" class="easyui-combobox"
-                           data-options="prompt:'请选择推广人员',required:true,width:260,height:35,missingMessage:'请选择推广人员',editable:false,valueField:'UserId',textField:'UserName'" />
-
-                </li>
-                
 
 
             </ul>
@@ -288,6 +300,10 @@
     <script type="text/javascript" src="~/Scripts/jquery.uploadPreview.min.js"></script>
     <script type="text/javascript">
 
+        var global = {
+            items:null
+        };
+
         $(function () {
             init();
         });
@@ -315,6 +331,11 @@
 
             $.post("/BizProgress/GetBizPersons", null, function (data) {
                 $("#mgr,#ops,#PromPerson").combobox("loadData", data);
+            });
+
+            $.post("/BizSetting/GetAllBizItems", null, function (data) {
+                global.items = data;
+                $("#item").combobox("loadData", global.items);
             });
         }
 
@@ -347,6 +368,20 @@
             $("#BizItem").combobox("reload", "/BizSetting/GetBizItemInCate/" + record.CateId);
         }
 
+        function itemOnChange(newValue, oldValue)
+        {
+            var selVals = $(this).combobox("getValues");
+            var selItems = $.grep(global.items, function (n, i) {
+                return $.inArray(n.ItemId.toString(), selVals) > -1;
+            });
+
+            $("#CommercialExpense").numberbox("setValue", "0.00");
+            $.each(selItems, function (i, n) {
+                var exp = $("#CommercialExpense").numberbox("getValue");
+                
+                $("#CommercialExpense").numberbox("setValue", parseFloat(exp) + parseFloat(n.ServicePrice));
+            });
+        }
       
         function closeBiz() {
             $("#dialogBiz").dialog("close");
@@ -359,12 +394,9 @@
         function add() {
             $("#woForm").form("clear");
 
-            $.uploadPreview({
-                input_field: "#image-upload",
-                preview_box: "#image-preview",
-                label_field: "#image-label",
-                label_default: "选择图片",
-                label_selected: "修改图片"
+            $("#woForm").form("load", {
+                CommercialExpense: 0,
+                PreferentialAmount:0
             });
 
             $("#dialogBiz").dialog("open");

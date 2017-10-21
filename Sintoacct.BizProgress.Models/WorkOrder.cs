@@ -63,14 +63,24 @@ namespace Sintoacct.Progress.Models
         public string BizOperations { get; set; }
 
         /// <summary>
-        /// 应收总金额
+        /// 工单的推荐人（可以跟客户的推荐人不同）
         /// </summary>
-        public decimal AmountReceivable { get; set; }
+        public string Recommend { get; set; }
 
         /// <summary>
-        /// 优惠总金额
+        /// 业务办理费用（业务项目标准费用总和）
+        /// </summary>
+        public decimal CommercialExpense { get; set; }
+
+        /// <summary>
+        /// 优惠金额（针对当前工单的总优惠额度）
         /// </summary>
         public decimal PreferentialAmount { get; set; }
+
+        /// <summary>
+        /// 代垫费用总额（所有进度记录中代垫费用的合计）
+        /// </summary>
+        public decimal AdvanceExpenditure { get; set; }
 
         /// <summary>
         /// 已收总金额（累计总和）

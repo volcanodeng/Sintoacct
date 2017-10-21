@@ -45,8 +45,6 @@ namespace Sintoacct.Ledger.BizProgressServices
             cust.BusinessAddress = customer.BusinessAddress;
             cust.Contacts = customer.Contacts;
             cust.Phone = customer.Phone;
-            cust.Email = customer.Email;
-            cust.WeixinNick = customer.WeixinNick;
             cust.Level = customer.Level;
 
             _context.Customers.AddOrUpdate(cust);
