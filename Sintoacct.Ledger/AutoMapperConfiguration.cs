@@ -47,11 +47,45 @@ namespace Sintoacct.Ledger
                 cfg.CreateMap<BizSteps, BizStepsViewModel>();
 
                 cfg.CreateMap<Customers, BizCustomerViewModel>();
-                cfg.CreateMap<WorkOrder, WorkOrderViewModel>();
+                cfg.CreateMap<WorkOrder, WorkOrderViewModel>()
+                .ForMember(dest => dest.BizItemNames, opt => opt.ResolveUsing<BizItemNamesResolver>())
+                .ForMember(dest => dest.BizItemIds, opt => opt.ResolveUsing<BizItemIdsResolver>());
 
             });
         }
     }
 
-    
+
+    public class BizItemNamesResolver : IValueResolver<WorkOrder, WorkOrderViewModel, string>
+    {
+        public string Resolve(WorkOrder source, WorkOrderViewModel destination, string destMember, ResolutionContext context)
+        {
+            string itemNames = "";
+            foreach(WorkOrderItem woi in source.WorkOrderItems)
+            {
+                if (itemNames != "") itemNames += ",";
+
+                itemNames += woi.BizItem.ItemName;
+            }
+            return itemNames;
+        }
+    }
+
+    public class BizItemIdsResolver : IValueResolver<WorkOrder, WorkOrderViewModel, string>
+    {
+        public string Resolve(WorkOrder source, WorkOrderViewModel destination, string destMember, ResolutionContext context)
+        {
+            string itemIds = "";
+            foreach (WorkOrderItem woi in source.WorkOrderItems)
+            {
+                if (itemIds != "") itemIds += ",";
+
+                itemIds += woi.ItemId.ToString();
+            }
+            return itemIds;
+        }
+    }
+
+
+
 }

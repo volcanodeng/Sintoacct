@@ -32,6 +32,7 @@ namespace Sintoacct.Ledger.BizProgressServices
         {
             string curUser = _identity.GetUserName();
             return _context.WorkOrders
+                           .Include("WorkOrderItems").Include("WorkOrderItems.BizItem")
                            .Where(p => p.Creator == curUser)
                            .OrderByDescending(p => p.WoId)
                            .Skip(pageIndex * pageSize)

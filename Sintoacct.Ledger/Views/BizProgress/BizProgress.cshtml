@@ -135,9 +135,9 @@
         </div>
     </div>
     <div id="dgToolbar">
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-plus fa-lg',plain:true" onclick="add()">新增工单</a>
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="edit()">修改工单</a>
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="del()">删除工单</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-plus fa-lg',plain:true" onclick="addWo()">新增工单</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="editWo()">修改工单</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="delWo()">删除工单</a>
     </div>
     <div id="progToolbar">
         <div><span style="padding-left:12px;">业务项目：</span><input class="easyui-combobox" id="BizItem" name="BizItem" data-options="valueField:'ItemId',textField:'ItemName',width:200,height:30,editable:false" /></div>
@@ -349,7 +349,9 @@
 
         function woFormSuccess(data) {
             
-
+            if (responseHandle(data)) {
+                $("#woList").datagrid("reload");
+            }
         }
 
         function sFormOnSubmit()
@@ -391,7 +393,7 @@
             $('#woForm').submit();
         }
 
-        function add() {
+        function addWo() {
             $("#woForm").form("clear");
 
             $("#woForm").form("load", {
@@ -402,6 +404,10 @@
             $("#dialogBiz").dialog("open");
         }
 
+        function editWo()
+        {
+
+        }
 
         $.parser.onComplete = function () {
             $("#Loading").remove();
