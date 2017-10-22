@@ -228,3 +228,8 @@ function responseHandle(data) {
 function fmtDate(value, row, index) {
     return value.replace(/T00:00:00/, "").replace(/T/, " ").substr(0,19);
 }
+
+//datagrid格式化人民币金额
+function fmtRMB(value, row, index) {
+    return "￥" + parseFloat(value).toFixed(2);
+}

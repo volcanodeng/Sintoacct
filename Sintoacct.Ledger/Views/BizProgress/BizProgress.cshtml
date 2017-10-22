@@ -104,16 +104,16 @@
                     <tr>
                         <th data-options="field:'WoId',align:'center',width:30">工作单号</th>
                         <th data-options="field:'CustomerName',align:'center',width:100">客户名称</th>
-                        <th data-options="field:'ContractTime',align:'center',width:70">签约时间</th>
-                        <th data-options="field:'BizItemNames',align:'right',width:100">业务项目</th>
-                        <th data-options="field:'Remark',align:'right',width:100">客户要求</th>
-                        <th data-options="field:'BizManager',align:'right',width:50">业务主管</th>
-                        <th data-options="field:'BizOperations',align:'right',width:70">业务人员</th>
-                        <th data-options="field:'PromPerson',align:'right',width:50">推广人员</th>
-                        <th data-options="field:'CommercialExpense',align:'right',width:50">业务费用</th>
-                        <th data-options="field:'PreferentialAmount',align:'right',width:50">优惠金额</th>
-                        <th data-options="field:'AdvanceExpenditure',align:'right',width:50">代垫支出</th>
-                        <th data-options="field:'AmountReceived',align:'right',width:50">已收金额</th>
+                        <th data-options="field:'ContractTime',align:'center',width:70,formatter:fmtDate">签约时间</th>
+                        <th data-options="field:'BizItemNames',width:100">业务项目</th>
+                        <th data-options="field:'Remark',width:100">客户要求</th>
+                        <th data-options="field:'BizManager',align:'center',width:50">业务主管</th>
+                        <th data-options="field:'BizOperations',align:'center',width:70">业务人员</th>
+                        <th data-options="field:'PromPerson',align:'center',width:50">推广人员</th>
+                        <th data-options="field:'CommercialExpense',align:'right',width:50,formatter:fmtRMB">业务费用</th>
+                        <th data-options="field:'PreferentialAmount',align:'right',width:50,formatter:fmtRMB">优惠金额</th>
+                        <th data-options="field:'AdvanceExpenditure',align:'right',width:50,formatter:fmtRMB">代垫支出</th>
+                        <th data-options="field:'AmountReceived',align:'right',width:50,formatter:fmtRMB">已收金额</th>
                     </tr>
                 </thead>
             </table>
@@ -351,6 +351,7 @@
             
             if (responseHandle(data)) {
                 $("#woList").datagrid("reload");
+                closeBiz();
             }
         }
 

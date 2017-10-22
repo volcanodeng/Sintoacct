@@ -49,7 +49,8 @@ namespace Sintoacct.Ledger
                 cfg.CreateMap<Customers, BizCustomerViewModel>();
                 cfg.CreateMap<WorkOrder, WorkOrderViewModel>()
                 .ForMember(dest => dest.BizItemNames, opt => opt.ResolveUsing<BizItemNamesResolver>())
-                .ForMember(dest => dest.BizItemIds, opt => opt.ResolveUsing<BizItemIdsResolver>());
+                .ForMember(dest => dest.BizItemIds, opt => opt.ResolveUsing<BizItemIdsResolver>())
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.CustomerName));
 
             });
         }
@@ -63,7 +64,7 @@ namespace Sintoacct.Ledger
             string itemNames = "";
             foreach(WorkOrderItem woi in source.WorkOrderItems)
             {
-                if (itemNames != "") itemNames += ",";
+                if (itemNames != "") itemNames += ",<br>";
 
                 itemNames += woi.BizItem.ItemName;
             }
