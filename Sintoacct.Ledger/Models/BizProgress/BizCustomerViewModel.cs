@@ -23,7 +23,7 @@ namespace Sintoacct.Ledger.Models
 
         public string PromId { get; set; }
 
-        public string OpName { get; set; }
+        public string PromName { get; set; }
     }
 
     public class BizPromotionViewModel

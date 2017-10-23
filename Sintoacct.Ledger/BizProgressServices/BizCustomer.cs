@@ -39,6 +39,7 @@ namespace Sintoacct.Ledger.BizProgressServices
             {
                 cust = new Customers();
                 cust.PromId = customer.PromId;
+                cust.PromName = customer.PromName;
             }
             cust.CustomerName = customer.CustomerName;
             cust.CustomerAddress = customer.CustomerAddress;

@@ -20,14 +20,10 @@ namespace Sintoacct.Ledger.Services
             _ledger = ledger;
         }
 
+        #region 当前用户缓存
         private string UserCacheKey()
         {
             return string.Format("{0}_{1}",Constants.UserCache, ((ClaimsIdentity)_context.User.Identity).GetUserId());
-        }
-
-        private string AccountCacheKey(Guid acctBookId)
-        {
-            return string.Format("{0}_{1}", Constants.AccountCache, acctBookId);
         }
 
         public UserCacheModel SetUserCache(UserCacheModel userCache)
@@ -70,6 +66,15 @@ namespace Sintoacct.Ledger.Services
             _context.Cache.Remove(this.UserCacheKey());
         }
 
+        #endregion
+
+        #region 账套缓存 
+
+        private string AccountCacheKey(Guid acctBookId)
+        {
+            return string.Format("{0}_{1}", Constants.AccountCache, acctBookId);
+        }
+
         public AccountCacheModel SetAccountCache(AccountCacheModel acctCache)
         {
             if (acctCache == null) return null;
@@ -97,6 +102,30 @@ namespace Sintoacct.Ledger.Services
         {
             _context.Cache.Remove(this.AccountCacheKey(acctBookId));
         }
+
+        #endregion
+
+        #region 用户列表缓存
+
+        private string GetUsersCacheKey()
+        {
+            return "ALL_USER_CACHE";
+        }
+
+        public List<UsersViewModels> GetUsersCache()
+        {
+            List<UsersViewModels> users = (List<UsersViewModels>)_context.Cache.Get(GetUsersCacheKey());
+            if (users == null)
+            {
+                string sql = "select [UserId],[ClaimValue] as UserName from [AspNetUserClaims] where [ClaimType]='name'";
+                users = _ledger.Database.SqlQuery<UsersViewModels>(sql).ToList();
+
+                _context.Cache.Add(GetUsersCacheKey(), users, null, Cache.NoAbsoluteExpiration, TimeSpan.FromHours(Constants.UserCacheExpiration), CacheItemPriority.Default, null);
+            }
+            return users;
+        }
+
+        #endregion
     }
 
     public interface ICacheHelper : IDependency
@@ -112,5 +141,7 @@ namespace Sintoacct.Ledger.Services
         AccountCacheModel GetAccountCache(Guid acctBookId);
 
         void ClearAccountCache(Guid acctBookId);
+
+        List<UsersViewModels> GetUsersCache();
     }
 }

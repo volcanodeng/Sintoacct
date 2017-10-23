@@ -27,8 +27,11 @@ namespace Sintoacct.Progress.Models
 
         public int? Level { get; set; }
 
-        
+        [MaxLength(50)]
         public string PromId { get; set; }
+
+        [MaxLength(50)]
+        public string PromName { get; set; }
 
 
         public virtual ICollection<WorkOrder> BizProgress { get; set; }

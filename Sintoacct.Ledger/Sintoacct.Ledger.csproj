@@ -247,6 +247,7 @@
     <Compile Include="Models\LedgerSheetViewModels.cs" />
     <Compile Include="Models\LedgerViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\UsersViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AccountBookHelper.cs" />
     <Compile Include="Services\AccountHelper.cs" />

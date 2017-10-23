@@ -56,11 +56,12 @@
         </div>
         <div data-options="region:'center',border:true" style="padding:10px;">
             <table class="easyui-datagrid" id="vvList"
-                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#cusToolbar'">
+                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#cusToolbar',onDblClickRow:dgOnDblClickRow,idField:'CusId'">
                 <thead>
                     <tr>
                         <th data-options="field:'CusId',width:50,align:'center'">客户编码</th>
                         <th data-options="field:'CustomerName',width:150,align:'center'">客户名称</th>
+                        <th data-options="field:'PromName',width:60,align:'center'">客户推荐人</th>
                         <th data-options="field:'CustomerAddress',width:80,align:'center'">住所</th>
                         <th data-options="field:'BusinessAddress',width:60,align:'center'">实际经营地</th>
                         <th data-options="field:'Contacts',width:60,align:'right'">联系人</th>
@@ -86,13 +87,13 @@
                     <label for="CustomerName">客户名称:</label>
                     <input id="CustomerName" name="CustomerName" class="easyui-textbox"
                            data-options="prompt:'请填写客户名称',required:true,width:260,height:35,missingMessage:'请填写客户名称'" />
-
+                    <input type="hidden" id="CusId" name="CusId" />
                 </li>
                 <li>
                     <label for="PromId">推荐人:</label>
                     <input id="PromId" name="PromId" class="easyui-combobox"
                            data-options="prompt:'请选择推荐人',required:true,width:260,height:35,missingMessage:'请选择推荐人',editable:false,valueField:'UserId',textField:'UserName',url:'/BizProgress/GetBizPersons'" />
-
+                    <input type="hidden" id="PromName" name="PromName" />
                 </li>
                 <li>
                     <label for="CustomerAddress">住所:</label>
@@ -174,7 +175,8 @@
         }
     }
 
-    function cusFormOnSubmit() {
+        function cusFormOnSubmit() {
+            $("#PromName").val($("#PromId").combobox("getText"));
         return $(this).form('validate');
     }
 
@@ -190,11 +192,33 @@
         $('#sForm').submit();
     }
 
-    function add()
-    {
-        $("#cusForm").form("clear");
-        $("#dialogCus").dialog("open");
-    }
+        function add() {
+            $("#cusForm").form("clear");
+            $("#cusForm").form("load", {
+                CusId: 0
+            });
+            $("#dialogCus").dialog("open");
+        }
+
+        function edit()
+        {
+            var selRow = $("#vvList").datagrid("getSelected");
+            if (selRow == null) {
+                $.messager.alert('编辑', '请选择一个要编辑的客户信息', 'info');
+                return false;
+            }
+            $("#cusForm").form("load", {
+                CusId: selRow.CusId,
+                CustomerName: selRow.CustomerName,
+                PromId: selRow.PromId,
+                CustomerAddress: selRow.CustomerAddress,
+                BusinessAddress: selRow.BusinessAddress,
+                Contacts: selRow.Contacts,
+                Phone: selRow.Phone,
+                Level: selRow.Level
+            });
+            $("#dialogCus").dialog("open");
+        }
 
     function closeBiz() {
         $("#dialogCus").dialog("close");
@@ -202,7 +226,12 @@
 
     function saveBiz() {
         $('#cusForm').submit();
-    }
+        }
+
+        function dgOnDblClickRow(index, row)
+        {
+            edit();
+        }
 
     </script>
 
