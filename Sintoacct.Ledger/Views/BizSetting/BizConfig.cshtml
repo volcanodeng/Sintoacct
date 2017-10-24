@@ -1,0 +1,216 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/easyui")
+    <style type="text/css">
+        form div {
+            padding: 5px;
+            display: inline-block;
+        }
+
+        .datagrid-header-row td div {
+            text-align: center !important;
+            font-weight: bold;
+        }
+
+        form ul {
+            list-style-type: none;
+            list-style-position: outside;
+            padding: 0px;
+        }
+
+        form li {
+            padding: 12px;
+            position: relative;
+        }
+
+        form label {
+            width: 100px;
+            margin-top: 3px;
+            display: inline-block;
+            float: left;
+            padding: 3px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="easyui-layout" data-options="fit:true">
+       
+        <div data-options="region:'west',border:true" style="padding:10px;width:400px;">
+            <table class="easyui-datagrid" id="cateList" title="业务类别"
+                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#cusToolbar',onClickRow:cateOnClickRow,idField:'CateId',url:'/BizSetting/GetBizCategories'">
+                <thead>
+                    <tr>
+                        <th data-options="field:'CateId',width:50,align:'center'">类别编码</th>
+                        <th data-options="field:'CategoryName',width:150,align:'center'">业务类别</th>
+                        <th data-options="field:'SortIndex',width:60,align:'center'">类别排序</th>
+
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div data-options="region:'center',border:true" style="padding:10px;">
+            <table class="easyui-datagrid" id="itemList" title="业务项目"
+                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#cusToolbar',onClickRow:itemOnClickRow,idField:'ItemId'">
+                <thead>
+                    <tr>
+                        <th data-options="field:'ItemId',width:50,align:'center'">项目编号</th>
+                        <th data-options="field:'ItemName',width:150,align:'center'">项目名称</th>
+                        <th data-options="field:'ServicePrice',width:60,align:'center',formatter:fmtRMB">项目价格</th>
+                        <th data-options="field:'SortIndex',width:60,align:'center'">排序号</th>
+
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div data-options="region:'east',border:true" style="padding:10px;width:400px;">
+            <table class="easyui-datagrid" id="stepList" title="工作步骤"
+                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#cusToolbar',idField:'StepId'">
+                <thead>
+                    <tr>
+                        <th data-options="field:'StepId',width:50,align:'center'">步骤编码</th>
+                        <th data-options="field:'StepName',width:150,align:'center'">步骤名称</th>
+                        <th data-options="field:'SortIndex',width:60,align:'center'">排序号</th>
+
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        
+    </div>
+    <div id="cusToolbar">
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-plus fa-lg',plain:true" onclick="add()">新增类别</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="edit()">修改类别</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="del()">删除类别</a>
+    </div>
+    <div id="dialogCus" class="easyui-dialog" title="业务类别" style="width:500px;height:650px;"
+         data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnCus'">
+        <form method="post" id="cusForm">
+            <ul>
+                <li>
+                    <label for="CustomerName">业务类别:</label>
+                    <input id="CustomerName" name="CustomerName" class="easyui-textbox"
+                           data-options="prompt:'请填写业务类别',required:true,width:260,height:35,missingMessage:'请填写业务类别'" />
+                    <input type="hidden" id="CusId" name="CusId" />
+                </li>
+                <li>
+                    <label for="PromId">排序号:</label>
+                    <input id="PromId" name="PromId" class="easyui-combobox"
+                           data-options="prompt:'请选择推荐人',required:true,width:260,height:35,missingMessage:'请选择推荐人',editable:false,valueField:'UserId',textField:'UserName',url:'/BizProgress/GetBizPersons'" />
+                    <input type="hidden" id="PromName" name="PromName" />
+                </li>
+
+            </ul>
+        </form>
+    </div>
+    <div id="btnCus">
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-floppy-o fa-lg',plain:false,width:70" onclick="saveBiz()">保存</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-times fa-lg',plain:false,width:70" onclick="closeBiz()">关闭</a>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/easyui")
+    <script type="text/javascript">
+
+        $(function () {
+            init();
+
+        });
+
+        function init() {
+            $("#cusForm").form({
+                url: "/api/BizCustomer/SaveBizCustomer/",
+                onSubmit: cusFormOnSubmit,
+                success: cusFormSuccess
+            });
+
+        }
+
+        
+
+        function cusFormOnSubmit() {
+            $("#PromName").val($("#PromId").combobox("getText"));
+            return $(this).form('validate');
+        }
+
+        function cusFormSuccess(data) {
+            if (responseHandle(data)) {
+                formSubmit();
+                closeBiz();
+            }
+        }
+
+        
+
+        function add() {
+            $("#cusForm").form("clear");
+            $("#cusForm").form("load", {
+                CusId: 0
+            });
+            $("#dialogCus").dialog("open");
+        }
+
+        function edit() {
+            var selRow = $("#cateList").datagrid("getSelected");
+            if (selRow == null) {
+                $.messager.alert('编辑', '请选择一个要编辑的客户信息', 'info');
+                return false;
+            }
+            $("#cusForm").form("load", {
+                CusId: selRow.CusId,
+                CustomerName: selRow.CustomerName,
+                PromId: selRow.PromId,
+                CustomerAddress: selRow.CustomerAddress,
+                BusinessAddress: selRow.BusinessAddress,
+                Contacts: selRow.Contacts,
+                Phone: selRow.Phone,
+                Level: selRow.Level
+            });
+            $("#dialogCus").dialog("open");
+        }
+
+        function del() {
+            var selRow = $("#cateList").datagrid("getSelected");
+            if (selRow == null) {
+                $.messager.alert('删除', '请选择要删除的客户信息', 'info');
+                return false;
+            }
+            $.messager.confirm('删除', '你确定要删除该客户信息吗？', function (r) {
+                if (r) {
+                    $.post("/api/BizCustomer/Delete/", { CusId: selRow.CusId }, function (data) {
+                        if (responseHandle(data)) {
+                            formSubmit();
+                        }
+                    });
+                }
+            });
+        }
+
+        function closeBiz() {
+            $("#dialogCus").dialog("close");
+        }
+
+        function saveBiz() {
+            $('#cusForm').submit();
+        }
+
+        function cateOnClickRow(index, row) {
+            $.post("/BizSetting/GetBizItemInCate", { id: row.CateId }, function (data) {
+                $("#itemList").datagrid("loadData", data);
+            });
+        }
+
+        function itemOnClickRow(index, row)
+        {
+            $.post("/BizSetting/GetBizStepInItem", { id: row.ItemId }, function (data) {
+                $("#stepList").datagrid("loadData", data);
+            });
+        }
+
+    </script>
+</body>
+</html>

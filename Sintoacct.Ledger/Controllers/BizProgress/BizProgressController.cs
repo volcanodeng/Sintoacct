@@ -34,22 +34,6 @@ namespace Sintoacct.Ledger.Controllers
             return View();
         }
 
-
-        public ActionResult Category()
-        {
-            return View();
-        }
-
-        public ActionResult BizItem()
-        {
-            return View();
-        }
-
-        public ActionResult BizSteps()
-        {
-            return View();
-        }
-
         public JsonResult GetBizPersons()
         {
             return Json(_company.GetBizPersons());

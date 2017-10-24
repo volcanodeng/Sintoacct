@@ -21,6 +21,11 @@ namespace Sintoacct.Ledger.Controllers.BizProgress
             _bizSetting = bizSetting;
         }
 
+        public ActionResult BizConfig()
+        {
+            return View();
+        }
+
         public JsonResult GetBizCategories()
         {
             return Json(Mapper.Map <List<BizCategoryViewModel>>(_bizSetting.GetBizCategories()),JsonRequestBehavior.AllowGet);
@@ -34,6 +39,12 @@ namespace Sintoacct.Ledger.Controllers.BizProgress
         public JsonResult GetAllBizItems()
         {
             return Json(Mapper.Map<List<BizItemViewModel>>(_bizSetting.GetBizItems()));
+        }
+
+
+        public JsonResult GetBizStepInItem(int id)
+        {
+            return Json(Mapper.Map<List<BizStepsViewModel>>(_bizSetting.GetBizStepInItem(id)));
         }
     }
 }

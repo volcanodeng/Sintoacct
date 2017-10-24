@@ -42,5 +42,7 @@ namespace Sintoacct.Ledger.Models
         public string StepName { get; set; }
 
         public int SortIndex { get; set; }
+
+        public int ItemId { get; set; }
     }
 }

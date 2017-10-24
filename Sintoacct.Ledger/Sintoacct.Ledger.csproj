@@ -443,10 +443,10 @@
     <Content Include="Views\BizProgress\TopFrame.cshtml" />
     <Content Include="Views\BizProgress\BizProgress.cshtml" />
     <Content Include="Views\Customer\Customers.cshtml" />
+    <Content Include="Views\BizSetting\BizConfig.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\BizSetting\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
