@@ -17,9 +17,13 @@ namespace Sintoacct.Ledger.BizProgressServices
             _context = progContext;
         }
 
-        public List<Customers> GetCustomers()
+        public List<Customers> GetCustomers(BizCustomerConditionViewModel condition)
         {
-            return _context.Customers.OrderByDescending(c => c.Level).ToList();
+            if(condition.CusId.HasValue)
+            return _context.Customers.Where(c=>condition.CusId.Value==c.CusId).ToList();
+
+            return _context.Customers.Where(c => (string.IsNullOrEmpty(condition.CustomerName) || c.CustomerName.Contains(condition.CustomerName)) && 
+                                                 (string.IsNullOrEmpty(condition.Phone) || c.Phone.Contains(condition.Phone))).ToList();
         }
 
         public Customers GetCustomer(long cusId)
@@ -40,6 +44,7 @@ namespace Sintoacct.Ledger.BizProgressServices
                 cust = new Customers();
                 cust.PromId = customer.PromId;
                 cust.PromName = customer.PromName;
+                cust.State = CustomerState.Normal;
             }
             cust.CustomerName = customer.CustomerName;
             cust.CustomerAddress = customer.CustomerAddress;
@@ -52,6 +57,18 @@ namespace Sintoacct.Ledger.BizProgressServices
             _context.SaveChanges();
 
             return cust;
+        }
+
+        public void DeleteCustomer(long cusId)
+        {
+            Customers cus = this.GetCustomer(cusId);
+            if(cus==null)
+            {
+                throw new NullReferenceException("找不到要删除的客户信息：" + cusId);
+            }
+
+            cus.State = CustomerState.Deleted;
+            _context.SaveChanges();
         }
 
 

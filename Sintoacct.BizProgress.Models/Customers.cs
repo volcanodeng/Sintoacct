@@ -33,8 +33,29 @@ namespace Sintoacct.Progress.Models
         [MaxLength(50)]
         public string PromName { get; set; }
 
+        public CustomerState State { get; set; }
 
         public virtual ICollection<WorkOrder> BizProgress { get; set; }
 
+    }
+
+    public enum CustomerState
+    {
+        /// <summary>
+        /// 正常
+        /// </summary>
+        Normal = 1,
+        /// <summary>
+        /// 欠费停止服务
+        /// </summary>
+        Stopped = 0,
+        /// <summary>
+        /// 客户已注销
+        /// </summary>
+        Canceled = -1,
+        /// <summary>
+        /// 已删除
+        /// </summary>
+        Deleted = -2
     }
 }

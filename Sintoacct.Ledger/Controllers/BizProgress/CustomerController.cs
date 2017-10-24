@@ -26,10 +26,10 @@ namespace Sintoacct.Ledger.Controllers
             return View();
         }
 
-        public JsonResult GetCustomers()
-        {
-            return Json(Mapper.Map<List<BizCustomerViewModel>>(_customer.GetCustomers()),JsonRequestBehavior.AllowGet);
-        }
+        //public JsonResult GetCustomers()
+        //{
+        //    return Json(Mapper.Map<List<BizCustomerViewModel>>(_customer.GetCustomers()),JsonRequestBehavior.AllowGet);
+        //}
 
         public ActionResult CostSetting()
         {

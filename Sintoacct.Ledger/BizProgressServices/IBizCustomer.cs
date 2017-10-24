@@ -7,9 +7,11 @@ namespace Sintoacct.Ledger.BizProgressServices
     public interface IBizCustomer : IDependency
     {
         Customers GetCustomer(long cusId);
-        List<Customers> GetCustomers();
+        List<Customers> GetCustomers(BizCustomerConditionViewModel condition);
         BizPromotion GetPromotion(long promId);
         Customers SaveCustomer(BizCustomerViewModel customer);
         BizPromotion SavePromotion(BizPromotionViewModel promotion);
+        void DeleteCustomer(long cusId);
+
     }
 }

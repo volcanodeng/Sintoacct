@@ -24,6 +24,7 @@ namespace Sintoacct.Progress.Models.Migrations
                         ItemId = c.Int(nullable: false, identity: true),
                         ItemName = c.String(maxLength: 50),
                         SortIndex = c.Int(nullable: false),
+                        ServicePrice = c.Decimal(nullable: false, precision: 18, scale: 2),
                         CateId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.ItemId)
@@ -88,6 +89,7 @@ namespace Sintoacct.Progress.Models.Migrations
                         Remark = c.String(),
                         BizManager = c.String(maxLength: 50),
                         BizOperations = c.String(maxLength: 100),
+                        Recommend = c.String(),
                         CommercialExpense = c.Decimal(nullable: false, precision: 18, scale: 2),
                         PreferentialAmount = c.Decimal(nullable: false, precision: 18, scale: 2),
                         AdvanceExpenditure = c.Decimal(nullable: false, precision: 18, scale: 2),
@@ -113,7 +115,8 @@ namespace Sintoacct.Progress.Models.Migrations
                         Contacts = c.String(maxLength: 50),
                         Phone = c.String(nullable: false, maxLength: 20),
                         Level = c.Int(),
-                        PromId = c.String(),
+                        PromId = c.String(maxLength: 50),
+                        PromName = c.String(maxLength: 50),
                     })
                 .PrimaryKey(t => t.CusId);
             

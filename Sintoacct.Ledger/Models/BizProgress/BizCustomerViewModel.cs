@@ -24,6 +24,22 @@ namespace Sintoacct.Ledger.Models
         public string PromId { get; set; }
 
         public string PromName { get; set; }
+
+        public int State { get; set; }
+    }
+
+    public class BizCustomerConditionViewModel
+    {
+        public long? CusId { get; set; }
+
+        public string CustomerName { get; set; }
+
+        public string Phone { get; set; }
+    }
+
+    public class BizCustomerDelViewModel
+    {
+        public long CusId { get; set; }
     }
 
     public class BizPromotionViewModel
