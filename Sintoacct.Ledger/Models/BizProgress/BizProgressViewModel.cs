@@ -39,6 +39,11 @@ namespace Sintoacct.Ledger.Models
         public DateTime CreateTime { get; set; }
     }
 
+    public class WorkOrderDelViewModel
+    {
+        public long WoId { get; set; }
+    }
+
     public class BizPersonViewModel
     {
         public string UserId { get; set; }

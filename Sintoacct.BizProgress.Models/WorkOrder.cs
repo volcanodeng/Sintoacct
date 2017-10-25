@@ -99,6 +99,11 @@ namespace Sintoacct.Progress.Models
         public DateTime CreateTime { get; set; }
 
         /// <summary>
+        /// 工单状态
+        /// </summary>
+        public WorkOrderState State { get; set; }
+
+        /// <summary>
         /// 工单支付记录
         /// </summary>
         public virtual ICollection<WorkOrderPayment> WorkOrderPayments { get; set; }
@@ -107,5 +112,13 @@ namespace Sintoacct.Progress.Models
         /// 工单对应的工作进度
         /// </summary>
         public virtual ICollection<WorkProgress> WorkProgresses { get; set; }
+    }
+
+    public enum WorkOrderState
+    {
+        New = 1,
+        InProcess = 2,
+        Completed = 3,
+        Deleted = -1
     }
 }

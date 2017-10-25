@@ -26,6 +26,12 @@ namespace Sintoacct.Ledger.BizProgressServices
                                                  (string.IsNullOrEmpty(condition.Phone) || c.Phone.Contains(condition.Phone))).ToList();
         }
 
+        public List<Customers> GetCustomers()
+        {
+            BizCustomerConditionViewModel cond = new BizCustomerConditionViewModel();
+            return this.GetCustomers(cond);
+        }
+
         public Customers GetCustomer(long cusId)
         {
             return _context.Customers.Where(c => c.CusId == cusId).FirstOrDefault();

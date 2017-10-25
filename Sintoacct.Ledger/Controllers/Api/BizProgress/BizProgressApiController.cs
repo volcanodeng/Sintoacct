@@ -43,5 +43,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             
             return Ok(ResMessage.Success());
         }
+
+
     }
 }

@@ -53,12 +53,13 @@ namespace Sintoacct.Ledger.Controllers.Api
         }
 
         [ClaimsAuthorize("role", "business")]
-        [HttpGet, HttpPost, Route("api/BizCustomer/GetCustomers")]
-        public IHttpActionResult GetCustomers(BizCustomerConditionViewModel cusCondition)
+        [HttpGet, HttpPost, Route("api/BizCustomer/SearchCustomers")]
+        public IHttpActionResult SearchCustomers(BizCustomerConditionViewModel cusCondition)
         {
             var customers = _customer.GetCustomers(cusCondition);
 
             return Ok(Mapper.Map<List<BizCustomerViewModel>>(customers));
         }
+
     }
 }

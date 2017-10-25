@@ -101,5 +101,10 @@ namespace Sintoacct.Ledger.BizProgressServices
 
             return wo;
         }
+
+        public void DeleteWorkOrder(WorkOrderDelViewModel workOrder)
+        {
+
+        }
     }
 }

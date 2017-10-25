@@ -117,6 +117,7 @@ namespace Sintoacct.Progress.Models.Migrations
                         Level = c.Int(),
                         PromId = c.String(maxLength: 50),
                         PromName = c.String(maxLength: 50),
+                        State = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.CusId);
             

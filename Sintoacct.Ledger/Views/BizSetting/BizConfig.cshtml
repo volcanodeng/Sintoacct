@@ -43,7 +43,7 @@
        
         <div data-options="region:'west',border:true" style="padding:10px;width:400px;">
             <table class="easyui-datagrid" id="cateList" title="业务类别"
-                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#cusToolbar',onClickRow:cateOnClickRow,idField:'CateId',url:'/BizSetting/GetBizCategories'">
+                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#cateToolbar',onClickRow:cateOnClickRow,idField:'CateId',url:'/BizSetting/GetBizCategories'">
                 <thead>
                     <tr>
                         <th data-options="field:'CateId',width:50,align:'center'">类别编码</th>
@@ -56,7 +56,7 @@
         </div>
         <div data-options="region:'center',border:true" style="padding:10px;">
             <table class="easyui-datagrid" id="itemList" title="业务项目"
-                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#cusToolbar',onClickRow:itemOnClickRow,idField:'ItemId'">
+                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#itemToolbar',onClickRow:itemOnClickRow,idField:'ItemId'">
                 <thead>
                     <tr>
                         <th data-options="field:'ItemId',width:50,align:'center'">项目编号</th>
@@ -70,7 +70,7 @@
         </div>
         <div data-options="region:'east',border:true" style="padding:10px;width:400px;">
             <table class="easyui-datagrid" id="stepList" title="工作步骤"
-                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#cusToolbar',idField:'StepId'">
+                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#stepToolbar',idField:'StepId'">
                 <thead>
                     <tr>
                         <th data-options="field:'StepId',width:50,align:'center'">步骤编码</th>
@@ -83,7 +83,17 @@
         </div>
         
     </div>
-    <div id="cusToolbar">
+    <div id="cateToolbar">
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-plus fa-lg',plain:true" onclick="add()">新增类别</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="edit()">修改类别</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="del()">删除类别</a>
+    </div>
+    <div id="itemToolbar">
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-plus fa-lg',plain:true" onclick="add()">新增项目</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="edit()">修改项目</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="del()">删除项目</a>
+    </div>
+    <div id="stepToolbar">
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-plus fa-lg',plain:true" onclick="add()">新增类别</a>
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="edit()">修改类别</a>
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="del()">删除类别</a>

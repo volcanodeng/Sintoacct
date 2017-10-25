@@ -7,13 +7,13 @@ namespace Sintoacct.Progress.Models.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class ModifyCustomers : IMigrationMetadata
+    public sealed partial class ModifyWorkOrder : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ModifyCustomers));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(ModifyWorkOrder));
         
         string IMigrationMetadata.Id
         {
-            get { return "201710240223554_ModifyCustomers"; }
+            get { return "201710251002568_ModifyWorkOrder"; }
         }
         
         string IMigrationMetadata.Source
