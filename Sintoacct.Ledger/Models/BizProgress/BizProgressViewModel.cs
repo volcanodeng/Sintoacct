@@ -45,6 +45,31 @@ namespace Sintoacct.Ledger.Models
         public long WoId { get; set; }
     }
 
+    public class WorkProgress
+    {
+        public long ProgId { get; set; }
+
+        public long WoId { get; set; }
+
+        public int ItemId { get; set; }
+
+        public int StepId { get; set; }
+
+        public string StepName { get; set; }
+
+        public DateTime? CompletedTime { get; set; }
+
+        public string ResultDesc { get; set; }
+
+        public string ImageUrl { get; set; }
+
+        public decimal AdvanceExpenditure { get; set; }
+
+        public string Creator { get; set; }
+
+        public DateTime CreateTime { get; set; }
+    }
+
     public class BizPersonViewModel
     {
         public string UserId { get; set; }

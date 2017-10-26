@@ -68,7 +68,7 @@ namespace Sintoacct.Progress.Models
 
         /// <summary>
         /// 凭证图片。
-        /// 图片文件保存到七牛，数据库仅保存访问地址
+        /// 图片文件保存到阿里云OSS，数据库仅保存访问地址
         /// </summary>
         public virtual ICollection<ProgressImage> Images { get; set; } 
 

@@ -129,12 +129,13 @@
                    data-options="fit:true,singleSelect:true,fitColumns:true,rownumbers:true,idField:'ProgId',toolbar:'#progToolbar'">
                 <thead>
                     <tr>
-                        <th data-options="field:'BizId',width:50,align:'center'">完成时间</th>
-                        <th data-options="field:'CustomerName',width:150,align:'center'">工作进度</th>
-                        <th data-options="field:'ContractTime',width:80,align:'center'">办理结果</th>
-                        <th data-options="field:'ItemName',width:60,align:'right'">凭证图片</th>
-                        <th data-options="field:'Remark',width:60,align:'right'">记录人</th>
-                        <th data-options="field:'BizManager',width:60,align:'right'">记录时间</th>
+                        <th data-options="field:'CompletedTime',width:50,align:'center',formatter:fmtDate">完成时间</th>
+                        <th data-options="field:'StepName',width:100,align:'center'">工作进度</th>
+                        <th data-options="field:'ResultDesc',width:200">办理结果</th>
+                        <th data-options="field:'AdvanceExpenditure',width:80,align:'center'">代垫费用</th>
+                        <th data-options="field:'ImageUrl',width:100,align:'center'">凭证图片</th>
+                        <th data-options="field:'Creator',width:60,align:'center'">记录人</th>
+                        <th data-options="field:'CreateTime',width:60,align:'center'">记录时间</th>
                     </tr>
                 </thead>
             </table>
@@ -146,11 +147,10 @@
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="delWo()">删除工单</a>
     </div>
     <div id="progToolbar">
-        <div><span style="padding-left:12px;">业务项目：</span><input class="easyui-combobox" id="BizItem" name="BizItem" data-options="valueField:'ItemId',textField:'ItemName',width:200,height:30,editable:false" /></div>
+        <div><span style="padding-left:12px;">业务项目：</span><input class="easyui-combobox" id="progItems"  data-options="valueField:'ItemId',textField:'ItemName',width:200,height:30,editable:false" /></div>
         <div>
-            <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-plus fa-lg',plain:true" onclick="add()">新增进度</a>
-            <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="edit()">修改进度</a>
-            <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="del()">删除进度</a>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="createProg()">创建进度列表</a>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="editProg()">填写进度</a>
         </div>
     </div>
 
@@ -231,9 +231,8 @@
         <form method="post" id="progForm" enctype="multipart/form-data">
             <ul>
                 <li>
-                    <label for="customer">客户名称:</label>
-                    <input id="customer" name="customer" class="easyui-combobox"
-                           data-options="prompt:'请选择业务对应的客户',required:true,width:260,height:35,missingMessage:'请选择业务对应的客户',valueField:'CusId',textField:'CustomerName',url:'/Customer/GetCustomers'" />
+                    <label for="customer">完成时间:</label>
+                    <input id="customer" name="customer" class="easyui-datebox" data-options="width:260,height:35" />
 
                 </li>
                 <li>
@@ -485,6 +484,17 @@
         }
 
         function woOnSelect(index, row)
+        {
+            var iids = row.BizItemIds.split(',');
+            var itemList = $.grep(global.items, function (n, i) {
+                return $.inArray(n.ItemId.toString(), iids) > -1;
+            });
+
+            $("#progItems").combobox("clear");
+            $("#progItems").combobox("loadData", itemList);
+        }
+
+        function editProg()
         {
 
         }
