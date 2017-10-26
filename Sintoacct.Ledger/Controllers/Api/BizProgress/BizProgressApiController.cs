@@ -44,6 +44,18 @@ namespace Sintoacct.Ledger.Controllers.Api
             return Ok(ResMessage.Success());
         }
 
+        [ClaimsAuthorize("role", "progress-record")]
+        [HttpGet, HttpPost, Route("api/BizProgress/DeleteWorkOrder")]
+        public IHttpActionResult DeleteWorkOrder(WorkOrderDelViewModel workOrder)
+        {
+            if (workOrder.WoId<=0)
+            {
+                ResMessage.Fail("要删除的工单编号无效");
+            }
 
+            _progress.DeleteWorkOrder(workOrder);
+
+            return Ok(ResMessage.Success());
+        }
     }
 }

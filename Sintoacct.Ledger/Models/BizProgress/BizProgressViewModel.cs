@@ -33,6 +33,7 @@ namespace Sintoacct.Ledger.Models
 
         public decimal AmountReceived { get; set; }
 
+        public int State { get; set; }
 
         public string Creator { get; set; }
 

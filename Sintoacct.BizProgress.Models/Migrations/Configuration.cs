@@ -14,7 +14,7 @@ namespace Sintoacct.Progress.Models.Migrations
 
         protected override void Seed(Sintoacct.Progress.Models.BizProgressContext context)
         {
-            
+            /*
             
             context.BizCategories.AddOrUpdate(
                 new BizCategory { CategoryName = "工商业务", SortIndex = 1 },
@@ -235,6 +235,7 @@ namespace Sintoacct.Progress.Models.Migrations
                 j++;
             }
             context.SaveChanges();
+            */
         }
     }
 }

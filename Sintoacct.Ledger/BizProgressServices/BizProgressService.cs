@@ -33,7 +33,7 @@ namespace Sintoacct.Ledger.BizProgressServices
             string curUser = _identity.GetUserName();
             return _context.WorkOrders
                            .Include("WorkOrderItems").Include("WorkOrderItems.BizItem").Include("Customer")
-                           .Where(p => p.Creator == curUser)
+                           .Where(p => p.Creator == curUser && p.State != WorkOrderState.Deleted)
                            .OrderByDescending(p => p.WoId)
                            .Skip(pageIndex * pageSize)
                            .Take(pageSize)
@@ -67,6 +67,7 @@ namespace Sintoacct.Ledger.BizProgressServices
                 wo = new WorkOrder();
                 wo.CreateTime = DateTime.Now;
                 wo.Creator = _identity.GetUserName();
+                wo.State = WorkOrderState.New;
             }
 
             //业务项目
@@ -104,7 +105,14 @@ namespace Sintoacct.Ledger.BizProgressServices
 
         public void DeleteWorkOrder(WorkOrderDelViewModel workOrder)
         {
+            WorkOrder wo = this.GetWorkOrder(workOrder.WoId);
+            if(wo == null)
+            {
+                throw new NullReferenceException("找不到要删除的工单：" + workOrder.WoId);
+            }
 
+            wo.State = WorkOrderState.Deleted;
+            _context.SaveChanges();
         }
     }
 }

@@ -104,21 +104,22 @@
         </div>
         <div data-options="region:'center',border:true" style="padding:10px;">
             <table class="easyui-datagrid" id="woList"
-                   data-options="fit:true,singleSelect:true,fitColumns:true,idField:'WoId',toolbar:'#dgToolbar',url:'/api/BizProgress/GetMyWorkOrders/',onDblClickCell:woOnDblClickCell">
+                   data-options="fit:true,singleSelect:true,fitColumns:true,idField:'WoId',toolbar:'#dgToolbar',url:'/api/BizProgress/GetMyWorkOrders/',onDblClickCell:woOnDblClickCell,onSelect:woOnSelect">
                 <thead>
                     <tr>
                         <th data-options="field:'WoId',align:'center',width:30">工作单号</th>
                         <th data-options="field:'CustomerName',align:'center',width:100">客户名称</th>
-                        <th data-options="field:'ContractTime',align:'center',width:70,formatter:fmtDate">签约时间</th>
+                        <th data-options="field:'ContractTime',align:'center',width:50,formatter:fmtDate">签约时间</th>
                         <th data-options="field:'BizItemNames',width:100">业务项目</th>
                         <th data-options="field:'Remark',width:100">客户要求</th>
                         <th data-options="field:'BizManager',align:'center',width:50">业务主管</th>
-                        <th data-options="field:'BizOperations',align:'center',width:70">业务人员</th>
-                        <th data-options="field:'Recommend',align:'center',width:50">推广人员</th>
+                        @*<th data-options="field:'BizOperations',align:'center',width:70">业务人员</th>
+                        <th data-options="field:'Recommend',align:'center',width:50">推广人员</th>*@
                         <th data-options="field:'CommercialExpense',align:'right',width:50,formatter:fmtRMB">业务费用</th>
                         <th data-options="field:'PreferentialAmount',align:'right',width:50,formatter:fmtRMB">优惠金额</th>
                         <th data-options="field:'AdvanceExpenditure',align:'right',width:50,formatter:fmtRMB">代垫支出</th>
                         <th data-options="field:'AmountReceived',align:'right',width:50,formatter:fmtRMB">已收金额</th>
+                        <th data-options="field:'State',align:'center',width:50,formatter:fmtState">状态</th>
                     </tr>
                 </thead>
             </table>
@@ -188,11 +189,16 @@
                 <li>
                     <div><label for="CommercialExpense">业务费用:</label>
                     <input id="CommercialExpense" name="CommercialExpense" class="easyui-numberbox" value="0.00"
-                                data-options="width:255,height:35,editable:false,precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'¥'" /></div>
+                                data-options="width:140,height:35,readonly:true,precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'¥'" /></div>
+                    <div>
+                        <label for="AdvanceExpenditure">代垫支出:</label>
+                        <input id="AdvanceExpenditure" name="AdvanceExpenditure" class="easyui-numberbox" value="0.00"
+                               data-options="width:140,height:35,readonly:true,precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'¥'" />
+                    </div>
                     <div>
                         <label for="PreferentialAmount">优惠金额:</label>
                         <input id="PreferentialAmount" name="PreferentialAmount" class="easyui-numberbox" value="0.00"
-                               data-options="prompt:'请输入优惠金额',required:true,width:255,height:35,missingMessage:'请输入优惠金额',precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'¥'" />
+                               data-options="prompt:'请输入优惠金额',required:true,width:140,height:35,missingMessage:'请输入优惠金额',precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'¥'" />
                     </div>
                 </li>
                 <li>
@@ -404,7 +410,9 @@
             $("#woForm").form("clear");
 
             $("#woForm").form("load", {
+                WoId:0,
                 CommercialExpense: 0,
+                AdvanceExpenditure:0,
                 PreferentialAmount:0
             });
 
@@ -427,6 +435,7 @@
                 BizItemIds: selRow.BizItemIds,
                 Remark:selRow.Remark,
                 CommercialExpense: selRow.CommercialExpense,
+                AdvanceExpenditure:selRow.AdvanceExpenditure,
                 PreferentialAmount: selRow.PreferentialAmount,
                 mgr: selRow.BizManager,
                 ops: selRow.BizOperations,
@@ -438,9 +447,46 @@
             $("#dialogBiz").dialog("open");
         }
 
+        function delWo()
+        {
+            var selRow = $("#woList").datagrid("getSelected");
+            if (selRow == null)
+            {
+                $.messager.alert('删除', '请选择要删除的工单', 'info');
+                return false;
+            }
+            $.messager.confirm('删除', '你确定要删除这个工单吗？', function (r) {
+                if (r) {
+                    $.post("/api/BizProgress/DeleteWorkOrder", { WoId: selRow.WoId }, function (data) {
+                        if (responseHandle(data)) {
+                            $("#woList").datagrid("reload");
+                        }
+                    });
+                }
+            });
+        }
+
         function woOnDblClickCell()
         {
             editWo();
+        }
+
+        function fmtState(value, row, index) {
+            switch (value) {
+                case 1:
+                    return "新建工单";
+                case 2:
+                    return "办理中";
+                case 3:
+                    return "办理完结";
+                case -1:
+                    return "已删除";
+            }
+        }
+
+        function woOnSelect(index, row)
+        {
+
         }
 
         $.parser.onComplete = function () {

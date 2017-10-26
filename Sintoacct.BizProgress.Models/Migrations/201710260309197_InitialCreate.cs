@@ -96,6 +96,7 @@ namespace Sintoacct.Progress.Models.Migrations
                         AmountReceived = c.Decimal(nullable: false, precision: 18, scale: 2),
                         Creator = c.String(maxLength: 50),
                         CreateTime = c.DateTime(nullable: false),
+                        State = c.Int(nullable: false),
                         BizItems_ItemId = c.Int(),
                     })
                 .PrimaryKey(t => t.WoId)

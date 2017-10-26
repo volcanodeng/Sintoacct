@@ -116,9 +116,21 @@ namespace Sintoacct.Progress.Models
 
     public enum WorkOrderState
     {
+        /// <summary>
+        /// 新建工单。即没有录入任何进度信息。
+        /// </summary>
         New = 1,
+        /// <summary>
+        /// 办理中。
+        /// </summary>
         InProcess = 2,
+        /// <summary>
+        /// 办理完结
+        /// </summary>
         Completed = 3,
+        /// <summary>
+        /// 已删除
+        /// </summary>
         Deleted = -1
     }
 }
