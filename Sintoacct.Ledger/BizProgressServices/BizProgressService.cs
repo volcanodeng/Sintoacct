@@ -118,6 +118,9 @@ namespace Sintoacct.Ledger.BizProgressServices
         public List<WorkProgress> BuildItemProgressList(long woId,int itemId)
         {
             WorkOrder wo = this.GetWorkOrder(woId);
+            if (wo.WorkProgresses.Any(wp => wp.ItemId == itemId)) return wo.WorkProgresses.ToList();
+
+
             return new List<WorkProgress>();
         }
     }
