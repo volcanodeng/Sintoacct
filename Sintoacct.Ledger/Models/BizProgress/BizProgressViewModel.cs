@@ -45,7 +45,7 @@ namespace Sintoacct.Ledger.Models
         public long WoId { get; set; }
     }
 
-    public class WorkProgress
+    public class WorkProgressViewModel
     {
         public long ProgId { get; set; }
 

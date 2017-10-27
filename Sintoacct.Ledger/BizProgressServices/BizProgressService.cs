@@ -47,7 +47,7 @@ namespace Sintoacct.Ledger.BizProgressServices
 
         public WorkOrder GetWorkOrder(long woId)
         {
-            return _context.WorkOrders.Where(p => p.WoId == woId).FirstOrDefault();
+            return _context.WorkOrders.Include("WorkProgresses").Where(p => p.WoId == woId).FirstOrDefault();
         }
 
         public WorkOrder GetMyWorkOrder(long woId)
@@ -117,7 +117,8 @@ namespace Sintoacct.Ledger.BizProgressServices
 
         public List<WorkProgress> BuildItemProgressList(long woId,int itemId)
         {
-
+            WorkOrder wo = this.GetWorkOrder(woId);
+            return new List<WorkProgress>();
         }
     }
 }
