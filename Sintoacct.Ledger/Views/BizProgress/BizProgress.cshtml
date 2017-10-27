@@ -130,7 +130,7 @@
                 <thead>
                     <tr>
                         <th data-options="field:'CompletedTime',width:50,align:'center',formatter:fmtDate">完成时间</th>
-                        <th data-options="field:'StepName',width:100,align:'center'">工作进度</th>
+                        <th data-options="field:'StepName',width:100,align:'center'">工作步骤</th>
                         <th data-options="field:'ResultDesc',width:200">办理结果</th>
                         <th data-options="field:'AdvanceExpenditure',width:80,align:'center'">代垫费用</th>
                         <th data-options="field:'ImageUrl',width:100,align:'center'">凭证图片</th>
@@ -147,7 +147,7 @@
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="delWo()">删除工单</a>
     </div>
     <div id="progToolbar">
-        <div><span style="padding-left:12px;">业务项目：</span><input class="easyui-combobox" id="progItems"  data-options="valueField:'ItemId',textField:'ItemName',width:200,height:30,editable:false" /></div>
+        <div><span style="padding-left:12px;">业务项目：</span><input class="easyui-combobox" id="progItems"  data-options="valueField:'ItemId',textField:'ItemName',width:200,height:30,editable:false,onSelect:piOnSelect" /></div>
         <div>
             <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="createProg()">创建进度列表</a>
             <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="editProg()">填写进度</a>
@@ -226,72 +226,37 @@
         </form>
     </div>
 
-    <div id="dialogProg" class="easyui-dialog" title="业务进度" style="width:500px;height:500px;"
+    <div id="dialogProg" class="easyui-dialog" title="业务进度" style="width:400px;height:550px;"
          data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnProg'">
         <form method="post" id="progForm" enctype="multipart/form-data">
             <ul>
                 <li>
-                    <label for="customer">完成时间:</label>
-                    <input id="customer" name="customer" class="easyui-datebox" data-options="width:260,height:35" />
+                    <label for="CompletedTime">完成时间:</label>
+                    <input id="CompletedTime" name="CompletedTime" class="easyui-datebox" data-options="width:260,height:35,prompt:'请输入进度完成时间，若未完成可留空'" />
 
                 </li>
                 <li>
-                    <label for="signTime">签约时间:</label>
-                    <input id="signTime" name="signTime" class="easyui-datebox"
-                           data-options="prompt:'请输入签约时间',required:true,width:260,height:35,missingMessage:'请输入签约时间'" />
-
-                </li>
-
-                <li>
-                    <label for="item">业务项目:</label>
-                    <input id="item" name="item" class="easyui-combobox"
-                           data-options="prompt:'请选择业务项目',required:true,width:260,height:35,missingMessage:'请选择业务项目',editable:false,valueField:'ItemId',textField:'ItemName'" />
-
+                    <label for="StepId">工作步骤:</label>
+                    <input id="StepId" name="StepId" class="easyui-combobox"
+                           data-options="prompt:'请选择工作步骤',required:true,width:260,height:35,missingMessage:'请选择工作步骤',editable:false,valueField:'StepId',textField:'StepName'" />
                 </li>
                 <li>
-                    <label for="step">业务进度:</label>
-                    <input id="step" name="step" class="easyui-combobox"
-                           data-options="prompt:'请选择业务进度',required:true,width:260,height:35,missingMessage:'请选择业务进度',editable:false,valueField:'StepId',textField:'StepName'" />
-
+                    <label for="ResultDesc">办理结果:</label>
+                    <input id="ResultDesc" name="ResultDesc" class="easyui-textbox"
+                           data-options="required:true,width:260,height:105,multiline:true" />
                 </li>
                 <li>
-                    <label for="desc">进度描述:</label>
-                    <input id="desc" name="desc" class="easyui-textbox"
-                           data-options="prompt:'请输入进度描述',required:true,width:260,height:105,missingMessage:'请输入进度描述',multiline:true" />
-
+                    <label for="AdvanceExpenditure">代垫费用:</label>
+                    <input id="AdvanceExpenditure" name="AdvanceExpenditure" class="easyui-numberbox" value="0.00"
+                           data-options="width:260,height:35,precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'¥'" />
                 </li>
                 <li>
-                    <label for="image-preview">证据图片:</label>
+                    <label for="image-preview">凭证图片:</label>
                     <div id="image-preview">
                         <label for="image-upload" id="image-label">选择图片</label>
                         <input type="file" name="image-upload" id="image-upload" />
                     </div>
                 </li>
-                <li>
-                    <label for="manager">业务主管:</label>
-                    <input id="manager" name="manager" class="easyui-combobox"
-                           data-options="prompt:'请选择业务主管',required:true,width:260,height:35,missingMessage:'请选择业务主管',editable:false,valueField:'userid',textField:'username'" />
-
-                </li>
-                <li>
-                    <label for="operations">业务员:</label>
-                    <input id="operations" name="operations" class="easyui-combobox"
-                           data-options="prompt:'请选择业务员',required:true,multiple:true,width:260,height:35,missingMessage:'请选择业务员',editable:false,valueField:'userid',textField:'username'" />
-
-                </li>
-                <li>
-                    <label for="promotion">推广人员:</label>
-                    <input id="promotion" name="promotion" class="easyui-combobox"
-                           data-options="prompt:'请选择推广人员',required:true,width:260,height:35,missingMessage:'请选择推广人员',editable:false,valueField:'userid',textField:'username'" />
-
-                </li>
-                <li>
-                    <label for="desc">备注:</label>
-                    <input id="desc" name="desc" class="easyui-textbox"
-                           data-options="prompt:'请输入备注',required:true,width:260,height:105,missingMessage:'请输入备注',multiline:true" />
-
-                </li>
-
 
             </ul>
         </form>
@@ -302,8 +267,8 @@
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-times fa-lg',plain:false,width:70" onclick="closeBiz()">关闭</a>
     </div>
     <div id="btnProg">
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-floppy-o fa-lg',plain:false,width:70" onclick="saveBiz()">保存</a>
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-times fa-lg',plain:false,width:70" onclick="closeBiz()">关闭</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-floppy-o fa-lg',plain:false,width:70" onclick="saveProg()">保存</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-times fa-lg',plain:false,width:70" onclick="closeProg()">关闭</a>
     </div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/easyui")
@@ -496,7 +461,18 @@
 
         function editProg()
         {
+            $("#dialogProg").dialog("open");
+        }
 
+        function closeProg()
+        {
+            $("#dialogProg").dialog("close");
+        }
+
+        function piOnSelect(record)
+        {
+            $("#StepId").combobox("clear");
+            $("#StepId").combobox("reload", "/BizSetting/GetBizStepInItem/" + record.ItemId);
         }
 
         $.parser.onComplete = function () {

@@ -45,14 +45,14 @@ namespace Sintoacct.Ledger.BizProgressServices
             return this.GetMyWorkOrders(0, 50);
         }
 
-        public WorkOrder GetWorkOrder(long bizId)
+        public WorkOrder GetWorkOrder(long woId)
         {
-            return _context.WorkOrders.Where(p => p.WoId == bizId).FirstOrDefault();
+            return _context.WorkOrders.Where(p => p.WoId == woId).FirstOrDefault();
         }
 
-        public WorkOrder GetMyWorkOrder(long bizId)
+        public WorkOrder GetMyWorkOrder(long woId)
         {
-            return _context.WorkOrders.Where(p => p.Creator == _identity.GetUserName() && p.WoId == bizId).FirstOrDefault();
+            return _context.WorkOrders.Where(p => p.Creator == _identity.GetUserName() && p.WoId == woId).FirstOrDefault();
         }
 
         public WorkOrder SaveWorkOrder(WorkOrderViewModel workOrder)
@@ -113,6 +113,11 @@ namespace Sintoacct.Ledger.BizProgressServices
 
             wo.State = WorkOrderState.Deleted;
             _context.SaveChanges();
+        }
+
+        public List<WorkProgress> BuildItemProgressList(long woId,int itemId)
+        {
+
         }
     }
 }
