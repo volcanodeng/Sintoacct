@@ -80,12 +80,27 @@ namespace Sintoacct.Ledger.BizProgressServices
             string[] items = workOrder.BizItemIds.Split(',');
             foreach(string i in items)
             {
-                //添加新记录
+                //添加关联项目
                 WorkOrderItem woi = new WorkOrderItem();
                 woi.WorkOrder = wo;
                 woi.BizItem = _setting.GetBizItem(Convert.ToInt32(i));
                 wo.CommercialExpense += woi.BizItem.ServicePrice;
                 wo.WorkOrderItems.Add(woi);
+
+                //生成进度步骤
+                foreach (BizSteps s in woi.BizItem.BizSteps)
+                {
+                    WorkProgress p = new WorkProgress();
+                    p.WorkOrder = wo;
+                    p.BizItem = woi.BizItem;
+                    p.BizStep = s;
+                    p.CompletedTime = null;
+                    p.ResultDesc = null;
+                    p.AdvanceExpenditure = 0;
+                    p.Creator = _identity.GetUserName();
+                    p.CreateTime = DateTime.Now;
+                    wo.WorkProgresses.Add(p);
+                }
             }
 
             //校验客户编号的有效性
@@ -115,13 +130,10 @@ namespace Sintoacct.Ledger.BizProgressServices
             _context.SaveChanges();
         }
 
-        public List<WorkProgress> BuildItemProgressList(long woId,int itemId)
+
+        public List<WorkProgress> GetWorkProgress(long woId, int itemId)
         {
-            WorkOrder wo = this.GetWorkOrder(woId);
-            if (wo.WorkProgresses.Any(wp => wp.ItemId == itemId)) return wo.WorkProgresses.ToList();
-
-
-            return new List<WorkProgress>();
+            return _context.WorkProgress.Include("BizStep").Where(wp => wp.WoId == woId && wp.ItemId == itemId).OrderBy(wp => wp.BizStep.SortIndex).ToList();
         }
     }
 }

@@ -70,6 +70,13 @@ namespace Sintoacct.Ledger.Models
         public DateTime CreateTime { get; set; }
     }
 
+    public class WorkProgressGetViewModel
+    {
+        public long WoId { get; set; }
+
+        public int ItemId { get; set; }
+    }
+
     public class BizPersonViewModel
     {
         public string UserId { get; set; }

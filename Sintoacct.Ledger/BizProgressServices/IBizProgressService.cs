@@ -11,7 +11,8 @@ namespace Sintoacct.Ledger.BizProgressServices
         List<WorkOrder> GetMyWorkOrders();
         List<WorkOrder> GetMyWorkOrders(int pageIndex, int pageSize);
         WorkOrder SaveWorkOrder(WorkOrderViewModel bizProg);
-
         void DeleteWorkOrder(WorkOrderDelViewModel workOrder);
+
+        List<WorkProgress> GetWorkProgress(long woId, int itemId);
     }
 }

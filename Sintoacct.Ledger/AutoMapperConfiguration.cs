@@ -51,6 +51,8 @@ namespace Sintoacct.Ledger
                 .ForMember(dest => dest.BizItemNames, opt => opt.ResolveUsing<BizItemNamesResolver>())
                 .ForMember(dest => dest.BizItemIds, opt => opt.ResolveUsing<BizItemIdsResolver>())
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.CustomerName));
+                cfg.CreateMap<WorkProgress, WorkProgressViewModel>()
+                .ForMember(dest => dest.StepName, opt => opt.MapFrom(src => src.BizStep.StepName));
 
             });
         }

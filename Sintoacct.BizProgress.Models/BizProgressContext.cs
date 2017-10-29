@@ -22,6 +22,8 @@ namespace Sintoacct.Progress.Models
 
         public DbSet<WorkOrderPayment> WorkOrderPayment { get; set; }
 
+        public DbSet<WorkProgress> WorkProgress { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

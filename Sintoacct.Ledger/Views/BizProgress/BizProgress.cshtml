@@ -113,8 +113,7 @@
                         <th data-options="field:'BizItemNames',width:100">业务项目</th>
                         <th data-options="field:'Remark',width:100">客户要求</th>
                         <th data-options="field:'BizManager',align:'center',width:50">业务主管</th>
-                        @*<th data-options="field:'BizOperations',align:'center',width:70">业务人员</th>
-                        <th data-options="field:'Recommend',align:'center',width:50">推广人员</th>*@
+                        
                         <th data-options="field:'CommercialExpense',align:'right',width:50,formatter:fmtRMB">业务费用</th>
                         <th data-options="field:'PreferentialAmount',align:'right',width:50,formatter:fmtRMB">优惠金额</th>
                         <th data-options="field:'AdvanceExpenditure',align:'right',width:50,formatter:fmtRMB">代垫支出</th>
@@ -126,7 +125,7 @@
         </div>
         <div data-options="region:'south',border:true,split:true" style="padding:10px;height:400px;">
             <table class="easyui-datagrid" id="progList"
-                   data-options="fit:true,singleSelect:true,fitColumns:true,rownumbers:true,idField:'ProgId',toolbar:'#progToolbar'">
+                   data-options="fit:true,singleSelect:true,fitColumns:true,rownumbers:true,idField:'ProgId',toolbar:'#progToolbar',onSelect:progOnSelect,onDblClickRow:progOnDblClickRow">
                 <thead>
                     <tr>
                         <th data-options="field:'CompletedTime',width:50,align:'center',formatter:fmtDate">完成时间</th>
@@ -135,7 +134,7 @@
                         <th data-options="field:'AdvanceExpenditure',width:80,align:'center'">代垫费用</th>
                         <th data-options="field:'ImageUrl',width:100,align:'center'">凭证图片</th>
                         <th data-options="field:'Creator',width:60,align:'center'">记录人</th>
-                        <th data-options="field:'CreateTime',width:60,align:'center'">记录时间</th>
+                        <th data-options="field:'CreateTime',width:60,align:'center',formatter:fmtDate">记录时间</th>
                     </tr>
                 </thead>
             </table>
@@ -149,7 +148,6 @@
     <div id="progToolbar">
         <div><span style="padding-left:12px;">业务项目：</span><input class="easyui-combobox" id="progItems"  data-options="valueField:'ItemId',textField:'ItemName',width:200,height:30,editable:false,onSelect:piOnSelect" /></div>
         <div>
-            <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="createProg()">创建进度列表</a>
             <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="editProg()">填写进度</a>
         </div>
     </div>
@@ -473,6 +471,26 @@
         {
             $("#StepId").combobox("clear");
             $("#StepId").combobox("reload", "/BizSetting/GetBizStepInItem/" + record.ItemId);
+
+            $.post("/api/BizProgress/GetWorkProgress", { WoId: $("#woList").datagrid("getSelected").WoId, ItemId: record.ItemId }, function (data) {
+                $("#progList").datagrid("loadData",data);
+            })
+            
+        }
+
+        function progOnSelect(index, row)
+        {
+            $("#progForm").form("load", {
+                CompletedTime: row.CompletedTime,
+                StepId: row.StepId,
+                ResultDesc: row.ResultDesc,
+                AdvanceExpenditure: row.AdvanceExpenditure
+            });
+        }
+
+        function progOnDblClickRow(index, row)
+        {
+            editProg();
         }
 
         $.parser.onComplete = function () {
