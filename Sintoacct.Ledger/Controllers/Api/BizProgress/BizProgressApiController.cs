@@ -65,5 +65,17 @@ namespace Sintoacct.Ledger.Controllers.Api
 
             return Ok(ResMessage.Success());
         }
+
+
+        [ClaimsAuthorize("role", "progress-record")]
+        [HttpGet, HttpPost, Route("api/BizProgress/SaveWorkProgress")]
+        public IHttpActionResult SaveWorkProgress(WorkProgressViewModel progress)
+        {
+            
+
+            _progress.SaveWorkProgress(progress);
+
+            return Ok(ResMessage.Success());
+        }
     }
 }

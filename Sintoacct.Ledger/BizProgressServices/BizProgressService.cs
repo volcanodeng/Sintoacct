@@ -131,9 +131,38 @@ namespace Sintoacct.Ledger.BizProgressServices
         }
 
 
+        public WorkProgress GetWorkProgress(long progId)
+        {
+            return _context.WorkProgress.Include("Images").Where(wp => wp.ProgId == progId).FirstOrDefault();
+        }
+
         public List<WorkProgress> GetWorkProgress(long woId, int itemId)
         {
             return _context.WorkProgress.Include("BizStep").Where(wp => wp.WoId == woId && wp.ItemId == itemId).OrderBy(wp => wp.BizStep.SortIndex).ToList();
+        }
+
+        public WorkProgress SaveWorkProgress(WorkProgressViewModel workProg)
+        {
+            if (workProg.ProgId <= 0) throw new ArgumentOutOfRangeException("进度编号无效");
+
+            WorkProgress wProg = this.GetWorkProgress(workProg.ProgId);
+
+            if (wProg == null) throw new ArgumentNullException("找不到该进度记录");
+
+            wProg.CompletedTime = workProg.CompletedTime;
+            wProg.ResultDesc = workProg.ResultDesc;
+            wProg.AdvanceExpenditure = workProg.AdvanceExpenditure;
+
+            if (!string.IsNullOrEmpty(workProg.ImageUrl))
+            {
+                wProg.Images.Remove(wProg.Images.FirstOrDefault());
+                ProgressImage pi = new ProgressImage();
+                pi.ServerImageName = workProg.ImageUrl;
+                wProg.Images.Add(pi);
+            }
+
+            _context.SaveChanges();
+            return wProg;
         }
     }
 }

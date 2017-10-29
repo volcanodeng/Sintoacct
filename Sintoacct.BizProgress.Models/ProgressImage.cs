@@ -11,6 +11,7 @@ namespace Sintoacct.Progress.Models
 
         public string OriginalImageName { get; set; }
 
+        [Required]
         public string ServerImageName { get; set; }
 
         [ForeignKey("WorkProgress")]

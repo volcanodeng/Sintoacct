@@ -233,3 +233,9 @@ function fmtDate(value, row, index) {
 function fmtRMB(value, row, index) {
     return "￥" + parseFloat(value).toFixed(2);
 }
+
+//datagrid显示图片
+function fmtImage(value, row, index)
+{
+    return '<img src="' + value + '" style="width: 100px; height: 60px;"/>';
+}

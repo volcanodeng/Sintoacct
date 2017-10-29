@@ -47,6 +47,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Aliyun.OSS, Version=2.5.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Aliyun.OSS.SDK.2.5.3\lib\Aliyun.OSS.dll</HintPath>
+    </Reference>
     <Reference Include="Autofac, Version=4.0.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.0.1\lib\net45\Autofac.dll</HintPath>
       <Private>True</Private>
@@ -214,6 +217,8 @@
     <Compile Include="BizProgressServices\IBizProgressService.cs" />
     <Compile Include="BizProgressServices\IBizSetting.cs" />
     <Compile Include="ClaimsAuthorizeAttribute.cs" />
+    <Compile Include="Common\AliyunOss.cs" />
+    <Compile Include="Common\AliyunOssConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\AccountBookApiController.cs" />
     <Compile Include="Controllers\Api\BaseApiController.cs" />

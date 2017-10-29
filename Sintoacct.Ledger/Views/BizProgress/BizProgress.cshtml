@@ -132,7 +132,7 @@
                         <th data-options="field:'StepName',width:100,align:'center'">工作步骤</th>
                         <th data-options="field:'ResultDesc',width:200">办理结果</th>
                         <th data-options="field:'AdvanceExpenditure',width:80,align:'center'">代垫费用</th>
-                        <th data-options="field:'ImageUrl',width:100,align:'center'">凭证图片</th>
+                        <th data-options="field:'ImageUrl',width:100,align:'center',formatter:fmtImage">凭证图片</th>
                         <th data-options="field:'Creator',width:60,align:'center'">记录人</th>
                         <th data-options="field:'CreateTime',width:60,align:'center',formatter:fmtDate">记录时间</th>
                     </tr>
@@ -294,6 +294,12 @@
                 success: sFormSuccess
             });
 
+            $("#progForm").form({
+                url: '/api/BizProgress/SaveWorkProgress',
+                onSubmit: progFormOnSubmit,
+                success: progFormSuccess
+            });
+
             $.uploadPreview({
                 input_field: "#image-upload",
                 preview_box: "#image-preview",
@@ -337,6 +343,18 @@
         function sFormSuccess(data)
         {
             $("#woList").datagrid("reload");
+        }
+
+        function progFormOnSubmit()
+        {
+            return $(this).form('validate');
+        }
+
+        function progFormSuccess(data)
+        {
+            if (responseHandle(data)) {
+                refreshProgList();
+            }
         }
 
         function cateSearchOnSelect(record)
@@ -467,14 +485,19 @@
             $("#dialogProg").dialog("close");
         }
 
+        function refreshProgList()
+        {
+            $.post("/api/BizProgress/GetWorkProgress", { WoId: $("#woList").datagrid("getSelected").WoId, ItemId: record.ItemId }, function (data) {
+                $("#progList").datagrid("loadData", data);
+            });
+        }
+
         function piOnSelect(record)
         {
             $("#StepId").combobox("clear");
             $("#StepId").combobox("reload", "/BizSetting/GetBizStepInItem/" + record.ItemId);
 
-            $.post("/api/BizProgress/GetWorkProgress", { WoId: $("#woList").datagrid("getSelected").WoId, ItemId: record.ItemId }, function (data) {
-                $("#progList").datagrid("loadData",data);
-            })
+            refreshProgList();
             
         }
 
