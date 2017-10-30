@@ -157,7 +157,7 @@ namespace Sintoacct.Ledger.BizProgressServices
             {
                 wProg.Images.Remove(wProg.Images.FirstOrDefault());
                 ProgressImage pi = new ProgressImage();
-                pi.ServerImageName = workProg.ImageUrl;
+                //pi.ServerImageName = workProg.ImageUrl;
                 wProg.Images.Add(pi);
             }
 
