@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using System.Net.Http;
 using AutoMapper;
+using Sintoacct.Ledger.Common;
 using Sintoacct.Ledger.BizProgressServices;
 using Sintoacct.Ledger.Models;
 
@@ -71,11 +73,22 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, HttpPost, Route("api/BizProgress/SaveWorkProgress")]
         public IHttpActionResult SaveWorkProgress(WorkProgressViewModel progress)
         {
-            
+            this.PostFile();
 
             _progress.SaveWorkProgress(progress);
 
             return Ok(ResMessage.Success());
+        }
+
+
+        private void PostFile()
+        {
+            // 检查是否是 multipart/form-data
+            if (!Request.Content.IsMimeMultipartContent("form-data")) return;
+
+            var provider = new MultipartFormDataStreamProvider(HttpContext.Current.Server.MapPath("~/uploads"));
+            var bodyPart =  Request.Content.ReadAsMultipartAsync(provider).Result;
+            
         }
     }
 }

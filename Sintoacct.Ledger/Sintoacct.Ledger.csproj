@@ -219,6 +219,7 @@
     <Compile Include="ClaimsAuthorizeAttribute.cs" />
     <Compile Include="Common\AliyunOss.cs" />
     <Compile Include="Common\AliyunOssConfig.cs" />
+    <Compile Include="Common\CustomMultipartFormDataStreamProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\AccountBookApiController.cs" />
     <Compile Include="Controllers\Api\BaseApiController.cs" />

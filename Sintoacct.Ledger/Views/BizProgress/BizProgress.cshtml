@@ -487,7 +487,8 @@
 
         function refreshProgList()
         {
-            $.post("/api/BizProgress/GetWorkProgress", { WoId: $("#woList").datagrid("getSelected").WoId, ItemId: record.ItemId }, function (data) {
+            var itemId = $("#progItems").combobox("getValue");
+            $.post("/api/BizProgress/GetWorkProgress", { WoId: $("#woList").datagrid("getSelected").WoId, ItemId: itemId }, function (data) {
                 $("#progList").datagrid("loadData", data);
             });
         }
