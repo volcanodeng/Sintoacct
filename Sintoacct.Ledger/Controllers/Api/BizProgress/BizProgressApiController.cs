@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Net;
 using System.Web.Http;
 using System.Net.Http;
 using AutoMapper;
+using System.Threading.Tasks;
 using Sintoacct.Ledger.Common;
 using Sintoacct.Ledger.BizProgressServices;
 using Sintoacct.Ledger.Models;
@@ -89,6 +91,37 @@ namespace Sintoacct.Ledger.Controllers.Api
             var provider = new MultipartFormDataStreamProvider(HttpContext.Current.Server.MapPath("~/uploads"));
             var bodyPart =  Request.Content.ReadAsMultipartAsync(provider).Result;
             
+        }
+
+        [HttpGet, HttpPost, Route("api/BizProgress/PostFormData")]
+        public async Task<HttpResponseMessage> PostFormData()
+        {
+            // Check if the request contains multipart/form-data.
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            string root = HttpContext.Current.Server.MapPath("~/uploads");
+            var provider = new MultipartFormDataStreamProvider(root);
+
+            try
+            {
+                // Read the form data.
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                // This illustrates how to get the file names.
+                foreach (MultipartFileData file in provider.FileData)
+                {
+                    //Trace.WriteLine(file.Headers.ContentDisposition.FileName);
+                    //Trace.WriteLine("Server file path: " + file.LocalFileName);
+                }
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (System.Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
         }
     }
 }

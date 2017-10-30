@@ -295,7 +295,7 @@
             });
 
             $("#progForm").form({
-                url: '/api/BizProgress/SaveWorkProgress',
+                url: '/api/BizProgress/PostFormData/',
                 onSubmit: progFormOnSubmit,
                 success: progFormSuccess
             });
@@ -353,7 +353,9 @@
         function progFormSuccess(data)
         {
             if (responseHandle(data)) {
-                refreshProgList();
+                $.post("/api/BizProgress/GetWorkProgress", { WoId: $("#woList").datagrid("getSelected").WoId, ItemId: $("#progItems").combobox("getValue") }, function (data) {
+                    $("#progList").datagrid("loadData", data);
+                });
             }
         }
 
@@ -485,20 +487,14 @@
             $("#dialogProg").dialog("close");
         }
 
-        function refreshProgList()
-        {
-            var itemId = $("#progItems").combobox("getValue");
-            $.post("/api/BizProgress/GetWorkProgress", { WoId: $("#woList").datagrid("getSelected").WoId, ItemId: itemId }, function (data) {
-                $("#progList").datagrid("loadData", data);
-            });
-        }
-
         function piOnSelect(record)
         {
             $("#StepId").combobox("clear");
             $("#StepId").combobox("reload", "/BizSetting/GetBizStepInItem/" + record.ItemId);
 
-            refreshProgList();
+            $.post("/api/BizProgress/GetWorkProgress", { WoId: $("#woList").datagrid("getSelected").WoId, ItemId: record.ItemId }, function (data) {
+                $("#progList").datagrid("loadData", data);
+            });
             
         }
 
@@ -515,6 +511,11 @@
         function progOnDblClickRow(index, row)
         {
             editProg();
+        }
+
+        function saveProg()
+        {
+            $('#progForm').submit();
         }
 
         $.parser.onComplete = function () {
