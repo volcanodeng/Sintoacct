@@ -72,33 +72,11 @@ namespace Sintoacct.Ledger.Controllers.Api
         }
 
 
+       
+
         [ClaimsAuthorize("role", "progress-record")]
         [HttpGet, HttpPost, Route("api/BizProgress/SaveWorkProgress")]
-        public IHttpActionResult SaveWorkProgress()
-        {
-            Dictionary<string,string> fileNames = this.PostFormData().Result;
-
-            WorkProgressViewModel wProg = new WorkProgressViewModel();
-            wProg.WoId = Convert.ToInt64(HttpContext.Current.Request.Form["WoId"]);
-            wProg.ItemId = Convert.ToInt32(HttpContext.Current.Request.Form["ItemId"]);
-            wProg.StepId = Convert.ToInt32(HttpContext.Current.Request.Form["StepId"]);
-            DateTime dt;
-            if (DateTime.TryParse(HttpContext.Current.Request.Form["CompletedTime"], out dt)) wProg.CompletedTime = dt;
-            wProg.ResultDesc = HttpContext.Current.Request.Form["ResultDesc"];
-            decimal ae;
-            if (decimal.TryParse(HttpContext.Current.Request.Form["AdvanceExpenditure"], out ae)) wProg.AdvanceExpenditure = ae;
-
-            wProg.FileName = fileNames.Values.FirstOrDefault();
-            wProg.ImageUrl = string.Format("{2}/{0}{1}", wProg.FileName, System.IO.Path.GetExtension(fileNames.Keys.FirstOrDefault()), _uploadPath);
-            _progress.SaveWorkProgress(wProg);
-
-            return Ok(ResMessage.Success());
-        }
-
-
-        
-
-        private async Task<Dictionary<string, string>> PostFormData()
+        public async Task<HttpResponseMessage> SaveWorkProgress()
         {
             // Check if the request contains multipart/form-data.
             if (!Request.Content.IsMimeMultipartContent())
@@ -118,17 +96,29 @@ namespace Sintoacct.Ledger.Controllers.Api
                 // This illustrates how to get the file names.
                 foreach (MultipartFileData file in provider.FileData)
                 {
-                    //Trace.WriteLine(file.Headers.ContentDisposition.FileName);
-                    //Trace.WriteLine("Server file path: " + file.LocalFileName);
                     fileNames.Add(file.Headers.ContentDisposition.FileName, file.LocalFileName);
                 }
-                return fileNames; //Request.CreateResponse(HttpStatusCode.OK);
+
+                WorkProgressViewModel wProg = new WorkProgressViewModel();
+                wProg.StepId = Convert.ToInt32(HttpContext.Current.Request.Form["StepId"]);
+                DateTime dt;
+                if (DateTime.TryParse(HttpContext.Current.Request.Form["CompletedTime"], out dt)) wProg.CompletedTime = dt;
+                wProg.ResultDesc = HttpContext.Current.Request.Form["ResultDesc"];
+                decimal ae;
+                if (decimal.TryParse(HttpContext.Current.Request.Form["AdvanceExpenditure"], out ae)) wProg.AdvanceExpenditure = ae;
+
+                wProg.FileName = string.Format("{0}{1}",  System.IO.Path.GetFileName(fileNames.Values.FirstOrDefault()), System.IO.Path.GetExtension(fileNames.Keys.FirstOrDefault().Replace("\"",""))); 
+                wProg.ImageUrl = string.Format("{0}/{1}", _uploadPath, System.IO.Path.GetFileName(wProg.FileName));
+                _progress.SaveWorkProgress(wProg);
+
+
+                return Request.CreateResponse(HttpStatusCode.OK);
             }
-            catch //(System.Exception e)
+            catch (System.Exception e)
             {
-                //return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-                return fileNames;
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
         }
+
     }
 }
