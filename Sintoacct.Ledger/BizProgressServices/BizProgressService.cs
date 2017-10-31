@@ -154,11 +154,14 @@ namespace Sintoacct.Ledger.BizProgressServices
             wProg.ResultDesc = workProg.ResultDesc;
             wProg.AdvanceExpenditure = workProg.AdvanceExpenditure;
 
-            if (!string.IsNullOrEmpty(workProg.ImageUrl))
+            if (!string.IsNullOrEmpty(workProg.Url))
             {
                 wProg.Images.Remove(wProg.Images.FirstOrDefault());
                 ProgressImage pi = new ProgressImage();
-                //pi.ServerImageName = workProg.ImageUrl;
+                pi.AliyunKey = workProg.FileName;
+                pi.Url = workProg.Url;
+                pi.Expiration = DateTime.Now.AddYears(5);
+                pi.WorkProgress = wProg;
                 wProg.Images.Add(pi);
             }
 

@@ -7,13 +7,13 @@ namespace Sintoacct.Progress.Models.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class ModifyProgressImage : IMigrationMetadata
+    public sealed partial class InitialCreate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ModifyProgressImage));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201710310234085_ModifyProgressImage"; }
+            get { return "201710311418550_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

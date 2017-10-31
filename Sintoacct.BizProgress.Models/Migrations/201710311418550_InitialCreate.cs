@@ -71,7 +71,7 @@ namespace Sintoacct.Progress.Models.Migrations
                 c => new
                     {
                         ImgId = c.Long(nullable: false, identity: true),
-                        AliyunBucket = c.String(nullable: false, maxLength: 64),
+                        AliyunBucket = c.String(maxLength: 64),
                         AliyunKey = c.String(nullable: false, maxLength: 300),
                         Url = c.String(nullable: false, maxLength: 300),
                         Expiration = c.DateTime(nullable: false),

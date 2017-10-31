@@ -231,7 +231,7 @@
                 <li>
                     <label for="CompletedTime">完成时间:</label>
                     <input id="CompletedTime" name="CompletedTime" class="easyui-datebox" data-options="width:260,height:35,prompt:'请输入进度完成时间，若未完成可留空'" />
-
+                    <input type="hidden" id="ProgId" name="ProgId" />
                 </li>
                 <li>
                     <label for="StepId">工作步骤:</label>
@@ -501,6 +501,7 @@
         function progOnSelect(index, row)
         {
             $("#progForm").form("load", {
+                ProgId: row.ProgId,
                 CompletedTime: row.CompletedTime,
                 StepId: row.StepId,
                 ResultDesc: row.ResultDesc,

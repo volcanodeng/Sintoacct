@@ -61,7 +61,7 @@ namespace Sintoacct.Ledger.Models
 
         public string ResultDesc { get; set; }
 
-        public string ImageUrl { get; set; }
+        public string Url { get; set; }
 
         public string FileName { get; set; }
 

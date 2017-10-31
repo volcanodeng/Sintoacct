@@ -100,6 +100,7 @@ namespace Sintoacct.Ledger.Controllers.Api
                 }
 
                 WorkProgressViewModel wProg = new WorkProgressViewModel();
+                wProg.ProgId = Convert.ToInt64(HttpContext.Current.Request.Form["ProgId"]);
                 wProg.StepId = Convert.ToInt32(HttpContext.Current.Request.Form["StepId"]);
                 DateTime dt;
                 if (DateTime.TryParse(HttpContext.Current.Request.Form["CompletedTime"], out dt)) wProg.CompletedTime = dt;
@@ -108,7 +109,7 @@ namespace Sintoacct.Ledger.Controllers.Api
                 if (decimal.TryParse(HttpContext.Current.Request.Form["AdvanceExpenditure"], out ae)) wProg.AdvanceExpenditure = ae;
 
                 wProg.FileName = string.Format("{0}{1}",  System.IO.Path.GetFileName(fileNames.Values.FirstOrDefault()), System.IO.Path.GetExtension(fileNames.Keys.FirstOrDefault().Replace("\"",""))); 
-                wProg.ImageUrl = string.Format("{0}/{1}", _uploadPath, System.IO.Path.GetFileName(wProg.FileName));
+                wProg.Url = string.Format("{0}/{1}", _uploadPath, System.IO.Path.GetFileName(wProg.FileName));
                 _progress.SaveWorkProgress(wProg);
 
 
