@@ -63,6 +63,8 @@ namespace Sintoacct.Ledger.Models
 
         public string ImageUrl { get; set; }
 
+        public string FileName { get; set; }
+
         public decimal AdvanceExpenditure { get; set; }
 
         public string Creator { get; set; }

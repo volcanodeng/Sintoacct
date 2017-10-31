@@ -53,6 +53,10 @@
     <Compile Include="Migrations\201710300203175_InitialCreate.Designer.cs">
       <DependentUpon>201710300203175_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201710310234085_ModifyProgressImage.cs" />
+    <Compile Include="Migrations\201710310234085_ModifyProgressImage.Designer.cs">
+      <DependentUpon>201710310234085_ModifyProgressImage.cs</DependentUpon>
+    </Compile>
     <Compile Include="WorkOrder.cs" />
     <Compile Include="BizProgressContext.cs" />
     <Compile Include="BizPromotion.cs" />
@@ -76,6 +80,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201710300203175_InitialCreate.resx">
       <DependentUpon>201710300203175_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710310234085_ModifyProgressImage.resx">
+      <DependentUpon>201710310234085_ModifyProgressImage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

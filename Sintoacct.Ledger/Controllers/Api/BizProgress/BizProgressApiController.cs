@@ -17,6 +17,7 @@ namespace Sintoacct.Ledger.Controllers.Api
     {
         private readonly IBizProgressService _progress;
         private readonly IModelValidation _modelValid;
+        private const string _uploadPath = "~/uploads";
 
         public BizProgressApiController(IBizProgressService progress,
                                         IModelValidation modelValid)
@@ -73,28 +74,31 @@ namespace Sintoacct.Ledger.Controllers.Api
 
         [ClaimsAuthorize("role", "progress-record")]
         [HttpGet, HttpPost, Route("api/BizProgress/SaveWorkProgress")]
-        public IHttpActionResult SaveWorkProgress(WorkProgressViewModel progress)
+        public IHttpActionResult SaveWorkProgress()
         {
-            this.PostFile();
+            Dictionary<string,string> fileNames = this.PostFormData().Result;
 
-            _progress.SaveWorkProgress(progress);
+            WorkProgressViewModel wProg = new WorkProgressViewModel();
+            wProg.WoId = Convert.ToInt64(HttpContext.Current.Request.Form["WoId"]);
+            wProg.ItemId = Convert.ToInt32(HttpContext.Current.Request.Form["ItemId"]);
+            wProg.StepId = Convert.ToInt32(HttpContext.Current.Request.Form["StepId"]);
+            DateTime dt;
+            if (DateTime.TryParse(HttpContext.Current.Request.Form["CompletedTime"], out dt)) wProg.CompletedTime = dt;
+            wProg.ResultDesc = HttpContext.Current.Request.Form["ResultDesc"];
+            decimal ae;
+            if (decimal.TryParse(HttpContext.Current.Request.Form["AdvanceExpenditure"], out ae)) wProg.AdvanceExpenditure = ae;
+
+            wProg.FileName = fileNames.Values.FirstOrDefault();
+            wProg.ImageUrl = string.Format("{2}/{0}{1}", wProg.FileName, System.IO.Path.GetExtension(fileNames.Keys.FirstOrDefault()), _uploadPath);
+            _progress.SaveWorkProgress(wProg);
 
             return Ok(ResMessage.Success());
         }
 
 
-        private void PostFile()
-        {
-            // 检查是否是 multipart/form-data
-            if (!Request.Content.IsMimeMultipartContent("form-data")) return;
+        
 
-            var provider = new MultipartFormDataStreamProvider(HttpContext.Current.Server.MapPath("~/uploads"));
-            var bodyPart =  Request.Content.ReadAsMultipartAsync(provider).Result;
-            
-        }
-
-        [HttpGet, HttpPost, Route("api/BizProgress/PostFormData")]
-        public async Task<HttpResponseMessage> PostFormData()
+        private async Task<Dictionary<string, string>> PostFormData()
         {
             // Check if the request contains multipart/form-data.
             if (!Request.Content.IsMimeMultipartContent())
@@ -102,9 +106,10 @@ namespace Sintoacct.Ledger.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
 
-            string root = HttpContext.Current.Server.MapPath("~/uploads");
+            string root = HttpContext.Current.Server.MapPath(_uploadPath);
             var provider = new MultipartFormDataStreamProvider(root);
 
+            Dictionary<string, string> fileNames = new Dictionary<string, string>();
             try
             {
                 // Read the form data.
@@ -115,12 +120,14 @@ namespace Sintoacct.Ledger.Controllers.Api
                 {
                     //Trace.WriteLine(file.Headers.ContentDisposition.FileName);
                     //Trace.WriteLine("Server file path: " + file.LocalFileName);
+                    fileNames.Add(file.Headers.ContentDisposition.FileName, file.LocalFileName);
                 }
-                return Request.CreateResponse(HttpStatusCode.OK);
+                return fileNames; //Request.CreateResponse(HttpStatusCode.OK);
             }
-            catch (System.Exception e)
+            catch //(System.Exception e)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+                //return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+                return fileNames;
             }
         }
     }

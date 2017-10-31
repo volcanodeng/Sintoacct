@@ -10,7 +10,7 @@ namespace Sintoacct.Progress.Models
         [Key]
         public long ImgId { get; set; }
 
-        [Required,MaxLength(64)]
+        [MaxLength(64)]
         public string AliyunBucket { get; set; }
 
         [Required,MaxLength(300)]
