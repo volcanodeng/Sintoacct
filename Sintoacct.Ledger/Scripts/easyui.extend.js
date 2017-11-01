@@ -237,5 +237,8 @@ function fmtRMB(value, row, index) {
 //datagrid显示图片
 function fmtImage(value, row, index)
 {
-    return '<img src="' + value + '" style="width: 100px; height: 60px;"/>';
+    if (value != null && value != undefined && $.trim(value) != "")
+        return '<a href="' + value + '" target="_blank"><img src="' + value + '" style="width: 100px; height: 80px;"/></a>';
+    else
+        return "";
 }

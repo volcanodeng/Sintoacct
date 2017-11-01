@@ -132,7 +132,7 @@
                         <th data-options="field:'StepName',width:100,align:'center'">工作步骤</th>
                         <th data-options="field:'ResultDesc',width:200">办理结果</th>
                         <th data-options="field:'AdvanceExpenditure',width:80,align:'center'">代垫费用</th>
-                        <th data-options="field:'ImageUrl',width:100,align:'center',formatter:fmtImage">凭证图片</th>
+                        <th data-options="field:'Url',width:100,align:'center',formatter:fmtImage">凭证图片</th>
                         <th data-options="field:'Creator',width:60,align:'center'">记录人</th>
                         <th data-options="field:'CreateTime',width:60,align:'center',formatter:fmtDate">记录时间</th>
                     </tr>
@@ -353,6 +353,7 @@
         function progFormSuccess(data)
         {
             if (responseHandle(data)) {
+                $("#dialogProg").dialog("close");
                 $.post("/api/BizProgress/GetWorkProgress", { WoId: $("#woList").datagrid("getSelected").WoId, ItemId: $("#progItems").combobox("getValue") }, function (data) {
                     $("#progList").datagrid("loadData", data);
                 });
@@ -500,6 +501,15 @@
 
         function progOnSelect(index, row)
         {
+            $("#progForm").form("clear");
+            $.uploadPreview({
+                input_field: "#image-upload",
+                preview_box: "#image-preview",
+                label_field: "#image-label",
+                label_default: "选择图片",
+                label_selected: "修改图片"
+            });
+
             $("#progForm").form("load", {
                 ProgId: row.ProgId,
                 CompletedTime: row.CompletedTime,
@@ -507,6 +517,10 @@
                 ResultDesc: row.ResultDesc,
                 AdvanceExpenditure: row.AdvanceExpenditure
             });
+
+            $("#image-preview").css('background-image', 'url(' + row.Url + ')');
+            $("#image-preview").css('background-size', '200px 100px');
+            $("#image-preview").css('background-repeat', 'no-repeat');
         }
 
         function progOnDblClickRow(index, row)

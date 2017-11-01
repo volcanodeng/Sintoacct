@@ -52,7 +52,9 @@ namespace Sintoacct.Ledger
                 .ForMember(dest => dest.BizItemIds, opt => opt.ResolveUsing<BizItemIdsResolver>())
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.CustomerName));
                 cfg.CreateMap<WorkProgress, WorkProgressViewModel>()
-                .ForMember(dest => dest.StepName, opt => opt.MapFrom(src => src.BizStep.StepName));
+                .ForMember(dest => dest.StepName, opt => opt.MapFrom(src => src.BizStep.StepName))
+                .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.Images.Count > 0 ? src.Images.FirstOrDefault().Url : ""))
+                .ForMember(dest=>dest.FileName,opt=>opt.MapFrom(src=>src.Images.Count>0?src.Images.FirstOrDefault().AliyunKey:""));
 
             });
         }

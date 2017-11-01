@@ -17,7 +17,7 @@ namespace Sintoacct.Ledger.Controllers.Api
     {
         private readonly IBizProgressService _progress;
         private readonly IModelValidation _modelValid;
-        private const string _uploadPath = "~/uploads";
+        private const string _uploadPath = "/uploads";
 
         public BizProgressApiController(IBizProgressService progress,
                                         IModelValidation modelValid)
@@ -96,6 +96,8 @@ namespace Sintoacct.Ledger.Controllers.Api
                 // This illustrates how to get the file names.
                 foreach (MultipartFileData file in provider.FileData)
                 {
+                    if (System.IO.File.Exists(file.LocalFileName)) System.IO.File.Move(file.LocalFileName, string.Format("{0}{1}", file.LocalFileName, System.IO.Path.GetExtension(file.Headers.ContentDisposition.FileName.Replace("\"", ""))));
+
                     fileNames.Add(file.Headers.ContentDisposition.FileName, file.LocalFileName);
                 }
 
@@ -113,7 +115,7 @@ namespace Sintoacct.Ledger.Controllers.Api
                 _progress.SaveWorkProgress(wProg);
 
 
-                return Request.CreateResponse(HttpStatusCode.OK);
+                return Request.CreateResponse<ResMessageContent>(HttpStatusCode.OK,ResMessage.Success());
             }
             catch (System.Exception e)
             {
