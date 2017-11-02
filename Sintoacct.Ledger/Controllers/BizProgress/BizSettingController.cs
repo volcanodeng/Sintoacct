@@ -26,22 +26,25 @@ namespace Sintoacct.Ledger.Controllers.BizProgress
             return View();
         }
 
+        [ClaimsAuthorize("role", "business")]
         public JsonResult GetBizCategories()
         {
             return Json(Mapper.Map <List<BizCategoryViewModel>>(_bizSetting.GetBizCategories()),JsonRequestBehavior.AllowGet);
         }
 
+        [ClaimsAuthorize("role", "business")]
         public JsonResult GetBizItemInCate(int id)
         {
             return Json(Mapper.Map<List<BizItemViewModel>>(_bizSetting.GetBizItemsInCate(id)),JsonRequestBehavior.AllowGet);
         }
 
+        [ClaimsAuthorize("role", "business")]
         public JsonResult GetAllBizItems()
         {
             return Json(Mapper.Map<List<BizItemViewModel>>(_bizSetting.GetBizItems()));
         }
 
-
+        [ClaimsAuthorize("role", "business")]
         public JsonResult GetBizStepInItem(int id)
         {
             return Json(Mapper.Map<List<BizStepsViewModel>>(_bizSetting.GetBizStepInItem(id)));

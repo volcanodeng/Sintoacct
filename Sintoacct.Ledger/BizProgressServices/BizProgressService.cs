@@ -134,7 +134,7 @@ namespace Sintoacct.Ledger.BizProgressServices
 
         public WorkProgress GetWorkProgress(long progId)
         {
-            return _context.WorkProgress.Include("Images").Where(wp => wp.ProgId == progId).FirstOrDefault();
+            return _context.WorkProgress.Include("Images").Include("WorkOrder").Where(wp => wp.ProgId == progId).FirstOrDefault();
         }
 
         public List<WorkProgress> GetWorkProgress(long woId, int itemId)
@@ -153,6 +153,9 @@ namespace Sintoacct.Ledger.BizProgressServices
             wProg.CompletedTime = workProg.CompletedTime;
             wProg.ResultDesc = workProg.ResultDesc;
             wProg.AdvanceExpenditure = workProg.AdvanceExpenditure;
+
+            //重算代垫费用
+            wProg.WorkOrder.AdvanceExpenditure = wProg.WorkOrder.WorkProgresses.Sum(p => p.AdvanceExpenditure);
 
             if (!string.IsNullOrEmpty(workProg.Url))
             {

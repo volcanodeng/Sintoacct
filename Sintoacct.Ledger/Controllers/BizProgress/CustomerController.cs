@@ -21,21 +21,25 @@ namespace Sintoacct.Ledger.Controllers
             _customer = customer;
         }
 
+        [ClaimsAuthorize("role", "business")]
         public ActionResult Customers()
         {
             return View();
         }
 
+        [ClaimsAuthorize("role", "business")]
         public JsonResult GetCustomers()
         {
             return Json(Mapper.Map<List<BizCustomerViewModel>>(_customer.GetCustomers()), JsonRequestBehavior.AllowGet);
         }
 
+        [ClaimsAuthorize("role", "business")]
         public ActionResult CostSetting()
         {
             return View();
         }
 
+        [ClaimsAuthorize("role", "business")]
         public ActionResult MarketingChain()
         {
             return View();

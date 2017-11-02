@@ -1,4 +1,8 @@
-﻿
+﻿@using System.Web;
+@using System.Security.Claims;
+@{ 
+    ClaimsPrincipal user = HttpContext.Current.User as ClaimsPrincipal;
+}
 <div id="layout-wrapper" class="easyui-layout" data-options="fit:true">
 
     <div data-options="region:'west',collapsible:true" title="系统功能" style="width:150px;">
@@ -10,18 +14,21 @@
             <div data-options="iconCls:'fa fa-file-text-o fa-lg'" style="font-weight:bolder;" onclick="AddTabIframe('客户列表', '/Customer/Customers/')">
                 客户列表
             </div>
-            <div data-options="iconCls:'fa fa-line-chart fa-lg'" style="font-weight:bolder;" onclick="AddTabIframe('业务配置', '/BizSetting/BizConfig/')">
-               业务配置
-            </div>
+            @if (user.HasClaim("role", "IdentityManagerAdministrator"))
+            {
             <div class="menu-sep"></div>
-            <div data-options="iconCls:'fa fa-cog fa-lg'" style="font-weight:bolder;">
+            <div data-options="iconCls:'fa fa-line-chart fa-lg'" style="font-weight:bolder;" onclick="AddTabIframe('业务配置', '/BizSetting/BizConfig/')">
+                业务配置
+            </div>
+            }
+            @*<div data-options="iconCls:'fa fa-cog fa-lg'" style="font-weight:bolder;">
                 <span>营销推广</span>
                 <div>
                     <div onclick="AddTabIframe('客户费用设置', '/Customer/CostSetting/')">客户费用设置</div>
                     <div onclick="AddTabHref('客户推广链', '/Customer/MarketingChain/')">客户推广链</div>
                     
                 </div>
-            </div>
+            </div>*@
         </div>
     </div>
 

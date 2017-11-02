@@ -24,16 +24,19 @@ namespace Sintoacct.Ledger.Controllers
             _company = company;
         }
 
+        [ClaimsAuthorize("role", "business")]
         public ActionResult TopFrame()
         {
             return View();
         }
 
+        [ClaimsAuthorize("role", "business")]
         public ActionResult BizProgress()
         {
             return View();
         }
 
+        [ClaimsAuthorize("role", "business")]
         public JsonResult GetBizPersons()
         {
             return Json(_company.GetBizPersons());
