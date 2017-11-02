@@ -210,14 +210,14 @@
 
         function cateOnClickRow(index, row) {
             $.post("/BizSetting/GetBizItemInCate", { id: row.CateId }, function (data) {
-                $("#itemList").datagrid("loadData", data);
+                $("#itemList").datagrid("loadData", JSON.parse(data));
             });
         }
 
         function itemOnClickRow(index, row)
         {
             $.post("/BizSetting/GetBizStepInItem", { id: row.ItemId }, function (data) {
-                $("#stepList").datagrid("loadData", data);
+                $("#stepList").datagrid("loadData",JSON.parse( data));
             });
         }
 
