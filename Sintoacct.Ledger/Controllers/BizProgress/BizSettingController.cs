@@ -41,13 +41,13 @@ namespace Sintoacct.Ledger.Controllers.BizProgress
         [ClaimsAuthorize("role", "business")]
         public JsonResult GetAllBizItems()
         {
-            return Json(Mapper.Map<List<BizItemViewModel>>(_bizSetting.GetBizItems()), "text/html");
+            return Json(Mapper.Map<List<BizItemViewModel>>(_bizSetting.GetBizItems()),JsonRequestBehavior.AllowGet);
         }
 
         [ClaimsAuthorize("role", "business")]
         public JsonResult GetBizStepInItem(int id)
         {
-            return Json(Mapper.Map<List<BizStepsViewModel>>(_bizSetting.GetBizStepInItem(id)), "text/html");
+            return Json(Mapper.Map<List<BizStepsViewModel>>(_bizSetting.GetBizStepInItem(id)), JsonRequestBehavior.AllowGet);
         }
     }
 }
