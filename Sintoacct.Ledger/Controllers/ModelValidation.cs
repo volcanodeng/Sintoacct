@@ -89,18 +89,7 @@ namespace Sintoacct.Ledger.Controllers
             return true;
         }
 
-        public bool ValidBizCustomer(BizCustomerViewModel customer,out string err)
-        {
-            err = string.Empty;
-            Guid uid;
-            if(!Guid.TryParse(customer.PromId,out uid) || _company.GetBizPerson(uid)==null)
-            {
-                err = "推荐人为空";
-                return false;
-            }
-
-            return true;
-        }
+        
     }
 
     public interface IModelValidation : IDependency
@@ -112,6 +101,6 @@ namespace Sintoacct.Ledger.Controllers
 
         bool ValidBizProgress(WorkOrderViewModel progress, out string err);
 
-        bool ValidBizCustomer(BizCustomerViewModel customer, out string err);
+        
     }
 }

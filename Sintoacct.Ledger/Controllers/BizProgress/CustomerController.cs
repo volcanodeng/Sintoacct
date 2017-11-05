@@ -7,6 +7,7 @@ using System.Security.Claims;
 using Sintoacct.Ledger.BizProgressServices;
 using AutoMapper;
 using Sintoacct.Ledger.Models;
+using Sintoacct.Ledger.Common;
 
 namespace Sintoacct.Ledger.Controllers
 {
@@ -31,6 +32,16 @@ namespace Sintoacct.Ledger.Controllers
         public JsonResult GetCustomers()
         {
             return Json(Mapper.Map<List<BizCustomerViewModel>>(_customer.GetCustomers()), "text/html", JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetValidCustomers()
+        {
+            return Json(Mapper.Map<List<BizCustomerViewModel>>(_customer.GetValidCustomers()), "text/html", JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetCustomerLevel()
+        {
+            return Json(EnumJson.Convert(typeof(Sintoacct.Progress.Models.CustomerLevel)),"text/html", JsonRequestBehavior.AllowGet);
         }
 
         [ClaimsAuthorize("role", "business")]

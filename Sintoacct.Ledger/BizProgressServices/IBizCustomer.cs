@@ -9,6 +9,7 @@ namespace Sintoacct.Ledger.BizProgressServices
         Customers GetCustomer(long cusId);
         List<Customers> GetCustomers(BizCustomerConditionViewModel condition);
         List<Customers> GetCustomers();
+        List<Customers> GetValidCustomers();
         BizPromotion GetPromotion(long promId);
         Customers SaveCustomer(BizCustomerViewModel customer);
         BizPromotion SavePromotion(BizPromotionViewModel promotion);

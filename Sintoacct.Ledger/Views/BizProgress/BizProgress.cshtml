@@ -160,7 +160,7 @@
                     <div>
                         <label for="CusId">客户名称:</label>
                         <input id="CusId" name="CusId" class="easyui-combobox"
-                               data-options="prompt:'请选择业务对应的客户',required:true,width:255,height:35,missingMessage:'请选择业务对应的客户',valueField:'CusId',textField:'CustomerName',url:'/Customer/GetCustomers'" />
+                               data-options="prompt:'请选择业务对应的客户',required:true,width:255,height:35,missingMessage:'请选择业务对应的客户',valueField:'CusId',textField:'CustomerName',url:'/Customer/GetValidCustomers'" />
                     </div>
                     <div>
                         <label for="ContractTime">签约时间:</label>
@@ -279,6 +279,8 @@
 
         $(function () {
             init();
+
+            window.setTimeout(' $("#woList").datagrid("selectRow", 0)', 500);
         });
 
         function init() {
@@ -477,6 +479,11 @@
 
             $("#progItems").combobox("clear");
             $("#progItems").combobox("loadData", itemList);
+
+            if (itemList.length > 0)
+            {
+                $("#progItems").combobox("select", itemList[0].ItemId);
+            }
         }
 
         function editProg()

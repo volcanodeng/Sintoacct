@@ -26,11 +26,11 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, HttpPost, Route("api/BizCustomer/SaveBizCustomer")]
         public IHttpActionResult SaveBizCustomer(BizCustomerViewModel customer)
         {
-            string err;
-            if(!_modelValid.ValidBizCustomer(customer,out err))
-            {
-                ResMessage.Fail(err);
-            }
+            //string err;
+            //if(!_modelValid.ValidBizCustomer(customer,out err))
+            //{
+            //    ResMessage.Fail(err);
+            //}
 
             _customer.SaveCustomer(customer);
 

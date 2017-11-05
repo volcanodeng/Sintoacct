@@ -19,9 +19,9 @@ namespace Sintoacct.Ledger.Models
 
         public string Phone { get; set; }
 
-        public int? Level { get; set; }
+        public int Level { get; set; }
 
-        public string PromId { get; set; }
+        //public string PromId { get; set; }
 
         public string PromName { get; set; }
 
@@ -35,6 +35,8 @@ namespace Sintoacct.Ledger.Models
         public string CustomerName { get; set; }
 
         public string Phone { get; set; }
+
+        public int? State { get; set; }
     }
 
     public class BizCustomerDelViewModel
@@ -56,4 +58,6 @@ namespace Sintoacct.Ledger.Models
 
         public string PromChain { get; set; }
     }
+
+    
 }

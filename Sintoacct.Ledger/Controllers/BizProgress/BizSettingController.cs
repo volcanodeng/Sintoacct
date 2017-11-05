@@ -47,7 +47,7 @@ namespace Sintoacct.Ledger.Controllers.BizProgress
         [ClaimsAuthorize("role", "business")]
         public JsonResult GetBizStepInItem(int id)
         {
-            return Json(Mapper.Map<List<BizStepsViewModel>>(_bizSetting.GetBizStepInItem(id)), JsonRequestBehavior.AllowGet);
+            return Json(Mapper.Map<List<BizStepsViewModel>>(_bizSetting.GetBizStepInItem(id)), "text/html", JsonRequestBehavior.AllowGet);
         }
     }
 }

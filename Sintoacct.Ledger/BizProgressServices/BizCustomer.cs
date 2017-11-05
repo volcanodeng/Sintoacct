@@ -23,12 +23,21 @@ namespace Sintoacct.Ledger.BizProgressServices
             return _context.Customers.Where(c=>condition.CusId.Value==c.CusId).ToList();
 
             return _context.Customers.Where(c => (string.IsNullOrEmpty(condition.CustomerName) || c.CustomerName.Contains(condition.CustomerName)) && 
-                                                 (string.IsNullOrEmpty(condition.Phone) || c.Phone.Contains(condition.Phone))).ToList();
+                                                 (string.IsNullOrEmpty(condition.Phone) || c.Phone.Contains(condition.Phone)) &&
+                                                 (!condition.State.HasValue) || (int)c.State==condition.State.Value)
+                                     .OrderByDescending(c=>c.State).ToList();
         }
 
         public List<Customers> GetCustomers()
         {
             BizCustomerConditionViewModel cond = new BizCustomerConditionViewModel();
+            return this.GetCustomers(cond);
+        }
+
+        public List<Customers> GetValidCustomers()
+        {
+            BizCustomerConditionViewModel cond = new BizCustomerConditionViewModel();
+            cond.State = (int)CustomerState.Normal;
             return this.GetCustomers(cond);
         }
 
@@ -48,7 +57,7 @@ namespace Sintoacct.Ledger.BizProgressServices
             else
             {
                 cust = new Customers();
-                cust.PromId = customer.PromId;
+                //cust.PromId = customer.PromId;
                 cust.PromName = customer.PromName;
                 cust.State = CustomerState.Normal;
             }
@@ -57,7 +66,7 @@ namespace Sintoacct.Ledger.BizProgressServices
             cust.BusinessAddress = customer.BusinessAddress;
             cust.Contacts = customer.Contacts;
             cust.Phone = customer.Phone;
-            cust.Level = customer.Level;
+            cust.Level = (CustomerLevel)customer.Level;
 
             _context.Customers.AddOrUpdate(cust);
             _context.SaveChanges();
