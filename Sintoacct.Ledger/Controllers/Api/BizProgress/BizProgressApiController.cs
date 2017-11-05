@@ -5,6 +5,7 @@ using System.Web;
 using System.Net;
 using System.Web.Http;
 using System.Net.Http;
+using System.IO;
 using AutoMapper;
 using System.Threading.Tasks;
 using Sintoacct.Ledger.Common;
@@ -96,7 +97,19 @@ namespace Sintoacct.Ledger.Controllers.Api
                 // This illustrates how to get the file names.
                 foreach (MultipartFileData file in provider.FileData)
                 {
-                    if (System.IO.File.Exists(file.LocalFileName)) System.IO.File.Move(file.LocalFileName, string.Format("{0}{1}", file.LocalFileName, System.IO.Path.GetExtension(file.Headers.ContentDisposition.FileName.Replace("\"", ""))));
+                    if (File.Exists(file.LocalFileName))
+                    {
+                        FileInfo fi = new FileInfo(file.LocalFileName);
+                        if (fi.Length < 500)
+                        {
+                            File.Delete(file.LocalFileName);
+                            continue;
+                        }
+                        else
+                        {
+                            File.Move(file.LocalFileName, string.Format("{0}{1}", file.LocalFileName, Path.GetExtension(file.Headers.ContentDisposition.FileName.Replace("\"", ""))));
+                        }
+                    }
 
                     fileNames.Add(file.Headers.ContentDisposition.FileName, file.LocalFileName);
                 }
@@ -110,8 +123,11 @@ namespace Sintoacct.Ledger.Controllers.Api
                 decimal ae;
                 if (decimal.TryParse(HttpContext.Current.Request.Form["AdvanceExpenditure"], out ae)) wProg.AdvanceExpenditure = ae;
 
-                wProg.FileName = string.Format("{0}{1}",  System.IO.Path.GetFileName(fileNames.Values.FirstOrDefault()), System.IO.Path.GetExtension(fileNames.Keys.FirstOrDefault().Replace("\"",""))); 
-                wProg.Url = string.Format("{0}/{1}", _uploadPath, System.IO.Path.GetFileName(wProg.FileName));
+                if (fileNames.Count > 0)
+                {
+                    wProg.FileName = string.Format("{0}{1}", Path.GetFileName(fileNames.Values.FirstOrDefault()), Path.GetExtension(fileNames.Keys.FirstOrDefault().Replace("\"", "")));
+                    wProg.Url = string.Format("{0}/{1}", _uploadPath, Path.GetFileName(wProg.FileName));
+                }
                 _progress.SaveWorkProgress(wProg);
 
 

@@ -153,7 +153,8 @@ namespace Sintoacct.Ledger.BizProgressServices
             wProg.CompletedTime = workProg.CompletedTime;
             wProg.ResultDesc = workProg.ResultDesc;
             wProg.AdvanceExpenditure = workProg.AdvanceExpenditure;
-
+            wProg.CreateTime = DateTime.Now;
+            wProg.Creator = _identity.Claims.Where(c => c.Type == "name").FirstOrDefault().Value;
             //重算代垫费用
             wProg.WorkOrder.AdvanceExpenditure = wProg.WorkOrder.WorkProgresses.Sum(p => p.AdvanceExpenditure);
 
