@@ -45,4 +45,9 @@ namespace Sintoacct.Ledger.Models
 
         public int ItemId { get; set; }
     }
+
+    public class BizConfigDeleteViewModel
+    {
+        public int id { get; set; }
+    }
 }

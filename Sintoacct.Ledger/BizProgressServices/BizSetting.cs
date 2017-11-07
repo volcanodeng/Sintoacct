@@ -126,6 +126,15 @@ namespace Sintoacct.Ledger.BizProgressServices
 
             return bizStep;
         }
+
+        public void DeleteBizStep(int stepId)
+        {
+            BizSteps step = this.GetStep(stepId);
+            if (step == null) throw new ArgumentNullException("找不到步骤信息：" + stepId);
+
+            _context.BizSteps.Remove(step);
+            _context.SaveChanges();
+        }
     }
 
 

@@ -100,7 +100,7 @@
     </div>
     <div id="dialogCus" class="easyui-dialog" title="业务类别" style="width:500px;height:650px;"
          data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnCus'">
-        <form method="post" id="cusForm">
+        <form method="post" id="cateForm">
             <ul>
                 <li>
                     <label for="CustomerName">业务类别:</label>
@@ -132,22 +132,22 @@
         });
 
         function init() {
-            $("#cusForm").form({
+            $("#cateForm").form({
                 url: "/api/BizCustomer/SaveBizCustomer/",
-                onSubmit: cusFormOnSubmit,
-                success: cusFormSuccess
+                onSubmit: cateFormOnSubmit,
+                success: cateFormSuccess
             });
 
         }
 
         
 
-        function cusFormOnSubmit() {
+        function cateFormOnSubmit() {
             $("#PromName").val($("#PromId").combobox("getText"));
             return $(this).form('validate');
         }
 
-        function cusFormSuccess(data) {
+        function cateFormSuccess(data) {
             if (responseHandle(data)) {
                 formSubmit();
                 closeBiz();
@@ -157,8 +157,8 @@
         
 
         function add() {
-            $("#cusForm").form("clear");
-            $("#cusForm").form("load", {
+            $("#cateForm").form("clear");
+            $("#cateForm").form("load", {
                 CusId: 0
             });
             $("#dialogCus").dialog("open");
@@ -170,7 +170,7 @@
                 $.messager.alert('编辑', '请选择一个要编辑的客户信息', 'info');
                 return false;
             }
-            $("#cusForm").form("load", {
+            $("#cateForm").form("load", {
                 CusId: selRow.CusId,
                 CustomerName: selRow.CustomerName,
                 PromId: selRow.PromId,
@@ -205,7 +205,7 @@
         }
 
         function saveBiz() {
-            $('#cusForm').submit();
+            $('#cateForm').submit();
         }
 
         function cateOnClickRow(index, row) {

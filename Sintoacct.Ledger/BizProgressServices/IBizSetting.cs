@@ -24,5 +24,6 @@ namespace Sintoacct.Ledger.BizProgressServices
 
         BizSteps SaveBizStep(BizStepsViewModel step);
 
+        void DeleteBizStep(int stepId);
     }
 }
