@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Security.Claims;
 using Sintoacct.Ledger.BizProgressServices;
 using Sintoacct.Ledger.Services;
+using Sintoacct.Ledger.Common;
 
 namespace Sintoacct.Ledger.Controllers
 {
@@ -41,6 +42,11 @@ namespace Sintoacct.Ledger.Controllers
         {
             return Json(_company.GetBizPersons());
         }
-        
+
+        [ClaimsAuthorize("role", "business")]
+        public JsonResult GetWorkOrderPriority()
+        {
+            return Json(EnumJson.Convert(typeof(Sintoacct.Progress.Models.WorkOrderPriority)), "text/html", JsonRequestBehavior.AllowGet);
+        }
     }
 }

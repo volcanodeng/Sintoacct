@@ -113,12 +113,13 @@
                         <th data-options="field:'BizItemNames',width:100">业务项目</th>
                         <th data-options="field:'Remark',width:100">客户要求</th>
                         <th data-options="field:'BizManager',align:'center',width:50">业务主管</th>
-                        
+                        <th data-options="field:'FinishTime',align:'center',width:50,formatter:fmtDate">办结时间</th>
                         <th data-options="field:'CommercialExpense',align:'right',width:50,formatter:fmtRMB">业务费用</th>
                         <th data-options="field:'PreferentialAmount',align:'right',width:50,formatter:fmtRMB">优惠金额</th>
                         <th data-options="field:'AdvanceExpenditure',align:'right',width:50,formatter:fmtRMB">代垫支出</th>
                         <th data-options="field:'AmountReceived',align:'right',width:50,formatter:fmtRMB">已收金额</th>
                         <th data-options="field:'State',align:'center',width:50,formatter:fmtState">状态</th>
+                        <th data-options="field:'Priority',align:'center',width:50,formatter:fmtPriority">优先级</th>
                     </tr>
                 </thead>
             </table>
@@ -152,7 +153,7 @@
         </div>
     </div>
 
-    <div id="dialogBiz" class="easyui-dialog" title="工单信息" style="width:750px;height:500px;"
+    <div id="dialogBiz" class="easyui-dialog" title="工单信息" style="width:750px;height:550px;"
          data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnBiz'">
         <form method="post" id="woForm" >
             <ul>
@@ -182,6 +183,20 @@
                         <label for="Remark">客户要求:</label>
                         <input id="Remark" name="Remark" class="easyui-textbox"
                                data-options="prompt:'请输入客户要求',width:600,height:60,missingMessage:'请输入客户要求',multiline:true" />
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <label for="FinishTime">办结时间:</label>
+                        <input id="FinishTime" name="FinishTime" class="easyui-datebox"
+                               data-options="prompt:'请输入办结时间',required:false,width:255,height:35,missingMessage:'请输入办结时间'" />
+                    </div>
+                    <div>
+                        
+                            <label for="Priority">优先级:</label>
+                            <input id="Priority" name="Priority" class="easyui-combobox"
+                                   data-options="prompt:'请选择处理优先级',required:true,width:255,height:35,missingMessage:'请选择处理优先级',valueField:'Value',textField:'Name',url:'/BizProgress/GetWorkOrderPriority'" />
+                       
                     </div>
                 </li>
                 <li>
@@ -265,7 +280,7 @@
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-times fa-lg',plain:false,width:70" onclick="closeBiz()">关闭</a>
     </div>
     <div id="btnProg">
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-floppy-o fa-lg',plain:false,width:70" onclick="saveProg()">保存</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-floppy-o fa-lg',plain:false,width:70" id="btnSaveProg" onclick="saveProg()">保存</a>
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-times fa-lg',plain:false,width:70" onclick="closeProg()">关闭</a>
     </div>
     @Scripts.Render("~/bundles/jquery")
@@ -274,7 +289,8 @@
     <script type="text/javascript">
 
         var global = {
-            items:null
+            items: null,
+            serverTime : "@DateTime.Now.ToShortDateString()"
         };
 
         $(function () {
@@ -423,6 +439,8 @@
                 CommercialExpense: selRow.CommercialExpense,
                 AdvanceExpenditure:selRow.AdvanceExpenditure,
                 PreferentialAmount: selRow.PreferentialAmount,
+                Priority: selRow.Priority,
+                FinishTime:selRow.FinishTime,
                 mgr: selRow.BizManager,
                 ops: selRow.BizOperations,
                 rec: selRow.Recommend
@@ -484,6 +502,17 @@
             {
                 $("#progItems").combobox("select", itemList[0].ItemId);
             }
+
+            var fDate = new Date(Date.parse(fmtDate(row.FinishTime).replace(/-/g, "/")));
+            var curDate = new Date(Date.parse(global.serverTime.replace(/-/g, "/")));
+            if(fDate<curDate)
+            {
+                $("#btnSaveProg").hide();
+            }
+            else
+            {
+                $("#btnSaveProg").show();
+            }
         }
 
         function editProg()
@@ -539,6 +568,19 @@
         function saveProg()
         {
             $('#progForm').submit();
+        }
+
+        function fmtPriority(value, row, index)
+        {
+            switch(value)
+            {
+                case 1:
+                    return "可延迟处理";
+                case 2:
+                    return "限时办理";
+                case 3:
+                    return "紧急处理";
+            }
         }
 
         $.parser.onComplete = function () {

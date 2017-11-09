@@ -112,6 +112,8 @@ namespace Sintoacct.Ledger.BizProgressServices
             wo.BizOperations = workOrder.BizOperations;
             wo.Recommend = workOrder.Recommend;
             wo.PreferentialAmount = workOrder.PreferentialAmount;
+            wo.Priority = (WorkOrderPriority)workOrder.Priority;
+            wo.FinishTime = workOrder.FinishTime;
 
             _context.WorkOrders.AddOrUpdate(wo);
             _context.SaveChanges();

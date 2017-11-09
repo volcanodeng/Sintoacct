@@ -24,7 +24,7 @@ namespace Sintoacct.Ledger.BizProgressServices
 
         public BizCategory GetBizCategory(int cateId)
         {
-            return _context.BizCategories.Include("BizItems").Include("BizSteps").Where(c => c.CateId == cateId).FirstOrDefault();
+            return _context.BizCategories.Include("BizItems").Where(c => c.CateId == cateId).FirstOrDefault();
         }
 
         public BizCategory SaveCategory(BizCategoryViewModel cate)

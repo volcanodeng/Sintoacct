@@ -43,7 +43,7 @@
        
         <div data-options="region:'west',border:true" title="业务类别" style="padding:10px;width:400px;">
             <table class="easyui-datagrid" id="cateList" 
-                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#cateToolbar',onClickRow:cateOnClickRow,idField:'CateId',url:'/BizSetting/GetBizCategories'">
+                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#cateToolbar',onClickRow:cateOnClickRow,idField:'CateId',url:'/BizSetting/GetBizCategories',onDblClickCell:cateOnDblClickCell">
                 <thead>
                     <tr>
                         <th data-options="field:'CateId',width:50,align:'center'">类别编码</th>
@@ -56,7 +56,7 @@
         </div>
         <div data-options="region:'center',border:true" title="业务项目" style="padding:10px;">
             <table class="easyui-datagrid" id="itemList" 
-                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#itemToolbar',onClickRow:itemOnClickRow,idField:'ItemId'">
+                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#itemToolbar',onClickRow:itemOnClickRow,idField:'ItemId',onDblClickCell:itemOnDblClickCell">
                 <thead>
                     <tr>
                         <th data-options="field:'ItemId',width:50,align:'center'">项目编号</th>
@@ -70,7 +70,7 @@
         </div>
         <div data-options="region:'east',border:true" title="工作步骤" style="padding:10px;width:400px;">
             <table class="easyui-datagrid" id="stepList"
-                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#stepToolbar',idField:'StepId'">
+                   data-options="fit:true,singleSelect:true,fitColumns:true,toolbar:'#stepToolbar',idField:'StepId',onDblClickCell:stepOnDblClickCell">
                 <thead>
                     <tr>
                         <th data-options="field:'StepId',width:50,align:'center'">步骤编码</th>
@@ -89,39 +89,96 @@
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="del()">删除类别</a>
     </div>
     <div id="itemToolbar">
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-plus fa-lg',plain:true" onclick="add()">新增项目</a>
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="edit()">修改项目</a>
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="del()">删除项目</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-plus fa-lg',plain:true" onclick="addItem()">新增项目</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="editItem()">修改项目</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="delItem()">删除项目</a>
     </div>
     <div id="stepToolbar">
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-plus fa-lg',plain:true" onclick="add()">新增类别</a>
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="edit()">修改类别</a>
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="del()">删除类别</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-plus fa-lg',plain:true" onclick="addStep()">新增步骤</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="editStep()">修改步骤</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="delStep()">删除步骤</a>
     </div>
-    <div id="dialogCus" class="easyui-dialog" title="业务类别" style="width:500px;height:650px;"
-         data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnCus'">
+    <div id="dialogCate" class="easyui-dialog" title="业务类别" style="width:500px;height:650px;"
+         data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnCate'">
         <form method="post" id="cateForm">
             <ul>
                 <li>
-                    <label for="CustomerName">业务类别:</label>
-                    <input id="CustomerName" name="CustomerName" class="easyui-textbox"
+                    <label for="CategoryName">业务类别:</label>
+                    <input id="CategoryName" name="CategoryName" class="easyui-textbox"
                            data-options="prompt:'请填写业务类别',required:true,width:260,height:35,missingMessage:'请填写业务类别'" />
-                    <input type="hidden" id="CusId" name="CusId" />
+                    <input type="hidden" id="CateId" name="CateId" />
                 </li>
                 <li>
                     <label for="PromId">排序号:</label>
-                    <input id="PromId" name="PromId" class="easyui-combobox"
-                           data-options="prompt:'请选择推荐人',required:true,width:260,height:35,missingMessage:'请选择推荐人',editable:false,valueField:'UserId',textField:'UserName',url:'/BizProgress/GetBizPersons'" />
-                    <input type="hidden" id="PromName" name="PromName" />
+                    <input id="SortIndex" name="SortIndex" class="easyui-numberbox"
+                           data-options="prompt:'请设置排序号',required:false,width:260,height:35,missingMessage:'请设置排序号',value:1" />
+                    
                 </li>
 
             </ul>
         </form>
     </div>
-    <div id="btnCus">
+    <div id="btnCate">
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-floppy-o fa-lg',plain:false,width:70" onclick="saveBiz()">保存</a>
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-times fa-lg',plain:false,width:70" onclick="closeBiz()">关闭</a>
     </div>
+
+    <div id="dialogItem" class="easyui-dialog" title="业务项目" style="width:500px;height:650px;"
+         data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnItem'">
+        <form method="post" id="itemForm">
+            <ul>
+                <li>
+                    <label for="ItemName">项目名称:</label>
+                    <input id="ItemName" name="ItemName" class="easyui-textbox"
+                           data-options="prompt:'请填写项目名称',required:true,width:260,height:35,missingMessage:'请填写项目名称'" />
+                    <input type="hidden" id="ItemId" name="ItemId" />
+                    <input type="hidden" id="CateId" name="CateId" />
+                </li>
+                <li>
+                    <label for="ServicePrice">项目价格:</label>
+                    <input id="ServicePrice" name="ServicePrice" class="easyui-numberbox" value="0.00"
+                           data-options="prompt:'请设置项目价格',required:false,width:260,height:35,missingMessage:'请设置项目价格',precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'¥'" />
+
+                </li>
+                <li>
+                    <label for="PromId">排序号:</label>
+                    <input id="SortIndex" name="SortIndex" class="easyui-numberbox"
+                           data-options="prompt:'请设置排序号',required:false,width:260,height:35,missingMessage:'请设置排序号',value:1" />
+
+                </li>
+            </ul>
+        </form>
+    </div>
+    <div id="btnItem">
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-floppy-o fa-lg',plain:false,width:70" onclick="saveItem()">保存</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-times fa-lg',plain:false,width:70" onclick="closeItem()">关闭</a>
+    </div>
+
+    <div id="dialogStep" class="easyui-dialog" title="工作步骤" style="width:500px;height:650px;"
+         data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnStep'">
+        <form method="post" id="stepForm">
+            <ul>
+                <li>
+                    <label for="StepName">步骤名称:</label>
+                    <input id="StepName" name="StepName" class="easyui-textbox"
+                           data-options="prompt:'请填写步骤名称',required:true,width:260,height:35,missingMessage:'请填写步骤名称'" />
+                    <input type="hidden" id="StepId" name="StepId" />
+                    <input type="hidden" id="ItemId" name="ItemId" />
+                </li>
+                <li>
+                    <label for="PromId">排序号:</label>
+                    <input id="SortIndex" name="SortIndex" class="easyui-numberbox"
+                           data-options="prompt:'请设置排序号',required:false,width:260,height:35,missingMessage:'请设置排序号',value:1" />
+
+                </li>
+            </ul>
+        </form>
+    </div>
+    <div id="btnStep">
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-floppy-o fa-lg',plain:false,width:70" onclick="saveStep()">保存</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-times fa-lg',plain:false,width:70" onclick="closeStep()">关闭</a>
+    </div>
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/easyui")
     <script type="text/javascript">
@@ -133,35 +190,63 @@
 
         function init() {
             $("#cateForm").form({
-                url: "/api/BizCustomer/SaveBizCustomer/",
+                url: "/api/BizSetting/SaveBizCategory/",
                 onSubmit: cateFormOnSubmit,
                 success: cateFormSuccess
             });
 
+            $("#itemForm").form({
+                url: "/api/BizSetting/SaveBizItem/",
+                onSubmit: itemFormOnSubmit,
+                success: itemFormSuccess
+            });
+
+            $("#stepForm").form({
+                url: "/api/BizSetting/SaveBizStep/",
+                onSubmit: stepFormOnSubmit,
+                success: stepFormSuccess
+            });
         }
 
-        
-
         function cateFormOnSubmit() {
-            $("#PromName").val($("#PromId").combobox("getText"));
             return $(this).form('validate');
         }
 
         function cateFormSuccess(data) {
             if (responseHandle(data)) {
-                formSubmit();
+                $("#cateList").datagrid("reload");
                 closeBiz();
             }
         }
 
-        
+        function itemFormOnSubmit() {
+            return $(this).form('validate');
+        }
+
+        function itemFormSuccess(data) {
+            if (responseHandle(data)) {
+                cateOnClickRow(0, $("#cateList").datagrid("getSelected"));
+                closeItem();
+            }
+        }
+
+        function stepFormOnSubmit() {
+            return $(this).form('validate');
+        }
+
+        function stepFormSuccess(data) {
+            if (responseHandle(data)) {
+                itemOnClickRow(0, $("#itemList").datagrid("getSelected"));
+                closeStep();
+            }
+        }
 
         function add() {
             $("#cateForm").form("clear");
             $("#cateForm").form("load", {
-                CusId: 0
+                CateId: 0
             });
-            $("#dialogCus").dialog("open");
+            $("#dialogCate").dialog("open");
         }
 
         function edit() {
@@ -171,29 +256,24 @@
                 return false;
             }
             $("#cateForm").form("load", {
-                CusId: selRow.CusId,
-                CustomerName: selRow.CustomerName,
-                PromId: selRow.PromId,
-                CustomerAddress: selRow.CustomerAddress,
-                BusinessAddress: selRow.BusinessAddress,
-                Contacts: selRow.Contacts,
-                Phone: selRow.Phone,
-                Level: selRow.Level
+                CateId: selRow.CateId,
+                CategoryName: selRow.CategoryName,
+                SortIndex: selRow.SortIndex
             });
-            $("#dialogCus").dialog("open");
+            $("#dialogCate").dialog("open");
         }
 
         function del() {
             var selRow = $("#cateList").datagrid("getSelected");
             if (selRow == null) {
-                $.messager.alert('删除', '请选择要删除的客户信息', 'info');
+                $.messager.alert('删除', '请选择要删除的业务类别', 'info');
                 return false;
             }
-            $.messager.confirm('删除', '你确定要删除该客户信息吗？', function (r) {
+            $.messager.confirm('删除', '你确定要删除该业务类别吗？', function (r) {
                 if (r) {
-                    $.post("/api/BizCustomer/Delete/", { CusId: selRow.CusId }, function (data) {
+                    $.post("/api/BizSetting/DeleteBizCategory/", { id: selRow.CateId }, function (data) {
                         if (responseHandle(data)) {
-                            formSubmit();
+                            $("#cateList").datagrid("reload");
                         }
                     });
                 }
@@ -201,7 +281,7 @@
         }
 
         function closeBiz() {
-            $("#dialogCus").dialog("close");
+            $("#dialogCate").dialog("close");
         }
 
         function saveBiz() {
@@ -209,9 +289,15 @@
         }
 
         function cateOnClickRow(index, row) {
+
             $.post("/BizSetting/GetBizItemInCate", { id: row.CateId }, function (data) {
                 $("#itemList").datagrid("loadData", JSON.parse(data));
             });
+        }
+
+        function cateOnDblClickCell(index, row)
+        {
+            edit();
         }
 
         function itemOnClickRow(index, row)
@@ -219,6 +305,132 @@
             $.post("/BizSetting/GetBizStepInItem", { id: row.ItemId }, function (data) {
                 $("#stepList").datagrid("loadData",JSON.parse( data));
             });
+        }
+
+        function addItem() {
+            $("#itemForm").form("clear");
+            $("#itemForm").form("load", {
+                CateId: 0
+            });
+            $("#dialogItem").dialog("open");
+        }
+
+        function editItem() {
+            var selRow = $("#itemList").datagrid("getSelected");
+            if (selRow == null) {
+                $.messager.alert('编辑', '请选择要编辑的业务项目', 'info');
+                return false;
+            }
+            var cate = $("#cateList").datagrid("getSelected");
+            if(cate == null)
+            {
+                $.messager.alert('编辑', '请选择要编辑的业务类别', 'info');
+                return false;
+            }
+            $("#itemForm").form("load", {
+                ItemId: selRow.ItemId,
+                CateId: cate.CateId,
+                ItemName: selRow.ItemName,
+                ServicePrice:selRow.ServicePrice,
+                SortIndex: selRow.SortIndex
+            });
+            $("#dialogItem").dialog("open");
+        }
+
+        function delItem() {
+            var selRow = $("#itemList").datagrid("getSelected");
+            if (selRow == null) {
+                $.messager.alert('删除', '请选择要删除的业务项目', 'info');
+                return false;
+            }
+            $.messager.confirm('删除', '你确定要删除该业务项目吗？', function (r) {
+                if (r) {
+                    $.post("/api/BizSetting/DeleteBizItem/", { id: selRow.ItemId }, function (data) {
+                        if (responseHandle(data)) {
+                            cateOnClickRow(0, $("#cateList").datagrid("getSelected"));
+                        }
+                    });
+                }
+            });
+        }
+
+        function saveItem()
+        {
+            $('#itemForm').submit();
+        }
+
+        function closeItem()
+        {
+            $("#dialogItem").dialog("close");
+        }
+
+        function itemOnDblClickCell(index, row)
+        {
+            editItem();
+        }
+
+        function addStep() {
+
+            var item = $("#itemList").datagrid("getSelected");
+            if (item == null)
+            {
+                $.messager.alert('新增', '请选择一个业务项目', 'info');
+                return false;
+            }
+
+            $("#stepForm").form("clear");
+            $("#stepForm").form("load", {
+                StepId: 0,
+                ItemId:item.ItemId
+            });
+            $("#dialogStep").dialog("open");
+        }
+
+        function editStep() {
+            var selRow = $("#stepList").datagrid("getSelected");
+            if (selRow == null) {
+                $.messager.alert('编辑', '请选择一个要编辑的客户信息', 'info');
+                return false;
+            }
+            $("#stepForm").form("load", {
+                StepId: selRow.StepId,
+                ItemId:selRow.ItemId,
+                StepName: selRow.StepName,
+                SortIndex: selRow.SortIndex
+            });
+            $("#dialogStep").dialog("open");
+        }
+
+        function delStep() {
+            var selRow = $("#stepList").datagrid("getSelected");
+            if (selRow == null) {
+                $.messager.alert('删除', '请选择要删除的工作步骤', 'info');
+                return false;
+            }
+            $.messager.confirm('删除', '你确定要删除该工作步骤吗？', function (r) {
+                if (r) {
+                    $.post("/api/BizSetting/DeleteBizStep/", { id: selRow.StepId }, function (data) {
+                        if (responseHandle(data)) {
+                            itemOnClickRow(0, $("#itemList").datagrid("getSelected"));
+                        }
+                    });
+                }
+            });
+        }
+
+        function saveStep()
+        {
+            $('#stepForm').submit();
+        }
+
+        function closeStep()
+        {
+            $("#dialogStep").dialog("close");
+        }
+
+        function stepOnDblClickCell(index, row)
+        {
+            editStep();
         }
 
     </script>

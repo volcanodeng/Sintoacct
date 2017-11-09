@@ -22,9 +22,14 @@ namespace Sintoacct.Ledger.Controllers.Api
         public IHttpActionResult SaveBizCategory(BizCategoryViewModel category)
         {
 
-
-            _setting.SaveCategory(category);
-
+            try
+            {
+                _setting.SaveCategory(category);
+            }
+            catch(Exception err)
+            {
+                ResMessage.Fail(err.Message);
+            }
             return Ok(ResMessage.Success());
         }
 
@@ -33,8 +38,14 @@ namespace Sintoacct.Ledger.Controllers.Api
         public IHttpActionResult DeleteBizCategory(BizConfigDeleteViewModel category)
         {
 
-
-            _setting.DeleteCategory(category.id);
+            try
+            {
+                _setting.DeleteCategory(category.id);
+            }
+            catch(Exception err)
+            {
+                ResMessage.Fail(err.Message);
+            }
 
             return Ok(ResMessage.Success());
         }
@@ -43,10 +54,14 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, HttpPost, Route("api/BizSetting/SaveBizItem")]
         public IHttpActionResult SaveBizItem(BizItemViewModel item)
         {
-
-
-            _setting.SaveBizItem(item);
-
+            try
+            {
+                _setting.SaveBizItem(item);
+            }
+            catch(Exception err)
+            {
+                ResMessage.Fail(err.Message);
+            }
             return Ok(ResMessage.Success());
         }
 
@@ -55,8 +70,14 @@ namespace Sintoacct.Ledger.Controllers.Api
         public IHttpActionResult DeleteBizItem(BizConfigDeleteViewModel item)
         {
 
-
-            _setting.DeleteBizItem(item.id);
+            try
+            {
+                _setting.DeleteBizItem(item.id);
+            }
+            catch(Exception err)
+            {
+                ResMessage.Fail(err.Message);
+            }
 
             return Ok(ResMessage.Success());
         }
@@ -66,8 +87,14 @@ namespace Sintoacct.Ledger.Controllers.Api
         public IHttpActionResult SaveBizStep(BizStepsViewModel step)
         {
 
-
-            _setting.SaveBizStep(step);
+            try
+            {
+                _setting.SaveBizStep(step);
+            }
+            catch(Exception err)
+            {
+                ResMessage.Fail(err.Message);
+            }
 
             return Ok(ResMessage.Success());
         }
@@ -76,9 +103,14 @@ namespace Sintoacct.Ledger.Controllers.Api
         [HttpGet, HttpPost, Route("api/BizSetting/DeleteBizStep")]
         public IHttpActionResult DeleteBizStep(BizConfigDeleteViewModel step)
         {
-
-
-            _setting.DeleteBizStep(step.id);
+            try
+            {
+                _setting.DeleteBizStep(step.id);
+            }
+            catch(Exception err)
+            {
+                ResMessage.Fail(err.Message);
+            }
 
             return Ok(ResMessage.Success());
         }

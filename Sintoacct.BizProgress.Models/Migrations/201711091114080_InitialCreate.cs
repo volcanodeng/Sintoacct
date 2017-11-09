@@ -96,6 +96,8 @@ namespace Sintoacct.Progress.Models.Migrations
                         PreferentialAmount = c.Decimal(nullable: false, precision: 18, scale: 2),
                         AdvanceExpenditure = c.Decimal(nullable: false, precision: 18, scale: 2),
                         AmountReceived = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        Priority = c.Int(nullable: false),
+                        FinishTime = c.DateTime(),
                         Creator = c.String(maxLength: 50),
                         CreateTime = c.DateTime(nullable: false),
                         State = c.Int(nullable: false),
@@ -112,14 +114,13 @@ namespace Sintoacct.Progress.Models.Migrations
                 c => new
                     {
                         CusId = c.Long(nullable: false, identity: true),
-                        CustomerName = c.String(maxLength: 50),
-                        CustomerAddress = c.String(maxLength: 200),
+                        CustomerName = c.String(nullable: false, maxLength: 50),
+                        CustomerAddress = c.String(nullable: false, maxLength: 200),
                         BusinessAddress = c.String(maxLength: 200),
-                        Contacts = c.String(maxLength: 50),
+                        Contacts = c.String(nullable: false, maxLength: 50),
                         Phone = c.String(nullable: false, maxLength: 20),
-                        Level = c.Int(),
-                        PromId = c.String(maxLength: 50),
-                        PromName = c.String(maxLength: 50),
+                        Level = c.Int(nullable: false),
+                        PromName = c.String(nullable: false, maxLength: 150),
                         State = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.CusId);

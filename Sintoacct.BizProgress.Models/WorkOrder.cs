@@ -88,6 +88,16 @@ namespace Sintoacct.Progress.Models
         public decimal AmountReceived { get; set; }
 
         /// <summary>
+        /// 优先级
+        /// </summary>
+        public WorkOrderPriority Priority { get; set; }
+
+        /// <summary>
+        /// 办结时间
+        /// </summary>
+        public DateTime? FinishTime { get; set; }
+
+        /// <summary>
         /// 创建者
         /// </summary>
         [MaxLength(50)]
@@ -114,6 +124,9 @@ namespace Sintoacct.Progress.Models
         public virtual ICollection<WorkProgress> WorkProgresses { get; set; }
     }
 
+    /// <summary>
+    /// 工单状态
+    /// </summary>
     public enum WorkOrderState
     {
         /// <summary>
@@ -132,5 +145,15 @@ namespace Sintoacct.Progress.Models
         /// 已删除
         /// </summary>
         Deleted = -1
+    }
+
+    /// <summary>
+    /// 工单优先级
+    /// </summary>
+    public enum WorkOrderPriority
+    {
+        可延迟处理 =1,
+        限时办理 = 2,
+        紧急处理 = 3
     }
 }
