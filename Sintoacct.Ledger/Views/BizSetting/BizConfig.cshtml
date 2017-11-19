@@ -309,8 +309,16 @@
 
         function addItem() {
             $("#itemForm").form("clear");
+
+            var cate = $("#cateList").datagrid("getSelected");
+            if (!cate)
+            {
+                $.messager.alert('业务项目', '请先选择一个业务类别!', 'info');
+            }
+
             $("#itemForm").form("load", {
-                CateId: 0
+                CateId: cate.CateId,
+                ItemId:0
             });
             $("#dialogItem").dialog("open");
         }
