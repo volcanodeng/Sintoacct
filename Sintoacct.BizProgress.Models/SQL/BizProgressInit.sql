@@ -2137,3 +2137,4 @@ SET IDENTITY_INSERT [T_Prog_BizSteps] OFF
 /*³õÊ¼»¯½ÇÉ«*/
 insert into [Sintoacct.Ledger].dbo.AspNetRoles values('EB4F86F5-B307-466D-B7DD-B3400F1E7FEA','business')
 insert into [Sintoacct.Ledger].dbo.AspNetRoles values('0284200F-F702-41D2-8E86-FB94B091271A','progress-record')
+insert into [Sintoacct.Ledger].dbo.AspNetRoles values('3695FE06-EFEB-4C85-9B47-078D66BAAEB3','progress-admin')

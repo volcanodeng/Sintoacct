@@ -17,6 +17,7 @@ namespace Sintoacct.Ledger.BizProgressServices
         private readonly ClaimsIdentity _identity;
         private readonly IBizCustomer _customer;
         private readonly IBizSetting _setting;
+        private bool _isAdmin;
 
         public BizProgressService(BizProgressContext progContext, 
                                   HttpContextBase context,
@@ -27,6 +28,8 @@ namespace Sintoacct.Ledger.BizProgressServices
             _identity = context.User.Identity as ClaimsIdentity;
             _customer = customer;
             _setting = setting;
+
+            _isAdmin = _identity.HasClaim("role", "progress-admin"); 
         }
 
         public List<WorkOrder> GetMyWorkOrders(int pageIndex,int pageSize)
@@ -34,7 +37,7 @@ namespace Sintoacct.Ledger.BizProgressServices
             string curUser = _identity.GetUserName();
             return _context.WorkOrders
                            .Include("WorkOrderItems").Include("WorkOrderItems.BizItem").Include("Customer")
-                           .Where(p => p.Creator == curUser && p.State != WorkOrderState.Deleted)
+                           .Where(p => (p.Creator == curUser || _isAdmin) && p.State != WorkOrderState.Deleted)
                            .OrderByDescending(p => p.WoId)
                            .Skip(pageIndex * pageSize)
                            .Take(pageSize)
@@ -53,7 +56,7 @@ namespace Sintoacct.Ledger.BizProgressServices
 
         public WorkOrder GetMyWorkOrder(long woId)
         {
-            return _context.WorkOrders.Where(p => p.Creator == _identity.GetUserName() && p.WoId == woId).FirstOrDefault();
+            return _context.WorkOrders.Where(p => (p.Creator == _identity.GetUserName() || _isAdmin) && p.WoId == woId).FirstOrDefault();
         }
 
         public WorkOrder SaveWorkOrder(WorkOrderViewModel workOrder)
