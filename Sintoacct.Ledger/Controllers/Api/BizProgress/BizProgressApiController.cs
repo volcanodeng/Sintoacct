@@ -29,9 +29,9 @@ namespace Sintoacct.Ledger.Controllers.Api
 
         [ClaimsAuthorize("role", "business")]
         [HttpGet, HttpPost, Route("api/BizProgress/GetMyWorkOrders")]
-        public IHttpActionResult GetMyWorkOrders()
+        public IHttpActionResult GetMyWorkOrders(WorkOrderSearchViewModel condition)
         {
-            var progList = _progress.GetMyWorkOrders();
+            var progList = _progress.GetMyWorkOrders(condition);
             return Ok(Mapper.Map<List<WorkOrderViewModel>>(progList));
         }
 

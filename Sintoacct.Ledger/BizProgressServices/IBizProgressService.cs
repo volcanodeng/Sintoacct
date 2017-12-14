@@ -8,8 +8,8 @@ namespace Sintoacct.Ledger.BizProgressServices
     {
         WorkOrder GetWorkOrder(long bizId);
         WorkOrder GetMyWorkOrder(long bizId);
-        List<WorkOrder> GetMyWorkOrders();
-        List<WorkOrder> GetMyWorkOrders(int pageIndex, int pageSize);
+        List<WorkOrder> GetMyWorkOrders(WorkOrderSearchViewModel condition);
+        List<WorkOrder> GetMyWorkOrders(WorkOrderSearchViewModel condition, int pageIndex, int pageSize);
         WorkOrder SaveWorkOrder(WorkOrderViewModel bizProg);
         void DeleteWorkOrder(WorkOrderDelViewModel workOrder);
 

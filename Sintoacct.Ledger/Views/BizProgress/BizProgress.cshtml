@@ -104,7 +104,7 @@
         </div>
         <div data-options="region:'center',border:true" style="padding:10px;">
             <table class="easyui-datagrid" id="woList"
-                   data-options="fit:true,singleSelect:true,fitColumns:true,idField:'WoId',toolbar:'#dgToolbar',url:'/api/BizProgress/GetMyWorkOrders/',onDblClickCell:woOnDblClickCell,onSelect:woOnSelect">
+                   data-options="fit:true,singleSelect:true,fitColumns:true,idField:'WoId',toolbar:'#dgToolbar',onDblClickCell:woOnDblClickCell,onSelect:woOnSelect">
                 <thead>
                     <tr>
                         <th data-options="field:'WoId',align:'center',width:30">工作单号</th>
@@ -296,6 +296,7 @@
         $(function () {
             init();
 
+            $("#btnSearch").click();
             window.setTimeout(' $("#woList").datagrid("selectRow", 0)', 500);
         });
 
@@ -360,7 +361,7 @@
 
         function sFormSuccess(data)
         {
-            $("#woList").datagrid("reload");
+            $("#woList").datagrid("loadData",JSON.parse( data));
         }
 
         function progFormOnSubmit()

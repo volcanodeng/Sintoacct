@@ -49,6 +49,18 @@ namespace Sintoacct.Ledger.Models
         public long WoId { get; set; }
     }
 
+    public class WorkOrderSearchViewModel
+    {
+        public long? WoId { get; set; }
+
+        public string CusName { get; set; }
+
+        public int? BizItem { get; set; }
+
+        public string ProgDesc { get; set; }
+
+    }
+
     public class WorkProgressViewModel
     {
         public long ProgId { get; set; }

@@ -32,21 +32,26 @@ namespace Sintoacct.Ledger.BizProgressServices
             _isAdmin = _identity.HasClaim("role", "progress-admin"); 
         }
 
-        public List<WorkOrder> GetMyWorkOrders(int pageIndex,int pageSize)
+        public List<WorkOrder> GetMyWorkOrders(WorkOrderSearchViewModel condition, int pageIndex,int pageSize)
         {
             string curUser = _identity.GetUserName();
             return _context.WorkOrders
                            .Include("WorkOrderItems").Include("WorkOrderItems.BizItem").Include("Customer")
-                           .Where(p => (p.Creator == curUser || _isAdmin) && p.State != WorkOrderState.Deleted)
+                           .Where(p => (p.Creator == curUser || _isAdmin)
+                                    && p.State != WorkOrderState.Deleted
+                                    && (!condition.WoId.HasValue || p.WoId==condition.WoId.Value)
+                                    && (string.IsNullOrEmpty(condition.CusName) || p.Customer.CustomerName.Contains(condition.CusName))
+                                    && (!condition.BizItem.HasValue || p.WorkOrderItems.Any(i=>i.ItemId==condition.BizItem.Value))
+                                    && (string.IsNullOrEmpty(condition.ProgDesc) || p.WorkProgresses.Any(pg=>pg.ResultDesc.Contains(condition.ProgDesc))))
                            .OrderByDescending(p => p.WoId)
                            .Skip(pageIndex * pageSize)
                            .Take(pageSize)
                            .ToList();
         }
 
-        public List<WorkOrder> GetMyWorkOrders()
+        public List<WorkOrder> GetMyWorkOrders(WorkOrderSearchViewModel condition)
         {
-            return this.GetMyWorkOrders(0, 50);
+            return this.GetMyWorkOrders(condition, 0, 50);
         }
 
         public WorkOrder GetWorkOrder(long woId)
