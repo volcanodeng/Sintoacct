@@ -142,9 +142,12 @@
         </div>
     </div>
     <div id="dgToolbar">
+        @if (((System.Security.Claims.ClaimsIdentity)this.Context.User.Identity).HasClaim("role", "progress-admin"))
+        {
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-plus fa-lg',plain:true" onclick="addWo()">新增工单</a>
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="editWo()">修改工单</a>
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="delWo()">删除工单</a>
+        }
     </div>
     <div id="progToolbar">
         <div><span style="padding-left:12px;">业务项目：</span><input class="easyui-combobox" id="progItems"  data-options="valueField:'ItemId',textField:'ItemName',width:200,height:30,editable:false,onSelect:piOnSelect" /></div>

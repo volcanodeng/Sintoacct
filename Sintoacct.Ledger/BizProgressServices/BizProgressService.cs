@@ -37,8 +37,8 @@ namespace Sintoacct.Ledger.BizProgressServices
             string curUser = _identity.GetUserName();
             return _context.WorkOrders
                            .Include("WorkOrderItems").Include("WorkOrderItems.BizItem").Include("Customer")
-                           .Where(p => (p.Creator == curUser || _isAdmin)
-                                    && p.State != WorkOrderState.Deleted
+                           .Where(p => //(p.Creator == curUser || _isAdmin) &&                          //每个人都能看所有的工单但不能新增修改
+                                    p.State != WorkOrderState.Deleted
                                     && (!condition.WoId.HasValue || p.WoId==condition.WoId.Value)
                                     && (string.IsNullOrEmpty(condition.CusName) || p.Customer.CustomerName.Contains(condition.CusName))
                                     && (!condition.BizItem.HasValue || p.WorkOrderItems.Any(i=>i.ItemId==condition.BizItem.Value))
@@ -61,7 +61,8 @@ namespace Sintoacct.Ledger.BizProgressServices
 
         public WorkOrder GetMyWorkOrder(long woId)
         {
-            return _context.WorkOrders.Where(p => (p.Creator == _identity.GetUserName() || _isAdmin) && p.WoId == woId).FirstOrDefault();
+            return _context.WorkOrders.Where(p => //(p.Creator == _identity.GetUserName() || _isAdmin) && 
+                                                   p.WoId == woId).FirstOrDefault();
         }
 
         public WorkOrder SaveWorkOrder(WorkOrderViewModel workOrder)
@@ -159,6 +160,19 @@ namespace Sintoacct.Ledger.BizProgressServices
             WorkProgress wProg = this.GetWorkProgress(workProg.ProgId);
 
             if (wProg == null) throw new ArgumentNullException("找不到该进度记录");
+
+            //不是创建人只能新增不能修改
+            if(wProg.Creator!= _identity.Claims.Where(c => c.Type == "name").FirstOrDefault().Value)
+            {
+                long woid = wProg.WoId;
+                int itemid = wProg.ItemId;
+                int stepid = wProg.StepId;
+                wProg = new WorkProgress();
+                wProg.WoId = woid;
+                wProg.ItemId = itemid;
+                wProg.StepId = stepid;
+                _context.WorkProgress.Add(wProg);
+            }
 
             wProg.CompletedTime = workProg.CompletedTime;
             wProg.ResultDesc = workProg.ResultDesc;

@@ -43,7 +43,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             return Ok(Mapper.Map<List<WorkProgressViewModel>>(progList));
         }
 
-        [ClaimsAuthorize("role", "progress-record")]
+        [ClaimsAuthorize("role", "progress-admin")]
         [HttpGet, HttpPost, Route("api/BizProgress/SaveWorkOrder")]
         public IHttpActionResult SaveWorkOrder(WorkOrderViewModel progress)
         {
@@ -58,7 +58,7 @@ namespace Sintoacct.Ledger.Controllers.Api
             return Ok(ResMessage.Success());
         }
 
-        [ClaimsAuthorize("role", "progress-record")]
+        [ClaimsAuthorize("role", "progress-admin")]
         [HttpGet, HttpPost, Route("api/BizProgress/DeleteWorkOrder")]
         public IHttpActionResult DeleteWorkOrder(WorkOrderDelViewModel workOrder)
         {
