@@ -24,7 +24,9 @@ namespace Sintoacct.Ledger.BizProgressServices
 
             return _context.Customers.Where(c => (string.IsNullOrEmpty(condition.CustomerName) || c.CustomerName.Contains(condition.CustomerName)) && 
                                                  (string.IsNullOrEmpty(condition.Phone) || c.Phone.Contains(condition.Phone)) &&
-                                                 (!condition.State.HasValue) || (int)c.State==condition.State.Value)
+                                                 //(!condition.State.HasValue) || (int)c.State==condition.State.Value
+                                                 c.State != CustomerState.Deleted
+                                           )
                                      .OrderByDescending(c=>c.State).ToList();
         }
 
