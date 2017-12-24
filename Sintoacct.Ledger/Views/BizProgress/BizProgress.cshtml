@@ -250,11 +250,12 @@
                     <label for="CompletedTime">完成时间:</label>
                     <input id="CompletedTime" name="CompletedTime" class="easyui-datebox" data-options="width:260,height:35,prompt:'请输入进度完成时间，若未完成可留空'" />
                     <input type="hidden" id="ProgId" name="ProgId" />
+                    <input type="hidden" id="WorkOrderId" name="WorkOrderId" />
                 </li>
                 <li>
                     <label for="StepId">工作步骤:</label>
                     <input id="StepId" name="StepId" class="easyui-combobox"
-                           data-options="prompt:'请选择工作步骤',required:true,width:260,height:35,missingMessage:'请选择工作步骤',editable:false,valueField:'StepId',textField:'StepName'" />
+                           data-options="prompt:'请选择工作步骤',required:true,width:260,height:35,missingMessage:'请选择工作步骤',editable:true,valueField:'StepId',textField:'StepName',filter:stepFilter" />
                 </li>
                 <li>
                     <label for="ResultDesc">办理结果:</label>
@@ -315,6 +316,11 @@
                 onSubmit: sFormOnSubmit,
                 success: sFormSuccess
             });
+            $("#sForm").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    $("#btnSearch").click();
+                }
+            });
 
             $("#progForm").form({
                 url: '/api/BizProgress/SaveWorkProgress/',
@@ -369,6 +375,10 @@
 
         function progFormOnSubmit()
         {
+            var row = $('#woList').datagrid("getSelected");
+            if (!row) { $.messager.alert('进度', '请选择该进度所对应的工单', 'warning'); return false }
+
+            $("#WorkOrderId").val(row.WoId);
             return $(this).form('validate');
         }
 
@@ -585,6 +595,12 @@
                 case 3:
                     return "紧急处理";
             }
+        }
+
+        function stepFilter(q, row)
+        {
+            var opts = $(this).combobox('options');
+            return row[opts.textField].indexOf(q) >= 0;
         }
 
         $.parser.onComplete = function () {

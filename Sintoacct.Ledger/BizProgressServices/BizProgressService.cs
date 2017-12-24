@@ -150,29 +150,35 @@ namespace Sintoacct.Ledger.BizProgressServices
 
         public List<WorkProgress> GetWorkProgress(long woId, int itemId)
         {
-            return _context.WorkProgress.Include("BizStep").Where(wp => wp.WoId == woId && wp.ItemId == itemId).OrderBy(wp => wp.BizStep.SortIndex).ToList();
+            return _context.WorkProgress.Include("BizStep")
+                           .Where(wp => wp.WoId == woId && wp.ItemId == itemId && !string.IsNullOrEmpty( wp.ResultDesc))
+                           .OrderBy(wp => wp.BizStep.SortIndex)
+                           .ToList();
         }
 
         public WorkProgress SaveWorkProgress(WorkProgressViewModel workProg)
         {
-            if (workProg.ProgId <= 0) throw new ArgumentOutOfRangeException("进度编号无效");
 
-            WorkProgress wProg = this.GetWorkProgress(workProg.ProgId);
-
-            if (wProg == null) throw new ArgumentNullException("找不到该进度记录");
+            WorkProgress wProg = null;
+            if(workProg.ProgId>0)
+            {
+                wProg = this.GetWorkProgress(workProg.ProgId);
+            }
+            
 
             //不是创建人只能新增不能修改
-            if(wProg.Creator!= _identity.Claims.Where(c => c.Type == "name").FirstOrDefault().Value)
+            if(wProg==null ||
+                wProg.Creator!= _identity.Claims.Where(c => c.Type == "name").FirstOrDefault().Value)
             {
-                long woid = wProg.WoId;
-                int itemid = wProg.ItemId;
-                int stepid = wProg.StepId;
+                BizSteps step = _context.BizSteps.Include("BizItem").Where(s => s.StepId == workProg.StepId).FirstOrDefault();
+                
                 wProg = new WorkProgress();
-                wProg.WoId = woid;
-                wProg.ItemId = itemid;
-                wProg.StepId = stepid;
+                wProg.WoId = workProg.WoId;
+                wProg.ItemId = step.BizItem.ItemId;
+                wProg.StepId = step.StepId;
                 _context.WorkProgress.Add(wProg);
             }
+            
 
             wProg.CompletedTime = workProg.CompletedTime;
             wProg.ResultDesc = workProg.ResultDesc;
@@ -180,7 +186,8 @@ namespace Sintoacct.Ledger.BizProgressServices
             wProg.CreateTime = DateTime.Now;
             wProg.Creator = _identity.Claims.Where(c => c.Type == "name").FirstOrDefault().Value;
             //重算代垫费用
-            wProg.WorkOrder.AdvanceExpenditure = wProg.WorkOrder.WorkProgresses.Sum(p => p.AdvanceExpenditure);
+            WorkOrder wOrder = _context.WorkOrders.Include("WorkProgresses").Where(wo => wo.WoId == wProg.WoId).First();
+            wOrder.AdvanceExpenditure = wOrder.WorkProgresses.Sum(p => p.AdvanceExpenditure);
 
             if (!string.IsNullOrEmpty(workProg.Url))
             {   

@@ -11,6 +11,11 @@ namespace Sintoacct.Progress.Models
     [Table("T_Prog_WorkProgress")]
     public class WorkProgress
     {
+        public WorkProgress()
+        {
+            Images = new List<ProgressImage>();
+        }
+
         /// <summary>
         /// 进度id
         /// </summary>

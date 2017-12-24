@@ -115,8 +115,10 @@ namespace Sintoacct.Ledger.Controllers.Api
                 }
 
                 WorkProgressViewModel wProg = new WorkProgressViewModel();
-                wProg.ProgId = Convert.ToInt64(HttpContext.Current.Request.Form["ProgId"]);
+                long progid;
+                if (long.TryParse(HttpContext.Current.Request.Form["ProgId"], out progid)) wProg.ProgId = progid;
                 wProg.StepId = Convert.ToInt32(HttpContext.Current.Request.Form["StepId"]);
+                wProg.WoId = Convert.ToInt64(HttpContext.Current.Request.Form["WorkOrderId"]);
                 DateTime dt;
                 if (DateTime.TryParse(HttpContext.Current.Request.Form["CompletedTime"], out dt)) wProg.CompletedTime = dt;
                 wProg.ResultDesc = HttpContext.Current.Request.Form["ResultDesc"];
