@@ -232,6 +232,7 @@
     <Compile Include="Controllers\BizProgress\BizSettingController.cs" />
     <Compile Include="Controllers\BizProgress\CustomerController.cs" />
     <Compile Include="Controllers\BizProgress\BizProgressController.cs" />
+    <Compile Include="Controllers\BizProgress\ReportController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LedgerController.cs" />
     <Compile Include="Controllers\LedgerSheetController.cs" />
@@ -450,6 +451,7 @@
     <Content Include="Views\BizProgress\BizProgress.cshtml" />
     <Content Include="Views\Customer\Customers.cshtml" />
     <Content Include="Views\BizSetting\BizConfig.cshtml" />
+    <Content Include="Views\BizProgress\ReportProgress.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
