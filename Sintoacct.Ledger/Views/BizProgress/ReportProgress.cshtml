@@ -7,11 +7,45 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title></title>
+    @Styles.Render("~/Content/easyui")
+
+    <style type="text/css">
+        .datagrid-header-row td div{
+            text-align: center !important;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <div  class="easyui-layout" data-options="fit:true">
-    
+        <div data-options="region:'north',split:false,border:false" style="padding:10px;overflow:hidden;background-color:#F2F2F2;">
+            <form id="sForm" method="post">
+                <div>进度日期：<input class="easyui-datebox"  name="sCreate"  style="width:100px;height:30px;" /> 至 <input class="easyui-datebox" name="eCreate"  style="width:100px;height:30px;" /></div>
+
+                <div><span style="padding-left:12px;">客户名称：</span><input class="easyui-combobox" name="CustomerName" data-options="valueField:'CusId',textField:'CustomerName',url:'/Customer/GetValidCustomers',width:100,height:30,method:'GET'" /></div>
+
+                <div><span style="padding-left:12px;">记录人：</span><input class="easyui-textbox" name="Creator" data-options="width:220,height:30" /></div>
+
+                <div><a href="javascript:void(0)" id="btnSearch" class="easyui-linkbutton" data-options="iconCls:'fa fa-search fa-lg'" onclick="javascript: $('#sForm').submit();" style="width:100px;">查询</a></div>
+            </form>
+        </div>
+        <div data-options="region:'center',border:true" style="padding:10px;">
+            <table class="easyui-datagrid" id="vvList"
+                   data-options="fit:true,singleSelect:true,fitColumns:true">
+                <thead>
+                    <tr>
+                        <th data-options="field:'AccountCode',width:50,align:'center'">客户名称</th>
+                        <th data-options="field:'AccountName',width:150,align:'center'">项目名称</th>
+                        <th data-options="field:'Period',width:80,align:'center'">工作步骤</th>
+                        <th data-options="field:'Abstract',width:60,align:'center'">进度记录</th>
+                        <th data-options="field:'Debit',width:60,align:'right'">完成时间</th>
+                        <th data-options="field:'Credit',width:60,align:'right'">记录人</th>
+                        <th data-options="field:'Direction',width:40,align:'center'">业务费用</th>
+                        <th data-options="field:'Balance',width:60,align:'right'">合同时间</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
 
 
@@ -22,8 +56,30 @@
 
         $(function () {
             
-
+            init();
         });
+
+        function init() {
+            $("#sForm").form({
+                url: "/api/ProgressReport/GetProgressList/",
+                onSubmit: formOnSubmit,
+                success: formSuccess
+            });
+
+
+            
+        }
+
+        function formOnSubmit() {
+            return $(this).form('validate');
+        }
+
+        function formSuccess(data) {
+            if (responseHandle(data)) {
+                $("#vvList").datagrid("loadData", []);
+                $("#vvList").datagrid("loadData", JSON.parse(data));
+            }
+        }
     </script>
 </body>
 </html>
