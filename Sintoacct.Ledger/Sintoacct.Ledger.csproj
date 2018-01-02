@@ -216,6 +216,8 @@
     <Compile Include="BizProgressServices\IBizCustomer.cs" />
     <Compile Include="BizProgressServices\IBizProgressService.cs" />
     <Compile Include="BizProgressServices\IBizSetting.cs" />
+    <Compile Include="BizProgressServices\IReportService.cs" />
+    <Compile Include="BizProgressServices\ReportService.cs" />
     <Compile Include="ClaimsAuthorizeAttribute.cs" />
     <Compile Include="Common\AliyunOss.cs" />
     <Compile Include="Common\AliyunOssConfig.cs" />
@@ -248,6 +250,7 @@
     <Compile Include="Models\BizProgress\BizCustomerViewModel.cs" />
     <Compile Include="Models\BizProgress\BizProgressViewModel.cs" />
     <Compile Include="Models\BizProgress\BizSettingViewModel.cs" />
+    <Compile Include="Models\BizProgress\ReportViewModel.cs" />
     <Compile Include="Models\CacheModels.cs" />
     <Compile Include="Models\EasyuiViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
