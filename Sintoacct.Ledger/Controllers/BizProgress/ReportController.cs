@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
-namespace Sintoacct.Ledger.Controllers.BizProgress
+namespace Sintoacct.Ledger.Controllers
 {
-    public class ReportController
+    public class ReportController : BaseController
     {
+        public ReportController()
+        {
+
+        }
     }
 }
