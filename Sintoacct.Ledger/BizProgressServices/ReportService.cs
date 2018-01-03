@@ -34,8 +34,8 @@ namespace Sintoacct.Ledger.BizProgressServices
             }
             if(!string.IsNullOrEmpty( condition.CustomerName))
             {
-                sql += " and c.[CustomerName] like @CustomerName";
-                parameters.Add(new SqlParameter("@CustomerName", string.Format("%{0}%", condition.CustomerName)));
+                sql += " and c.CusId = @CustomerName";
+                parameters.Add(new SqlParameter("@CustomerName",  condition.CustomerName));
             }
             if(!string.IsNullOrEmpty(condition.Creator))
             {
