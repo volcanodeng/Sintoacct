@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Sintoacct.Ledger.Models;
 
 namespace Sintoacct.Ledger.BizProgressServices
 {
-    public class IReportService : IDependency
+    public interface IReportService : IDependency
     {
+        List<ProgressListViewModel> GetProgressList(ProgressSearchViewModel condition);
     }
 }

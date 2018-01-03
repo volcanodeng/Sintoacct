@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+
 
 namespace Sintoacct.Ledger.Controllers
 {
     public class ReportController : BaseController
     {
-        public ReportController()
-        {
 
+        [ClaimsAuthorize("role", "report")]
+        public ActionResult ReportProgress()
+        {
+            return View();
         }
+
+        
     }
 }

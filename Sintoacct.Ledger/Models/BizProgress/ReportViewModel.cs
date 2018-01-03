@@ -71,12 +71,12 @@ namespace Sintoacct.Ledger.Models
 
     public class ProgressSearchViewModel
     {
-        public DateTime sCreate
+        public DateTime? sCreate
         {
             get;set;
         }
 
-        public DateTime eCreate
+        public DateTime? eCreate
         {
             get;set;
         }
