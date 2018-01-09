@@ -22,6 +22,7 @@ namespace Sintoacct.Ledger.Controllers.Api
         public IHttpActionResult GetProgerssList(ProgressSearchViewModel condition)
         {
             var progs = _report.GetProgressList(condition);
+
             return Ok(progs);
         }
     }

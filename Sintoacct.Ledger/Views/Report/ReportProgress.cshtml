@@ -25,13 +25,15 @@
     <div  class="easyui-layout" data-options="fit:true">
         <div data-options="region:'north',split:false,border:false" style="padding:10px;overflow:hidden;background-color:#F2F2F2;">
             <form id="sForm" method="post">
-                <div>进度日期：<input class="easyui-datebox"  name="sCreate"  style="width:100px;height:30px;" /> 至 <input class="easyui-datebox" name="eCreate"  style="width:100px;height:30px;" /></div>
+                <div>进度日期：<input class="easyui-datebox" id="sCreate" name="sCreate"  style="width:100px;height:30px;" /> 至 <input class="easyui-datebox" id="eCreate" name="eCreate"  style="width:100px;height:30px;" /></div>
 
-                <div><span style="padding-left:12px;">客户名称：</span><input class="easyui-combobox" name="CustomerName" data-options="valueField:'CusId',textField:'CustomerName',url:'/Customer/GetValidCustomers',width:200,height:30,method:'GET'" /></div>
+                <div><span style="padding-left:12px;">客户名称：</span><input class="easyui-combobox" id="CustomerName" name="CustomerName" data-options="valueField:'CusId',textField:'CustomerName',url:'/Customer/GetValidCustomers',width:200,height:30,method:'GET'" /></div>
 
-                <div><span style="padding-left:12px;">记录人：</span><input class="easyui-textbox" name="Creator" data-options="width:100,height:30" /></div>
+                <div><span style="padding-left:12px;">记录人：</span><input class="easyui-textbox" id="Creator" name="Creator" data-options="width:100,height:30" /></div>
 
-                <div><a href="javascript:void(0)" id="btnSearch" class="easyui-linkbutton" data-options="iconCls:'fa fa-search fa-lg'" onclick="javascript: $('#sForm').submit();" style="width:100px;">查询</a></div>
+                <div><a href="javascript:void(0)" id="btnSearch" class="easyui-linkbutton" data-options="iconCls:'fa fa-search fa-lg'" onclick="javascript: $('#sForm').submit();" style="width:100px;">查询</a>
+                    <a href="javascript:void(0)" id="btnSearch" class="easyui-linkbutton" data-options="iconCls:'fa fa-search fa-lg'" onclick="javascript: exportExcel();" style="width:100px;">导出Excel</a>
+                </div>
             </form>
         </div>
         <div data-options="region:'center',border:true" style="padding:10px;">
@@ -84,6 +86,19 @@
                 $("#vvList").datagrid("loadData", []);
                 $("#vvList").datagrid("loadData", JSON.parse(data));
             }
+        }
+
+        function exportExcel()
+        {
+            var params = {
+                sCreate: $("#sCreate").datebox("getValue"),
+                eCreate: $("#eCreate").datebox("getValue"),
+                CustomerName: $("#CustomerName").combobox("getValue"),
+                Creator: $("#Creator").textbox("getValue")
+            };
+            var url = "/Report/ExportExcelProgress/?" + $.param(params);
+            $(document.body).append("<iframe height='0' width='0' frameborder='0'  src=" + url + "></iframe>");
+            
         }
     </script>
 </body>
