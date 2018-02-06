@@ -86,5 +86,10 @@ namespace Sintoacct.Progress.Models
         /// 记录时间
         /// </summary>
         public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 排序号
+        /// </summary>
+        public int SortIndex { get; set; }
     }
 }

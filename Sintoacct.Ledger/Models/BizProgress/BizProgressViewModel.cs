@@ -86,6 +86,8 @@ namespace Sintoacct.Ledger.Models
         public string Creator { get; set; }
 
         public DateTime CreateTime { get; set; }
+
+        public int SortIndex { get; set; }
     }
 
     public class WorkProgressGetViewModel
@@ -93,6 +95,11 @@ namespace Sintoacct.Ledger.Models
         public long WoId { get; set; }
 
         public int ItemId { get; set; }
+    }
+
+    public class WorkProgressDelViewModel
+    {
+        public long ProgId { get; set; }
     }
 
     public class BizPersonViewModel

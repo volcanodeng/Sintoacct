@@ -152,7 +152,7 @@ namespace Sintoacct.Ledger.BizProgressServices
         {
             return _context.WorkProgress.Include("BizStep")
                            .Where(wp => wp.WoId == woId && wp.ItemId == itemId && !string.IsNullOrEmpty( wp.ResultDesc))
-                           .OrderBy(wp => wp.BizStep.SortIndex)
+                           .OrderBy(wp=>wp.SortIndex)
                            .ToList();
         }
 
@@ -185,6 +185,7 @@ namespace Sintoacct.Ledger.BizProgressServices
             wProg.AdvanceExpenditure = workProg.AdvanceExpenditure;
             wProg.CreateTime = DateTime.Now;
             wProg.Creator = _identity.Claims.Where(c => c.Type == "name").FirstOrDefault().Value;
+            wProg.SortIndex = workProg.SortIndex;
             //重算代垫费用
             WorkOrder wOrder = _context.WorkOrders.Include("WorkProgresses").Where(wo => wo.WoId == wProg.WoId).First();
             wOrder.AdvanceExpenditure = wOrder.WorkProgresses.Sum(p => p.AdvanceExpenditure);
@@ -201,6 +202,20 @@ namespace Sintoacct.Ledger.BizProgressServices
 
             _context.SaveChanges();
             return wProg;
+        }
+
+        public void DeleteWorkProgress(long ProgId)
+        {
+            var wProg = _context.WorkProgress.Where(wp => wp.ProgId == ProgId).FirstOrDefault();
+
+            if(wProg.Creator != _identity.Claims.Where(c => c.Type == "name").FirstOrDefault().Value)
+            {
+                throw new UnauthorizedAccessException("无权删除");
+            }
+
+            _context.WorkProgress.Remove(wProg);
+
+            _context.SaveChanges();
         }
     }
 }

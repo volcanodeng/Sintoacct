@@ -152,7 +152,8 @@
     <div id="progToolbar">
         <div><span style="padding-left:12px;">业务项目：</span><input class="easyui-combobox" id="progItems"  data-options="valueField:'ItemId',textField:'ItemName',width:200,height:30,editable:false,onSelect:piOnSelect" /></div>
         <div>
-            <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="editProg()">填写进度</a>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="newProg()">新增进度</a>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-pencil fa-lg',plain:true" onclick="delProg()">删除进度</a>
         </div>
     </div>
 
@@ -242,7 +243,7 @@
         </form>
     </div>
 
-    <div id="dialogProg" class="easyui-dialog" title="业务进度" style="width:400px;height:550px;"
+    <div id="dialogProg" class="easyui-dialog" title="业务进度" style="width:400px;height:600px;"
          data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnProg'">
         <form method="post" id="progForm" enctype="multipart/form-data">
             <ul>
@@ -266,6 +267,11 @@
                     <label for="AdvanceExpenditure">代垫费用:</label>
                     <input id="AdvanceExpenditure" name="AdvanceExpenditure" class="easyui-numberbox" value="0.00"
                            data-options="width:260,height:35,precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'¥'" />
+                </li>
+                <li>
+                    <label for="SortIndex">进度序号:</label>
+                    <input id="SortIndex" name="SortIndex" class="easyui-numberbox" value="1"
+                           data-options="width:260,height:35,precision:0" />
                 </li>
                 <li>
                     <label for="image-preview">凭证图片:</label>
@@ -529,9 +535,48 @@
             }
         }
 
-        function editProg()
+        function newProg()
         {
+            $("#progForm").form("clear");
+            $.uploadPreview({
+                input_field: "#image-upload",
+                preview_box: "#image-preview",
+                label_field: "#image-label",
+                label_default: "选择图片",
+                label_selected: "修改图片"
+            });
+
+            $("#progForm").form("load", {
+                ProgId: -1,
+                AdvanceExpenditure: 0,
+                SortIndex: 1
+            });
+
+            $("#image-preview").css('background-image', 'url()');
+
             $("#dialogProg").dialog("open");
+        }
+
+        function delProg()
+        {
+            var selProg = $("#progList").datagrid("getSelected");
+            if (!selProg)
+            {
+                $.messager.alert('删除进度', '请选择要删除的进度记录');
+                return;
+            }
+
+            $.messager.confirm('删除进度', '你确定要删除该进度记录吗?', function (r) {
+                if (r) {
+                    $.post("/api/BizProgress/DeleteWorkProgress", { ProgId: selProg.ProgId }, function (data) {
+                        if (responseHandle(data)) {
+                            $.post("/api/BizProgress/GetWorkProgress", { WoId: $("#woList").datagrid("getSelected").WoId, ItemId: $("#progItems").combobox("getValue") }, function (data) {
+                                $("#progList").datagrid("loadData", data);
+                            });
+                        }
+                    });
+                }
+            });
         }
 
         function closeProg()
@@ -566,7 +611,8 @@
                 CompletedTime: row.CompletedTime,
                 StepId: row.StepId,
                 ResultDesc: row.ResultDesc,
-                AdvanceExpenditure: row.AdvanceExpenditure
+                AdvanceExpenditure: row.AdvanceExpenditure,
+                SortIndex:row.SortIndex
             });
 
             $("#image-preview").css('background-image', 'url(' + row.Url + ')');
@@ -576,7 +622,7 @@
 
         function progOnDblClickRow(index, row)
         {
-            editProg();
+            $("#dialogProg").dialog("open");
         }
 
         function saveProg()

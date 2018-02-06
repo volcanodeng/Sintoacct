@@ -16,5 +16,7 @@ namespace Sintoacct.Ledger.BizProgressServices
         List<WorkProgress> GetWorkProgress(long woId, int itemId);
 
         WorkProgress SaveWorkProgress(WorkProgressViewModel workProg);
+
+        void DeleteWorkProgress(long ProgId);
     }
 }

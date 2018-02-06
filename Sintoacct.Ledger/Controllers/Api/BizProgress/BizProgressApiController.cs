@@ -119,6 +119,7 @@ namespace Sintoacct.Ledger.Controllers.Api
                 if (long.TryParse(HttpContext.Current.Request.Form["ProgId"], out progid)) wProg.ProgId = progid;
                 wProg.StepId = Convert.ToInt32(HttpContext.Current.Request.Form["StepId"]);
                 wProg.WoId = Convert.ToInt64(HttpContext.Current.Request.Form["WorkOrderId"]);
+                wProg.SortIndex = Convert.ToInt32(HttpContext.Current.Request.Form["SortIndex"]);
                 DateTime dt;
                 if (DateTime.TryParse(HttpContext.Current.Request.Form["CompletedTime"], out dt)) wProg.CompletedTime = dt;
                 wProg.ResultDesc = HttpContext.Current.Request.Form["ResultDesc"];
@@ -139,6 +140,27 @@ namespace Sintoacct.Ledger.Controllers.Api
             {
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
+        }
+
+        [ClaimsAuthorize("role", "progress-record")]
+        [HttpGet, HttpPost, Route("api/BizProgress/DeleteWorkProgress")]
+        public IHttpActionResult DeleteWorkProgress(WorkProgressDelViewModel delWorkProg)
+        {
+            if(delWorkProg.ProgId<=0)
+            {
+                ResMessage.Fail("待删除的进度编号无效");
+            }
+
+            try
+            {
+                _progress.DeleteWorkProgress(delWorkProg.ProgId);
+            }
+            catch(Exception err)
+            {
+                ResMessage.Fail(err.Message);
+            }
+
+            return Ok(ResMessage.Success());
         }
 
     }
