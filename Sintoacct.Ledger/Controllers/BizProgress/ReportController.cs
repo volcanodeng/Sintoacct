@@ -80,6 +80,17 @@ namespace Sintoacct.Ledger.Controllers
 
             return null;
         }
-        
+
+        [ClaimsAuthorize("role", "report")]
+        public JsonResult GetProgressCreators()
+        {
+            List<string> creators = _report.GetProgressCreators();
+            List<ComboboxViewModel> cbCreators = new List<ComboboxViewModel>();
+            foreach(string s in creators)
+            {
+                cbCreators.Add(new ComboboxViewModel() { text = s, val = s });
+            }
+            return Json(cbCreators);
+        }
     }
 }

@@ -42,11 +42,22 @@ namespace Sintoacct.Ledger.BizProgressServices
                 sql += " and p.Creator like @Creator";
                 parameters.Add(new SqlParameter("@Creator", string.Format("%{0}%", condition.Creator)));
             }
+            if(!string.IsNullOrEmpty(condition.Contacts))
+            {
+                sql += " and c.Contacts like @Contacts";
+                parameters.Add(new SqlParameter("@Contacts", string.Format("%{0}%", condition.Contacts)));
+            }
             sql += " order by  p.CreateTime desc";
 
             List<ProgressListViewModel> progs = _context.Database.SqlQuery<ProgressListViewModel>(sql, parameters.ToArray()).ToList();
 
             return progs;
+        }
+
+        public List<string> GetProgressCreators()
+        {
+            List<string> proCreators = _context.WorkProgress.GroupBy(p => p.Creator).Select(p => p.Key).ToList();
+            return proCreators;
         }
     }
 }

@@ -221,6 +221,8 @@
                                 <tr>
                                     <th data-options="field:'Abstract',width:280,editor:{type:'textbox',options:{buttonText:'摘要',onClickButton:absClickButton}}" rowspan="2">摘要</th>
                                     <th data-options="field:'AccId',formatter:scFormatter,width:280,editor:{type:'combotree',options:{editable:true}}" rowspan="2">会计科目</th>
+                                    <th data-options="field:'Quantity',width:80,hidden:true,editor:{type:'numberbox',options:{min:0,precision:2}}" rowspan="2">数量</th>
+                                    <th data-options="field:'Price',width:80,hidden:true,editor:{type:'numberbox',options:{min:0,precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'￥'}}" rowspan="2">价格</th>
                                     <th>借方金额</th>
                                     <th>贷方金额</th>
                                 </tr>
@@ -589,6 +591,8 @@
         {
             $(globVar.vTable).datagrid('getRows')[dgWrapper.editIndex]['AccountCode'] = node.attributes.AccCode;
             $(globVar.vTable).datagrid('getRows')[dgWrapper.editIndex]['AccountName'] = node.attributes.AccName;
+
+            
         }
 
         function treeFilter(q,node)

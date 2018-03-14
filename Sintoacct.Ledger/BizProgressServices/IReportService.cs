@@ -9,5 +9,7 @@ namespace Sintoacct.Ledger.BizProgressServices
     public interface IReportService : IDependency
     {
         List<ProgressListViewModel> GetProgressList(ProgressSearchViewModel condition);
+
+        List<string> GetProgressCreators();
     }
 }
