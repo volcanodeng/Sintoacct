@@ -27,7 +27,7 @@ namespace Sintoacct.Ledger.Models
             get;set;
         }
 
-        public DateTime CompletedTime
+        public DateTime? CompletedTime
         {
             get;set;
         }

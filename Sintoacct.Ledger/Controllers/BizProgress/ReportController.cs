@@ -53,7 +53,7 @@ namespace Sintoacct.Ledger.Controllers
                         data += (pl.ItemName + s);
                         data += (pl.StepName + s);
                         data += (pl.ResultDesc + s);
-                        data += (pl.CompletedTime.ToString("yyyy-mm-dd") + s);
+                        if(pl.CompletedTime.HasValue)data += (pl.CompletedTime.Value.ToString("yyyy-mm-dd") + s);
                         data += pl.Creator + s;
                         data += pl.CommercialExpense.ToString() + s;
                         data += pl.ContractTime.ToString("yyyy-mm-dd") ;
