@@ -91,5 +91,10 @@ namespace Sintoacct.Progress.Models
         /// 排序号
         /// </summary>
         public int SortIndex { get; set; }
+
+        /// <summary>
+        /// 完成状态
+        /// </summary>
+        public bool IsSuccess { get; set; }
     }
 }

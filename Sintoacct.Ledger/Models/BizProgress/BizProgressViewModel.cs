@@ -88,6 +88,8 @@ namespace Sintoacct.Ledger.Models
         public DateTime CreateTime { get; set; }
 
         public int SortIndex { get; set; }
+
+        public bool IsSuccess { get; set; }
     }
 
     public class WorkProgressGetViewModel

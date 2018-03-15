@@ -125,6 +125,8 @@ namespace Sintoacct.Ledger.Controllers.Api
                 wProg.ResultDesc = HttpContext.Current.Request.Form["ResultDesc"];
                 decimal ae;
                 if (decimal.TryParse(HttpContext.Current.Request.Form["AdvanceExpenditure"], out ae)) wProg.AdvanceExpenditure = ae;
+                bool isSuc;
+                if (bool.TryParse(HttpContext.Current.Request.Form["IsSuccess"], out isSuc)) wProg.IsSuccess = isSuc;
 
                 if (fileNames.Count > 0)
                 {

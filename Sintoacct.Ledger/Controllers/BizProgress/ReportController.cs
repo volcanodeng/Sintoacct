@@ -92,5 +92,17 @@ namespace Sintoacct.Ledger.Controllers
             }
             return Json(cbCreators);
         }
+
+        [ClaimsAuthorize("role", "report")]
+        public JsonResult GetProgressContacts()
+        {
+            List<string> contacts = _report.GetContacts();
+            List<ComboboxViewModel> cbContacts = new List<ComboboxViewModel>();
+            foreach (string s in contacts)
+            {
+                cbContacts.Add(new ComboboxViewModel() { text = s, val = s });
+            }
+            return Json(cbContacts);
+        }
     }
 }

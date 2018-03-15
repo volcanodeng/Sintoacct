@@ -67,6 +67,11 @@ namespace Sintoacct.Ledger.Models
             get;set;
         }
 
+        public string Contacts
+        {
+            get;set;
+        }
+
     }
 
     public class ProgressSearchViewModel

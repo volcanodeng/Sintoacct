@@ -11,5 +11,7 @@ namespace Sintoacct.Ledger.BizProgressServices
         List<ProgressListViewModel> GetProgressList(ProgressSearchViewModel condition);
 
         List<string> GetProgressCreators();
+
+        List<string> GetContacts();
     }
 }

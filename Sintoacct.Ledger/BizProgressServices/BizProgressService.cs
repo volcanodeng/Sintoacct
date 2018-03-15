@@ -186,6 +186,7 @@ namespace Sintoacct.Ledger.BizProgressServices
             wProg.CreateTime = DateTime.Now;
             wProg.Creator = _identity.Claims.Where(c => c.Type == "name").FirstOrDefault().Value;
             wProg.SortIndex = workProg.SortIndex;
+            wProg.IsSuccess = workProg.IsSuccess;
             //重算代垫费用
             WorkOrder wOrder = _context.WorkOrders.Include("WorkProgresses").Where(wo => wo.WoId == wProg.WoId).First();
             wOrder.AdvanceExpenditure = wOrder.WorkProgresses.Sum(p => p.AdvanceExpenditure);

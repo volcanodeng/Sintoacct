@@ -136,6 +136,7 @@
                         <th data-options="field:'Url',width:100,align:'center',formatter:fmtImage">凭证图片</th>
                         <th data-options="field:'Creator',width:60,align:'center'">记录人</th>
                         <th data-options="field:'CreateTime',width:60,align:'center',formatter:fmtDate">记录时间</th>
+                        <th data-options="field:'IsSuccess',width:60,align:'center',formatter:fmtIsSuccess">完成状态</th>
                     </tr>
                 </thead>
             </table>
@@ -243,7 +244,7 @@
         </form>
     </div>
 
-    <div id="dialogProg" class="easyui-dialog" title="业务进度" style="width:400px;height:600px;"
+    <div id="dialogProg" class="easyui-dialog" title="业务进度" style="width:400px;height:650px;"
          data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnProg'">
         <form method="post" id="progForm" enctype="multipart/form-data">
             <ul>
@@ -280,7 +281,10 @@
                         <input type="file" name="image-upload" id="image-upload" />
                     </div>
                 </li>
-
+                <li>
+                    <label for="SortIndex">完成状态:</label>
+                    <input class="easyui-switchbutton" data-options="onText:'成功',offText:'失败',value:'true'" name="IsSuccess" id="IsSuccess">
+                </li>
             </ul>
         </form>
     </div>
@@ -385,6 +389,7 @@
             if (!row) { $.messager.alert('进度', '请选择该进度所对应的工单', 'warning'); return false }
 
             $("#WorkOrderId").val(row.WoId);
+
             return $(this).form('validate');
         }
 
@@ -552,6 +557,8 @@
                 SortIndex: 1
             });
 
+            $("#IsSuccess").switchbutton("uncheck");
+
             $("#image-preview").css('background-image', 'url()');
 
             $("#dialogProg").dialog("open");
@@ -615,6 +622,15 @@
                 SortIndex:row.SortIndex
             });
 
+            if (row.IsSuccess)
+            {
+                $("#IsSuccess").switchbutton("check");
+            }
+            else
+            {
+                $("#IsSuccess").switchbutton("uncheck");
+            }
+
             $("#image-preview").css('background-image', 'url(' + row.Url + ')');
             $("#image-preview").css('background-size', '200px 100px');
             $("#image-preview").css('background-repeat', 'no-repeat');
@@ -647,6 +663,18 @@
         {
             var opts = $(this).combobox('options');
             return row[opts.textField].indexOf(q) >= 0;
+        }
+
+        function fmtIsSuccess(value, row, index)
+        {
+            if(value)
+            {
+                return "成功";
+            }
+            else
+            {
+                return "失败";
+            }
         }
 
         $.parser.onComplete = function () {
