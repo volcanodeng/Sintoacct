@@ -366,18 +366,20 @@
 
         //=========事件响应=====
         function debiteFormatter(value, row, index) {
-            if (value.toString().indexOf(".") == -1)
-                value = value * 100;
-            else
-                value = value.replace(/./gi, "");
+            //if (value.toString().indexOf(".") == -1)
+            //    value = value * 100;
+            //else
+            //    value = value.replace(/./gi, "");
+            value =  (parseFloat(value)*100).toFixed(0);
 
             return '<div class="col_debite"><div class="cell_val debit_val">' + value + '</div></div>';
         }
         function creditFormatter(value, row, index) {
-            if (value.toString().indexOf(".") == -1)
-                value = value * 100;
-            else
-                value = value.replace(/./gi, "");
+            //if (value.toString().indexOf(".") == -1)
+            //    value = value * 100;
+            //else
+            //    value = value.replace(/./gi, "");
+            value =  (parseFloat(value)*100).toFixed(0);
 
             return '<div class="col_credit"><div class="cell_val credit_val">' + value + '</div></div>';
         }
