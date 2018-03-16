@@ -221,16 +221,16 @@
                                 <tr>
                                     <th data-options="field:'Abstract',width:280,editor:{type:'textbox',options:{buttonText:'摘要',onClickButton:absClickButton}}" rowspan="2">摘要</th>
                                     <th data-options="field:'AccId',formatter:scFormatter,width:280,editor:{type:'combotree',options:{editable:true}}" rowspan="2">会计科目</th>
-                                    <th data-options="field:'Quantity',width:80,hidden:true,editor:{type:'numberbox',options:{min:0,precision:2}}" rowspan="2">数量</th>
+                                    <th data-options="field:'Quantity',width:80,hidden:true,editor:{type:'numberbox',options:{min:0,precision:2,onChange:chgQuantity}}" rowspan="2">数量</th>
                                     <th data-options="field:'Price',width:80,hidden:true,editor:{type:'numberbox',options:{min:0,precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'￥'}}" rowspan="2">价格</th>
                                     <th>借方金额</th>
                                     <th>贷方金额</th>
                                 </tr>
                                 <tr>
-                                    <th data-options="field:'Debit',width:230,formatter:debiteFormatter,editor:{type:'numberbox'}">
+                                    <th data-options="field:'Debit',width:230,formatter:debiteFormatter,editor:{type:'numberbox',options:{min:0,precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'￥'}}">
                                         <div class="money_unit"><span>亿</span> <span>千</span> <span>百</span> <span>十</span> <span>万</span> <span>千</span> <span>百</span> <span>十</span> <span>元</span> <span>角</span> <span class="last">分</span> </div>
                                     </th>
-                                    <th data-options="field:'Credit',width:230,formatter:creditFormatter,editor:{type:'numberbox'}">
+                                    <th data-options="field:'Credit',width:230,formatter:creditFormatter,editor:{type:'numberbox',options:{min:0,precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'￥'}}">
                                         <div class="money_unit"><span>亿</span> <span>千</span> <span>百</span> <span>十</span> <span>万</span> <span>千</span> <span>百</span> <span>十</span> <span>元</span> <span>角</span> <span class="last">分</span> </div>
                                     </th>
                                 </tr>
@@ -592,7 +592,19 @@
             $(globVar.vTable).datagrid('getRows')[dgWrapper.editIndex]['AccountCode'] = node.attributes.AccCode;
             $(globVar.vTable).datagrid('getRows')[dgWrapper.editIndex]['AccountName'] = node.attributes.AccName;
 
-            
+            if(node.attributes.IsQuantity)
+            {
+                $(globVar.vTable).datagrid("showColumn",'Quantity');
+                $(globVar.vTable).datagrid("showColumn",'Price');
+            }
+            else
+            {
+                var edQuantity = $(globVar.vTable).datagrid('getEditor', { index: dgWrapper.editIndex, field: 'Quantity' });
+                var edPrice = $(globVar.vTable).datagrid('getEditor', { index: dgWrapper.editIndex, field: 'Price' });
+
+                $(edQuantity.target).numberbox('setValue', null);
+                $(edPrice.target).numberbox('setValue', null);
+            }
         }
 
         function treeFilter(q,node)
@@ -659,6 +671,20 @@
 
                 return '您还有未保存的内容，需要先保存吗？';
             }
+        }
+
+        function chgQuantity(newValue,oldValue)
+        {
+            if($(globVar.vTable).datagrid("getColumnOption","Quantity").hidden)return;
+
+            var edDebit = $(globVar.vTable).datagrid('getEditor', { index: dgWrapper.editIndex, field: 'Debit' });
+            var edPrice = $(globVar.vTable).datagrid('getEditor', { index: dgWrapper.editIndex, field: 'Price' });
+
+            if(edPrice == null || edPrice.target == null)return;
+
+            var price = $(edPrice.target).numberbox('getValue');
+
+            $(edDebit.target).numberbox('setValue', price*newValue);
         }
 
         //=========事件响应=====
