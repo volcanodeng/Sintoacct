@@ -222,9 +222,10 @@
                                     <th data-options="field:'Abstract',width:280,editor:{type:'textbox',options:{buttonText:'摘要',onClickButton:absClickButton}}" rowspan="2">摘要</th>
                                     <th data-options="field:'AccId',formatter:scFormatter,width:280,editor:{type:'combotree',options:{editable:true}}" rowspan="2">会计科目</th>
                                     <th data-options="field:'Quantity',width:80,hidden:true,editor:{type:'numberbox',options:{min:0,precision:2,onChange:chgQuantity}}" rowspan="2">数量</th>
-                                    <th data-options="field:'Price',width:80,hidden:true,editor:{type:'numberbox',options:{min:0,precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'￥'}}" rowspan="2">价格</th>
+                                    <th data-options="field:'Price',width:80,hidden:true,editor:{type:'numberbox',options:{min:0,precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'￥',onChange:chgPrice}}" rowspan="2">价格</th>
                                     <th>借方金额</th>
                                     <th>贷方金额</th>
+                                    <th data-options="field:'Account',width:0,hidden:true"></th>
                                 </tr>
                                 <tr>
                                     <th data-options="field:'Debit',width:230,formatter:debiteFormatter,editor:{type:'numberbox',options:{min:0,precision:2,groupSeparator:',',decimalSeparator:'.',prefix:'￥'}}">
@@ -284,7 +285,8 @@
             abstractData: @Html.Raw( Model.AbstractsJson),              //摘要数据
             accountData: @Html.Raw( Model.AccountsJson),               //科目数据
             nextDate:"@Model.NextVoucherDate.ToString("yyyy-MM-dd")",    //下一个凭证的默认日期
-            preAbstract:""                                               //记录前一行摘要的内容，下一行自动粘贴该内容出来
+            preAbstract:"",                                               //记录前一行摘要的内容，下一行自动粘贴该内容出来
+            rowAccount:null                                                //保存当前行的科目信息
         };
 
         //======初始化=======
@@ -593,6 +595,7 @@
         {
             $(globVar.vTable).datagrid('getRows')[dgWrapper.editIndex]['AccountCode'] = node.attributes.AccCode;
             $(globVar.vTable).datagrid('getRows')[dgWrapper.editIndex]['AccountName'] = node.attributes.AccName;
+            globVar.rowAccount = node.attributes;
 
             if(node.attributes.IsQuantity)
             {
@@ -604,8 +607,8 @@
                 var edQuantity = $(globVar.vTable).datagrid('getEditor', { index: dgWrapper.editIndex, field: 'Quantity' });
                 var edPrice = $(globVar.vTable).datagrid('getEditor', { index: dgWrapper.editIndex, field: 'Price' });
 
-                $(edQuantity.target).numberbox('setValue', null);
-                $(edPrice.target).numberbox('setValue', null);
+                $(edQuantity.target).numberbox('setValue', 0);
+                $(edPrice.target).numberbox('setValue', 0);
             }
         }
 
@@ -634,6 +637,8 @@
                 ed = $(globVar.vTable).datagrid('getEditor', { index: ind, field: 'Abstract' });
                 $(ed.target).textbox("setValue",globVar.preAbstract);
             }
+
+            globVar.rowAccount=null;
         }
 
         function fieldSettingFun(ind,dg)
@@ -678,15 +683,33 @@
         function chgQuantity(newValue,oldValue)
         {
             if($(globVar.vTable).datagrid("getColumnOption","Quantity").hidden)return;
+            if(globVar.rowAccount==null)return;
 
-            var edDebit = $(globVar.vTable).datagrid('getEditor', { index: dgWrapper.editIndex, field: 'Debit' });
+            var direction = globVar.rowAccount.Direction;
+            var edAmount = $(globVar.vTable).datagrid('getEditor', { index: dgWrapper.editIndex, field: (direction=='借'?'Debit':'Credit') });
             var edPrice = $(globVar.vTable).datagrid('getEditor', { index: dgWrapper.editIndex, field: 'Price' });
 
             if(edPrice == null || edPrice.target == null)return;
 
             var price = $(edPrice.target).numberbox('getValue');
 
-            $(edDebit.target).numberbox('setValue', price*newValue);
+            $(edAmount.target).numberbox('setValue', price*newValue);
+        }
+
+        function chgPrice(newValue,oldValue)
+        {
+            if($(globVar.vTable).datagrid("getColumnOption","Price").hidden)return;
+            if(globVar.rowAccount==null)return;
+
+            var direction = globVar.rowAccount.Direction;
+            var edDebit = $(globVar.vTable).datagrid('getEditor', { index: dgWrapper.editIndex, field: (direction=='借'?'Debit':'Credit') });
+            var edQuantity = $(globVar.vTable).datagrid('getEditor', { index: dgWrapper.editIndex, field: 'Quantity' });
+
+            if(edQuantity == null || edQuantity.target == null)return;
+
+            var edQuantity = $(edQuantity.target).numberbox('getValue');
+
+            $(edDebit.target).numberbox('setValue', edQuantity*newValue);
         }
 
         //=========事件响应=====
