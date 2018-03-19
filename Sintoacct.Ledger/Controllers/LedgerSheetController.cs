@@ -5,14 +5,18 @@ using System.Web;
 using System.Web.Mvc;
 using System.Security.Claims;
 using Sintoacct.Ledger.Models;
+using Sintoacct.Ledger.Services;
+using Newtonsoft.Json;
 
 namespace Sintoacct.Ledger.Controllers
 {
     public class LedgerSheetController : BaseController
     {
-        public LedgerSheetController()
-        {
+        private readonly IAccountHelper _account;
 
+        public LedgerSheetController(IAccountHelper account)
+        {
+            _account = account;
         }
 
         /// <summary>
@@ -54,6 +58,18 @@ namespace Sintoacct.Ledger.Controllers
         public ActionResult VoucherSummary()
         {
             return View();
+        }
+
+        /// <summary>
+        /// 多栏账
+        /// </summary>
+        /// <returns></returns>
+        [ClaimsAuthorize("role", "accountant")]
+        public ActionResult MultiColumn()
+        {
+            MultiColumnViewModels mcvm = new MultiColumnViewModels();
+            mcvm.AccountsJson = JsonConvert.SerializeObject(_account.GetAccountTree().children);
+            return View(mcvm);
         }
     }
 }

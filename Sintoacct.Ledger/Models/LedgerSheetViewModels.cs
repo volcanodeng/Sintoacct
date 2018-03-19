@@ -113,4 +113,12 @@ namespace Sintoacct.Ledger.Models
 
         public decimal Credit { get; set; }
     }
+
+    /// <summary>
+    /// 多栏账
+    /// </summary>
+    public class MultiColumnViewModels
+    {
+        public string AccountsJson { get; set; }
+    }
 }

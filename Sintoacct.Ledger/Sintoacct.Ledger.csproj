@@ -456,6 +456,7 @@
     <Content Include="Views\Customer\Customers.cshtml" />
     <Content Include="Views\BizSetting\BizConfig.cshtml" />
     <Content Include="Views\Report\ReportProgress.cshtml" />
+    <Content Include="Views\LedgerSheet\MultiColumn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
