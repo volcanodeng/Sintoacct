@@ -205,7 +205,7 @@ namespace Sintoacct.Ledger.Services
                 voucher.InvoiceCount = vmVoucher.InvoiceCount;
                 voucher.State = VoucherState.PaddingAudit;
                 voucher.AccountBook = _acctBook.GetCurrentBook();
-                voucher.Creator = ((ClaimsIdentity)_context.User.Identity).GetUserName();
+                voucher.Creator = ((ClaimsIdentity)_context.User.Identity).Claims.Where(c => c.Type == "name").FirstOrDefault().Value;
                 voucher.CreateTime = DateTime.Now;
                 voucher.VoucherDetails = new List<VoucherDetail>();
 

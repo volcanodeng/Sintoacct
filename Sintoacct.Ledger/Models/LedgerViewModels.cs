@@ -670,5 +670,7 @@ namespace Sintoacct.Ledger.Models
         public DateTime NextVoucherDate { get; set; }
 
         public int VoucherIndex { get; set; }
+
+        public string CurrentUserName { get; set; }
     }
 }

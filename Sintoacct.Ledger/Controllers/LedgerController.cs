@@ -2,6 +2,7 @@
 using Sintoacct.Ledger.Services;
 using System;
 using System.Web;
+using System.Linq;
 using System.Security.Claims;
 using Sintoacct.Ledger.Models;
 using Microsoft.AspNet.Identity;
@@ -137,6 +138,7 @@ namespace Sintoacct.Ledger.Controllers
             model.AccountsJson = JsonConvert.SerializeObject( _account.GetAccountTree().children);
             model.NextVoucherDate = _voucher.GetNextVoucherDate();
             model.VoucherIndex = vIndex;
+            model.CurrentUserName = _identity.Claims.Where(c => c.Type == "name").FirstOrDefault().Value;
             return View(model);
         }
 

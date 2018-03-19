@@ -40,7 +40,7 @@
             background: #fff;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
             position: relative;
-            height: 480px;
+            height: 520px;
             overflow: hidden;
         }
 
@@ -238,6 +238,9 @@
                             </thead>
                         </table>
                     </div>
+                    <div style="padding:10px 0px 10px 0px;">
+                        <div><span style="font-size:14px;">制单人：@Model.CurrentUserName</span></div>
+                    </div>
                 </div>
                 <div id="abstractsWin" class="easyui-dialog" title="摘要选择" style="width:400px;height:500px;" data-options="modal:true,closed: true">
                     <div class="easyui-layout" data-options="fit:true">
@@ -286,7 +289,7 @@
             accountData: @Html.Raw( Model.AccountsJson),               //科目数据
             nextDate:"@Model.NextVoucherDate.ToString("yyyy-MM-dd")",    //下一个凭证的默认日期
             preAbstract:"",                                               //记录前一行摘要的内容，下一行自动粘贴该内容出来
-            rowAccount:null                                                //保存当前行的科目信息
+            rowAccount:new Array()                                        //保存当前行的科目信息
         };
 
         //======初始化=======
@@ -595,7 +598,7 @@
         {
             $(globVar.vTable).datagrid('getRows')[dgWrapper.editIndex]['AccountCode'] = node.attributes.AccCode;
             $(globVar.vTable).datagrid('getRows')[dgWrapper.editIndex]['AccountName'] = node.attributes.AccName;
-            globVar.rowAccount = node.attributes;
+            globVar.rowAccount.splice(dgWrapper.editIndex,1, node.attributes);
 
             if(node.attributes.IsQuantity)
             {
@@ -638,7 +641,6 @@
                 $(ed.target).textbox("setValue",globVar.preAbstract);
             }
 
-            globVar.rowAccount=null;
         }
 
         function fieldSettingFun(ind,dg)
@@ -683,9 +685,9 @@
         function chgQuantity(newValue,oldValue)
         {
             if($(globVar.vTable).datagrid("getColumnOption","Quantity").hidden)return;
-            if(globVar.rowAccount==null)return;
+            if(globVar.rowAccount[dgWrapper.editIndex]==null)return;
 
-            var direction = globVar.rowAccount.Direction;
+            var direction = globVar.rowAccount[dgWrapper.editIndex].Direction;
             var edAmount = $(globVar.vTable).datagrid('getEditor', { index: dgWrapper.editIndex, field: (direction=='借'?'Debit':'Credit') });
             var edPrice = $(globVar.vTable).datagrid('getEditor', { index: dgWrapper.editIndex, field: 'Price' });
 
@@ -699,9 +701,9 @@
         function chgPrice(newValue,oldValue)
         {
             if($(globVar.vTable).datagrid("getColumnOption","Price").hidden)return;
-            if(globVar.rowAccount==null)return;
+            if(globVar.rowAccount[dgWrapper.editIndex]==null)return;
 
-            var direction = globVar.rowAccount.Direction;
+            var direction = globVar.rowAccount[dgWrapper.editIndex].Direction;
             var edDebit = $(globVar.vTable).datagrid('getEditor', { index: dgWrapper.editIndex, field: (direction=='借'?'Debit':'Credit') });
             var edQuantity = $(globVar.vTable).datagrid('getEditor', { index: dgWrapper.editIndex, field: 'Quantity' });
 
