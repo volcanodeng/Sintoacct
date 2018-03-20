@@ -285,9 +285,15 @@
 
     function formatterAccCode(value,row,index)
     {
+        var tabStr = "&nbsp;&nbsp;";
         if(row.AccCode.length > 4)
         {
-            return "&nbsp;&nbsp;&nbsp;&nbsp;"+value;
+            var tabTimes = (row.AccCode.length - 4)/2;
+            for(i = 0;i<tabTimes;i++)
+            {
+                tabStr += tabStr;
+            }
+            return tabStr+value;
         }
 
         return value;

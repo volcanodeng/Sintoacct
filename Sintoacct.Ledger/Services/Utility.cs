@@ -29,7 +29,7 @@ namespace Sintoacct.Ledger.Services
                 accNode.attributes = Mapper.Map<AccountViewModel>(a);
                 tree.children.Add(accNode);
 
-                AccountRecursion(accounts.Where(acc => acc.ParentAccCode == a.AccCode).ToList(), accNode);
+                AccountRecursion(accounts.Where(acc => acc.AcId == a.AcId).ToList(), accNode);
             }
 
         }

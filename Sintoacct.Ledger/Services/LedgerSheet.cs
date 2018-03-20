@@ -442,6 +442,12 @@ namespace Sintoacct.Ledger.Services
         }
 
         #endregion
+
+        #region 多栏账
+
+
+
+        #endregion
     }
 
     public interface ILedgerSheet : IDependency
