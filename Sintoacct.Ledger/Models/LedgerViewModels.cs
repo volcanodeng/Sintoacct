@@ -673,4 +673,13 @@ namespace Sintoacct.Ledger.Models
 
         public string CurrentUserName { get; set; }
     }
+
+    public class SearchMultiColumnViewModel
+    {
+        public string StartPeriod {get;set;}
+
+        public string EndPeriod {get;set;}
+
+        public int? AccId {get;set;}
+    }
 }
