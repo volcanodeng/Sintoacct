@@ -97,7 +97,7 @@ namespace Sintoacct.Ledger.Controllers.Api
 
         [ClaimsAuthorize("role", "accountant")]
         [HttpGet, HttpPost, Route("api/LedgerSheet/GetAccountBalance")]
-        public IHttpActionResult GetMultiColumn(SearchConditionViewModel condition)
+        public IHttpActionResult GetMultiColumn(SearchMultiColumnViewModel condition)
         {
 
             if (string.IsNullOrEmpty(condition.StartPeriod) || string.IsNullOrEmpty(condition.EndPeriod))
@@ -105,7 +105,7 @@ namespace Sintoacct.Ledger.Controllers.Api
                 ResMessage.Fail("会计期间不能为空");
             }
 
-            List<AccountBalanceViewModels> sheet = _sheet.GetAccountBalance(condition);
+            List<AccountBalanceViewModels> sheet = new List<AccountBalanceViewModels>();//_sheet.GetAccountBalance(condition);
             DatagridViewModel<AccountBalanceViewModels> dgSheet = new DatagridViewModel<AccountBalanceViewModels>();
             dgSheet.rows = sheet;
 

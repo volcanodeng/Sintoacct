@@ -67,7 +67,7 @@ namespace Sintoacct.Ledger.Controllers
         [ClaimsAuthorize("role", "accountant")]
         public ActionResult MultiColumn()
         {
-            MultiColumnViewModels mcvm = new MultiColumnViewModels();
+            MultiColumnInitViewModels mcvm = new MultiColumnInitViewModels();
             mcvm.AccountsJson = JsonConvert.SerializeObject(_account.GetAccountTree().children);
             return View(mcvm);
         }

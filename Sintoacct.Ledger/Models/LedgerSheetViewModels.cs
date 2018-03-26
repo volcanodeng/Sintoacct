@@ -117,8 +117,65 @@ namespace Sintoacct.Ledger.Models
     /// <summary>
     /// 多栏账
     /// </summary>
-    public class MultiColumnViewModels
+    public class MultiColumnInitViewModels
     {
         public string AccountsJson { get; set; }
     }
+
+    public class MultiColumnViewModels
+    {
+        public long VdId { get; set; }
+
+        public int VoucherYear { get; set; }
+
+        public int VoucherMonth { get; set; }
+
+        public string CertWord { get; set; }
+
+        public int CertWordSN { get; set; }
+
+        public string Abstract { get; set; }
+
+        public decimal Debit { get; set; }
+
+        public decimal Credit { get; set; }
+
+        public string Direction { get; set; }
+
+        public decimal Balance { get; set; }
+
+        public List<BalanceOfSubAccount> SubAccountBalance { get; set; }
+    }
+
+    public class BalanceOfSubAccount
+    {
+        public long VdId { get; set; }
+
+        public long AccId { get; set; }
+
+        public string AccountName { get; set; }
+
+        public decimal Balance { get; set; }
+
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

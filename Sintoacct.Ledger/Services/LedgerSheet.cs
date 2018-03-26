@@ -445,7 +445,12 @@ namespace Sintoacct.Ledger.Services
 
         #region 多栏账
 
+        public List<MultiColumnViewModels> GetMultiColumn(SearchMultiColumnViewModel condition)
+        {
+            Guid abid = _cache.GetUserCache().AccountBookID;
 
+            return new List<MultiColumnViewModels>();
+        }
 
         #endregion
     }
