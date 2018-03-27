@@ -680,6 +680,6 @@ namespace Sintoacct.Ledger.Models
 
         public string EndPeriod {get;set;}
 
-        public int? AccId {get;set;}
+        public string ParentAccCode {get;set;}
     }
 }

@@ -449,6 +449,45 @@ namespace Sintoacct.Ledger.Services
         {
             Guid abid = _cache.GetUserCache().AccountBookID;
 
+            //固定列的明细记录
+            string frozenFields = "select v.VoucherYear,v.VoucherMonth,(select CertWord from T_Certificate_Word where CwId=v.CertificateWord_CwId) Certword,v.CertWordSN,vd.Abstract,vd.Debit,vd.Credit,a.Direction,0 as balance,vd.VdId "
+                                + "from T_Voucher v ,T_Voucher_Detail vd,T_Account a where v.VId=vd.VId and vd.AccId=a.AccId "
+                                + string.Format("and (Debit<>0 or Credit<>0) and v.AbId = {0} ", Utility.ParameterNameString("abid"))
+                                + string.Format("and v.PaymentTerms>={0} and v.PaymentTerms <= {1} and a.ParentAccCode={2} ",Utility.ParameterNameString("pts"),Utility.ParameterNameString("pte"),Utility.ParameterNameString("parAccCode"))
+                                + "order by v.VoucherYear,v.VoucherMonth ";
+
+            object[] parames = new object[] {
+                Utility.NewParameter("abid", abid),
+                Utility.NewParameter("pts", condition.StartPeriod),
+                Utility.NewParameter("pte", condition.EndPeriod),
+                Utility.NewParameter("parAccCode", condition.ParentAccCode)
+            };
+
+            List<MultiColumnViewModels> multiColumn = _ledger.Database.SqlQuery<MultiColumnViewModels>(frozenFields, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
+
+            //科目选项
+            string accountOptions = "select vd.AccId,vd.AccountCode,vd.AccountName "+
+                                    "from T_Voucher v ,T_Voucher_Detail vd,T_Account a where v.VId=vd.VId and vd.AccId=a.AccId " +
+                                    string.Format("and (Debit<>0 or Credit<>0) and v.AbId = {0} ", Utility.ParameterNameString("abid")) +
+                                    string.Format("and v.PaymentTerms>={0} and v.PaymentTerms <= {1} and a.ParentAccCode={2} ", Utility.ParameterNameString("pts"), Utility.ParameterNameString("pte"), Utility.ParameterNameString("parAccCode")) +
+                                    "group by vd.AccId,vd.AccountCode,vd.AccountName";
+
+            List<BalanceOfSubAccount> accounts = _ledger.Database.SqlQuery<BalanceOfSubAccount>(accountOptions, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
+
+            string accountBalance = "select VdId,vd.AccId,vd.Debit+vd.Credit as Balance " +
+                                    "from T_Voucher v ,T_Voucher_Detail vd,T_Account a where v.VId=vd.VId and vd.AccId=a.AccId " +
+                                    string.Format("and (Debit<>0 or Credit<>0) and v.AbId = {0} ", Utility.ParameterNameString("abid"))+
+                                    string.Format("and v.PaymentTerms>={0} and v.PaymentTerms <= {1} and a.ParentAccCode={2} ", Utility.ParameterNameString("pts"), Utility.ParameterNameString("pte"), Utility.ParameterNameString("parAccCode"));
+
+            List<BalanceOfSubAccount> accBalance = _ledger.Database.SqlQuery<BalanceOfSubAccount>(accountBalance, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
+
+            string InitialBalance = "select vd.AccId,vd.AccountName,sum(vd.Debit+vd.Credit) as Balance " +
+                                    "from T_Voucher v ,T_Voucher_Detail vd,T_Account a where v.VId=vd.VId and vd.AccId=a.AccId " +
+                                    string.Format("and (Debit<>0 or Credit<>0) and v.AbId = {0} ", Utility.ParameterNameString("abid"))+
+                                    string.Format("and v.PaymentTerms <= {0} and a.ParentAccCode={1} ", Utility.ParameterNameString("pts"), Utility.ParameterNameString("parAccCode"))+
+                                    "GROUP BY vd.AccId,vd.AccountName ";
+
+
             return new List<MultiColumnViewModels>();
         }
 
