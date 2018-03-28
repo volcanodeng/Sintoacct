@@ -481,13 +481,24 @@ namespace Sintoacct.Ledger.Services
 
             List<BalanceOfSubAccount> accBalance = _ledger.Database.SqlQuery<BalanceOfSubAccount>(accountBalance, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
 
+            //期初余额
             string InitialBalance = "select vd.AccId,vd.AccountName,sum(vd.Debit+vd.Credit) as Balance " +
                                     "from T_Voucher v ,T_Voucher_Detail vd,T_Account a where v.VId=vd.VId and vd.AccId=a.AccId " +
                                     string.Format("and (Debit<>0 or Credit<>0) and v.AbId = {0} ", Utility.ParameterNameString("abid"))+
                                     string.Format("and v.PaymentTerms <= {0} and a.ParentAccCode={1} ", Utility.ParameterNameString("pts"), Utility.ParameterNameString("parAccCode"))+
                                     "GROUP BY vd.AccId,vd.AccountName ";
 
+            List<BalanceOfSubAccount> initBalance = _ledger.Database.SqlQuery<BalanceOfSubAccount>(InitialBalance, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
 
+
+            return this.DataIntegrate(multiColumn, accounts, accBalance, initBalance);
+        }
+
+        private List<MultiColumnViewModels> DataIntegrate(List<MultiColumnViewModels> multiColumn,
+                                                          List<BalanceOfSubAccount> accounts,
+                                                          List<BalanceOfSubAccount> accBalance,
+                                                          List<BalanceOfSubAccount> initBalance)
+        {
             return new List<MultiColumnViewModels>();
         }
 
@@ -505,6 +516,8 @@ namespace Sintoacct.Ledger.Services
         List<GeneralLedgerViewModels> GetGeneralLedger(SearchConditionViewModel condition);
 
         List<AccountBalanceViewModels> GetAccountBalance(SearchConditionViewModel condition);
+
+        List<MultiColumnViewModels> GetMultiColumn(SearchMultiColumnViewModel condition);
     }
 
     public class AccountBalanceModel

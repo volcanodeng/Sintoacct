@@ -676,10 +676,13 @@ namespace Sintoacct.Ledger.Models
 
     public class SearchMultiColumnViewModel
     {
+        [Required(ErrorMessage = "请选择科目期间的开始时间")]
         public string StartPeriod {get;set;}
 
+        [Required(ErrorMessage = "请选择科目期间的结束时间")]
         public string EndPeriod {get;set;}
 
+        [Required(ErrorMessage = "请选择会计科目")]
         public string ParentAccCode {get;set;}
     }
 }
