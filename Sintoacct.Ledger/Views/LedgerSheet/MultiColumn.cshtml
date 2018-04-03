@@ -33,7 +33,9 @@
             <form id="sForm" method="post">
                 <div>会计期间：<input class="easyui-combobox" id="StartPeriod" name="StartPeriod" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /> 至 <input class="easyui-combobox" id="EndPeriod" name="EndPeriod" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /></div>
 
-                <div><span style="padding-left:12px;">会计科目：</span><input class="easyui-combotree" id="ParentAccCode" name="ParentAccCode" data-options="width:200,height:30" /></div>
+                <div><span style="padding-left:12px;">会计科目：</span><input class="easyui-combotree" id="AccCode"  data-options="width:200,height:30,onSelect:acccodeOnSelect" />
+                <input type="hidden" name="ParentAccCode" id="ParentAccCode" />
+                </div>
 
                 <div><a href="javascript:void(0)" id="btnSearch" class="easyui-linkbutton" data-options="iconCls:'fa fa-search fa-lg'" onclick="javascript: $('#sForm').submit();" style="width:100px;">查询</a></div>
             </form>
@@ -82,7 +84,7 @@
             $("#StartPeriod,#EndPeriod").combobox("select", data[data.length - 1].val);
         });
 
-        $("#ParentAccCode").combotree("loadData",globVar.accountData);
+        $("#AccCode").combotree("loadData",globVar.accountData);
     }
 
     function formOnSubmit() {
@@ -105,6 +107,11 @@
     {
         if (value == 0) return "";
         else return '<span style="font-weight:bolder;">' + parseFloat(value).toFixed(2) + "</span>";
+    }
+
+    function acccodeOnSelect(node)
+    {
+        $("#ParentAccCode").val(node.attributes.AccCode);
     }
 
     </script>

@@ -450,7 +450,7 @@ namespace Sintoacct.Ledger.Services
             Guid abid = _cache.GetUserCache().AccountBookID;
 
             //固定列的明细记录
-            string frozenFields = "select v.VoucherYear,v.VoucherMonth,(select CertWord from T_Certificate_Word where CwId=v.CertificateWord_CwId) Certword,v.CertWordSN,vd.Abstract,vd.Debit,vd.Credit,a.Direction,0 as balance,vd.VdId "
+            string frozenFields = "select v.VoucherYear,v.VoucherMonth,(select CertWord from T_Certificate_Word where CwId=v.CertificateWord_CwId) Certword,v.CertWordSN,vd.Abstract,vd.Debit,vd.Credit,a.Direction,0.00 as balance,vd.VdId "
                                 + "from T_Voucher v ,T_Voucher_Detail vd,T_Account a where v.VId=vd.VId and vd.AccId=a.AccId "
                                 + string.Format("and (Debit<>0 or Credit<>0) and v.AbId = {0} ", Utility.ParameterNameString("abid"))
                                 + string.Format("and v.PaymentTerms>={0} and v.PaymentTerms <= {1} and a.ParentAccCode={2} ",Utility.ParameterNameString("pts"),Utility.ParameterNameString("pte"),Utility.ParameterNameString("parAccCode"))
@@ -474,6 +474,7 @@ namespace Sintoacct.Ledger.Services
 
             List<BalanceOfSubAccount> accounts = _ledger.Database.SqlQuery<BalanceOfSubAccount>(accountOptions, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
 
+            //科目余额
             string accountBalance = "select VdId,vd.AccId,vd.Debit+vd.Credit as Balance " +
                                     "from T_Voucher v ,T_Voucher_Detail vd,T_Account a where v.VId=vd.VId and vd.AccId=a.AccId " +
                                     string.Format("and (Debit<>0 or Credit<>0) and v.AbId = {0} ", Utility.ParameterNameString("abid"))+
@@ -499,6 +500,24 @@ namespace Sintoacct.Ledger.Services
                                                           List<BalanceOfSubAccount> accBalance,
                                                           List<BalanceOfSubAccount> initBalance)
         {
+            List<MultiColumnViewModels> mcList = new List<MultiColumnViewModels>();
+
+            if (initBalance.Count > 0)
+            {
+                foreach (BalanceOfSubAccount ib in initBalance)
+                {
+
+                }
+            }
+            else
+            {
+                MultiColumnViewModels firstInitBalance = new MultiColumnViewModels();
+                firstInitBalance.Abstract = "期初余额";
+                firstInitBalance.Direction = "平";
+                mcList.Add(firstInitBalance);
+            }
+
+
             return new List<MultiColumnViewModels>();
         }
 
