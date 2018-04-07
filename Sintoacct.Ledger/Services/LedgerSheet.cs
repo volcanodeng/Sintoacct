@@ -486,7 +486,7 @@ namespace Sintoacct.Ledger.Services
             string InitialBalance = "select vd.AccId,vd.AccountName,sum(vd.Debit+vd.Credit) as Balance " +
                                     "from T_Voucher v ,T_Voucher_Detail vd,T_Account a where v.VId=vd.VId and vd.AccId=a.AccId " +
                                     string.Format("and (Debit<>0 or Credit<>0) and v.AbId = {0} ", Utility.ParameterNameString("abid"))+
-                                    string.Format("and v.PaymentTerms <= {0} and a.ParentAccCode={1} ", Utility.ParameterNameString("pts"), Utility.ParameterNameString("parAccCode"))+
+                                    string.Format("and v.PaymentTerms < {0} and a.ParentAccCode={1} ", Utility.ParameterNameString("pts"), Utility.ParameterNameString("parAccCode"))+
                                     "GROUP BY vd.AccId,vd.AccountName ";
 
             List<BalanceOfSubAccount> initBalance = _ledger.Database.SqlQuery<BalanceOfSubAccount>(InitialBalance, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
@@ -502,20 +502,19 @@ namespace Sintoacct.Ledger.Services
         {
             List<MultiColumnViewModels> mcList = new List<MultiColumnViewModels>();
 
+            //期初余额
+            MultiColumnViewModels firstInitBalance = new MultiColumnViewModels();
+            firstInitBalance.SubAccountBalance.AddRange(accounts);
             if (initBalance.Count > 0)
             {
-                foreach (BalanceOfSubAccount ib in initBalance)
-                {
-
-                }
+                firstInitBalance.SubAccountBalance.AddRange(initBalance);
             }
             else
             {
-                MultiColumnViewModels firstInitBalance = new MultiColumnViewModels();
                 firstInitBalance.Abstract = "期初余额";
                 firstInitBalance.Direction = "平";
-                mcList.Add(firstInitBalance);
             }
+            mcList.Add(firstInitBalance);
 
 
             return new List<MultiColumnViewModels>();

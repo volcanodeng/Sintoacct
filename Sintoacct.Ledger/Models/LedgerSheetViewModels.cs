@@ -124,6 +124,11 @@ namespace Sintoacct.Ledger.Models
 
     public class MultiColumnViewModels
     {
+        public MultiColumnViewModels()
+        {
+            SubAccountBalance = new List<BalanceOfSubAccount>();
+        }
+
         public long VdId { get; set; }
 
         public int VoucherYear { get; set; }
