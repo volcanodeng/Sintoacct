@@ -450,7 +450,7 @@ namespace Sintoacct.Ledger.Services
             Guid abid = _cache.GetUserCache().AccountBookID;
 
             //固定列的明细记录
-            string frozenFields = "select v.VoucherYear,v.VoucherMonth,(select CertWord from T_Certificate_Word where CwId=v.CertificateWord_CwId) Certword,v.CertWordSN,vd.Abstract,vd.Debit,vd.Credit,a.Direction,0.00 as balance,vd.VdId "
+            string frozenFields = "select v.VoucherYear,v.VoucherMonth,(select CertWord from T_Certificate_Word where CwId=v.CertificateWord_CwId) Certword,v.CertWordSN,vd.Abstract,vd.Debit,vd.Credit,a.Direction,0.00 as balance,vd.VdId,v.PaymentTerms "
                                 + "from T_Voucher v ,T_Voucher_Detail vd,T_Account a where v.VId=vd.VId and vd.AccId=a.AccId "
                                 + string.Format("and (Debit<>0 or Credit<>0) and v.AbId = {0} ", Utility.ParameterNameString("abid"))
                                 + string.Format("and v.PaymentTerms>={0} and v.PaymentTerms <= {1} and a.ParentAccCode={2} ",Utility.ParameterNameString("pts"),Utility.ParameterNameString("pte"),Utility.ParameterNameString("parAccCode"))
@@ -491,33 +491,88 @@ namespace Sintoacct.Ledger.Services
 
             List<BalanceOfSubAccount> initBalance = _ledger.Database.SqlQuery<BalanceOfSubAccount>(InitialBalance, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
 
+            List<string> fpt = this.GetFullPaymentTerms(condition.StartPeriod, condition.EndPeriod);
 
-            return this.DataIntegrate(multiColumn, accounts, accBalance, initBalance);
+            return this.DataIntegrate(multiColumn, accounts, accBalance, initBalance,fpt);
         }
 
         private List<MultiColumnViewModels> DataIntegrate(List<MultiColumnViewModels> multiColumn,
                                                           List<BalanceOfSubAccount> accounts,
                                                           List<BalanceOfSubAccount> accBalance,
-                                                          List<BalanceOfSubAccount> initBalance)
+                                                          List<BalanceOfSubAccount> initBalance,
+                                                          List<string> FullPaymentTerms)
         {
             List<MultiColumnViewModels> mcList = new List<MultiColumnViewModels>();
 
-            //期初余额
+            #region 期初余额
+
             MultiColumnViewModels firstInitBalance = new MultiColumnViewModels();
             firstInitBalance.SubAccountBalance.AddRange(accounts);
             if (initBalance.Count > 0)
             {
-                firstInitBalance.SubAccountBalance.AddRange(initBalance);
+                //绑定相关的期初余额
+                firstInitBalance.SubAccountBalance.ForEach(sa => sa.Balance = this.GetSubAccountBalance(initBalance, sa));
             }
             else
             {
+                //所有子科目都没有期初
                 firstInitBalance.Abstract = "期初余额";
                 firstInitBalance.Direction = "平";
             }
             mcList.Add(firstInitBalance);
 
+            #endregion
 
-            return new List<MultiColumnViewModels>();
+            foreach(string pt in FullPaymentTerms)
+            {
+                var curPaymentTerms = multiColumn.Where(mc => mc.PaymentTerms == pt).ToList();
+            }
+
+            return mcList;
+        }
+
+        /// <summary>
+        /// 找到当前子科目的期初余额
+        /// </summary>
+        /// <param name="initBalance">期初数据</param>
+        /// <param name="subAccount">当前子科目</param>
+        /// <returns>期初余额</returns>
+        private decimal? GetSubAccountBalance(List<BalanceOfSubAccount> initBalance, BalanceOfSubAccount subAccount)
+        {
+            var initSubAccount = initBalance.Where(ib => ib.AccId == subAccount.AccId).FirstOrDefault();
+
+            if(initSubAccount == null)
+            {
+                return null;
+            }
+            else
+            {
+                return initSubAccount.Balance;
+            }
+        }
+
+        private List<string> GetFullPaymentTerms(string start,string end)
+        {
+            if (string.IsNullOrEmpty(start) || string.IsNullOrEmpty(end))
+            {
+                throw new ArgumentNullException("会计期间不能为空");
+            }
+            if(start.Length!=6 || end.Length!=6)
+            {
+                throw new ArgumentOutOfRangeException("会计期间格式无效");
+            }
+
+            DateTime dtStart = new DateTime(Convert.ToInt32(start.Substring(0, 4)), Convert.ToInt32(start.Substring(4)), 1);
+            DateTime dtEnd = new DateTime(Convert.ToInt32(end.Substring(0, 4)), Convert.ToInt32(end.Substring(4)), 1);
+
+            List<string> FullPaymentTerms = new List<string>();
+            while (dtStart <= dtEnd)
+            {
+                FullPaymentTerms.Add(dtStart.ToString("yyyyMM"));
+                dtStart = dtStart.AddMonths(1);
+            }
+
+            return FullPaymentTerms;
         }
 
         #endregion

@@ -149,6 +149,8 @@ namespace Sintoacct.Ledger.Models
 
         public decimal Balance { get; set; }
 
+        public string PaymentTerms { get; set; }
+
         public List<BalanceOfSubAccount> SubAccountBalance { get; set; }
     }
 
@@ -160,7 +162,7 @@ namespace Sintoacct.Ledger.Models
 
         public string AccountName { get; set; }
 
-        public decimal Balance { get; set; }
+        public decimal? Balance { get; set; }
 
     }
 }
