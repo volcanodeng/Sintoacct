@@ -449,6 +449,8 @@ namespace Sintoacct.Ledger.Services
         {
             Guid abid = _cache.GetUserCache().AccountBookID;
 
+            Account pAccount = _ledger.Accounts.Where(a => a.AbId == abid && a.AccCode == condition.ParentAccCode).FirstOrDefault();
+
             //固定列的明细记录
             string frozenFields = "select v.VoucherYear,v.VoucherMonth,(select CertWord from T_Certificate_Word where CwId=v.CertificateWord_CwId) Certword,v.CertWordSN,vd.Abstract,vd.Debit,vd.Credit,a.Direction,0.00 as balance,vd.VdId,v.PaymentTerms "
                                 + "from T_Voucher v ,T_Voucher_Detail vd,T_Account a where v.VId=vd.VId and vd.AccId=a.AccId "
@@ -491,16 +493,27 @@ namespace Sintoacct.Ledger.Services
 
             List<BalanceOfSubAccount> initBalance = _ledger.Database.SqlQuery<BalanceOfSubAccount>(InitialBalance, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
 
+            //本期合计
+            string TotalOfTheCurrentPeriod = "select '本期合计' as Abstract,v.PaymentTerms,sum(vd.Debit) as Debit,sum(vd.Credit) as Credit " +
+                                             "from T_Voucher v ,T_Voucher_Detail vd,T_Account a where v.VId=vd.VId and vd.AccId=a.AccId " +
+                                             string.Format("and (Debit<>0 or Credit<>0) and v.AbId = {0} ", Utility.ParameterNameString("abid")) +
+                                             string.Format("and v.PaymentTerms>={0} and v.PaymentTerms <= {1} and a.ParentAccCode={2} ", Utility.ParameterNameString("pts"), Utility.ParameterNameString("pte"), Utility.ParameterNameString("parAccCode"))+
+                                             "group by v.PaymentTerms ";
+
+            List<MultiColumnViewModels> TotalOfTheCurrentPeriods = _ledger.Database.SqlQuery<MultiColumnViewModels>(TotalOfTheCurrentPeriod, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
+
             List<string> fpt = this.GetFullPaymentTerms(condition.StartPeriod, condition.EndPeriod);
 
-            return this.DataIntegrate(multiColumn, accounts, accBalance, initBalance,fpt);
+            return this.DataIntegrate(multiColumn, accounts, accBalance, initBalance,fpt, pAccount,TotalOfTheCurrentPeriods);
         }
 
         private List<MultiColumnViewModels> DataIntegrate(List<MultiColumnViewModels> multiColumn,
                                                           List<BalanceOfSubAccount> accounts,
                                                           List<BalanceOfSubAccount> accBalance,
                                                           List<BalanceOfSubAccount> initBalance,
-                                                          List<string> FullPaymentTerms)
+                                                          List<string> FullPaymentTerms,
+                                                          Account parentAccount,
+                                                          List<MultiColumnViewModels> totalOfTheCurrentPeriods)
         {
             List<MultiColumnViewModels> mcList = new List<MultiColumnViewModels>();
 
@@ -519,13 +532,33 @@ namespace Sintoacct.Ledger.Services
                 firstInitBalance.Abstract = "期初余额";
                 firstInitBalance.Direction = "平";
             }
+
+            string initPaymentTerm = FullPaymentTerms.Min();
+            firstInitBalance.VoucherYear = Convert.ToInt32(initPaymentTerm.Substring(0, 4));
+            firstInitBalance.VoucherMonth = Convert.ToInt32(initPaymentTerm.Substring(4));
+
             mcList.Add(firstInitBalance);
 
             #endregion
 
             foreach(string pt in FullPaymentTerms)
             {
-                var curPaymentTerms = multiColumn.Where(mc => mc.PaymentTerms == pt).ToList();
+                //当前会计期间的明细数据
+                var curDetails = multiColumn.Where(mc => mc.PaymentTerms == pt).ToList();
+                if (curDetails.Count == 0) continue;
+                mcList.AddRange(curDetails);
+
+                //本期合计
+                var curTotalPeriod = totalOfTheCurrentPeriods.Where(tcp => tcp.PaymentTerms == pt).FirstOrDefault();
+                if(curTotalPeriod==null)
+                {
+                    throw new ArgumentNullException("找不到本期合计");
+                }
+                curTotalPeriod.VoucherYear= Convert.ToInt32(pt.Substring(0, 4));
+                curTotalPeriod.VoucherMonth = Convert.ToInt32(pt.Substring(4));
+                mcList.Add(curTotalPeriod);
+
+                
             }
 
             return mcList;

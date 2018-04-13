@@ -45,13 +45,13 @@
                    data-options="fit:true,singleSelect:true,fitColumns:true">
                 <thead>
                     <tr>
-                        <th data-options="field:'AccountCode',width:50,align:'center'">日期</th>
-                        <th data-options="field:'AccountName',width:150,align:'center'">凭证字号</th>
-                        <th data-options="field:'AccountName',width:150,align:'center'">摘要</th>
+                        <th data-options="field:'VoucherDate',width:50,align:'center'">日期</th>
+                        <th data-options="field:'CertWordString',width:50,align:'center'">凭证字号</th>
+                        <th data-options="field:'Abstract',width:200,formatter:fmtAbstract">摘要</th>
                         <th data-options="field:'Debit',width:80,align:'center'">借方</th>
                         <th data-options="field:'Credit',width:60,align:'center'">贷方</th>
-                        <th data-options="field:'Credit',width:60,align:'center'">方向</th>
-                        <th data-options="field:'Credit',width:60,align:'center'">余额</th>
+                        <th data-options="field:'Direction',width:60,align:'center'">方向</th>
+                        <th data-options="field:'Balance',width:60,align:'center'">余额</th>
                     </tr>
                 </thead>
             </table>
@@ -112,7 +112,15 @@
     function acccodeOnSelect(node)
     {
         $("#ParentAccCode").val(node.attributes.AccCode);
-    }
+        }
+
+        function fmtAbstract(value, row, index) {
+            if (row.CertWordString == "") {
+                value = "&nbsp;&nbsp;" + value;
+            }
+
+            return value;
+        }
 
     </script>
 </body>

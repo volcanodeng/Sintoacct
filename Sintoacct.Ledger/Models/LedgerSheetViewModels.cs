@@ -135,9 +135,38 @@ namespace Sintoacct.Ledger.Models
 
         public int VoucherMonth { get; set; }
 
+        public string VoucherDate {
+            get
+            {
+                string res = "";
+                if (VoucherYear > 0 && VoucherMonth > 0)
+                {
+                    res = string.Format("{0}-{1}-{2}", VoucherYear, VoucherMonth, DateTime.DaysInMonth(VoucherYear, VoucherMonth));
+                }
+
+                if(Abstract == "期初余额")
+                {
+                    res = string.Format("{0}-{1}-1", VoucherYear, VoucherMonth);
+                }
+
+                return res;
+            }
+        }
+
         public string CertWord { get; set; }
 
         public int CertWordSN { get; set; }
+
+        public string CertWordString
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(CertWord) && CertWordSN > 0)
+                    return string.Format("{0}-{1}", CertWord, CertWordSN);
+                else
+                    return "";
+            }
+        }
 
         public string Abstract { get; set; }
 
