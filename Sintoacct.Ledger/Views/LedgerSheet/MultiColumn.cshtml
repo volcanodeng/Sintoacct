@@ -114,13 +114,13 @@
         $("#ParentAccCode").val(node.attributes.AccCode);
         }
 
-        function fmtAbstract(value, row, index) {
-            if (row.CertWordString == "") {
-                value = "&nbsp;&nbsp;" + value;
-            }
-
-            return value;
+    function fmtAbstract(value, row, index) {
+        if (row.CertWordString == "") {
+            value = "&nbsp;&nbsp;&nbsp;&nbsp;" + value;
         }
+
+        return value;
+    }
 
     </script>
 </body>

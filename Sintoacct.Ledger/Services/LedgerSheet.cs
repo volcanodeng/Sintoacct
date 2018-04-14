@@ -468,16 +468,16 @@ namespace Sintoacct.Ledger.Services
             List<MultiColumnViewModels> multiColumn = _ledger.Database.SqlQuery<MultiColumnViewModels>(frozenFields, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
 
             //科目选项
-            string accountOptions = "select vd.AccId,vd.AccountCode,vd.AccountName "+
+            string accountOptions = "select vd.AccId,vd.AccountCode,vd.AccountName,a.Direction " +
                                     "from T_Voucher v ,T_Voucher_Detail vd,T_Account a where v.VId=vd.VId and vd.AccId=a.AccId " +
                                     string.Format("and (Debit<>0 or Credit<>0) and v.AbId = {0} ", Utility.ParameterNameString("abid")) +
                                     string.Format("and v.PaymentTerms>={0} and v.PaymentTerms <= {1} and a.ParentAccCode={2} ", Utility.ParameterNameString("pts"), Utility.ParameterNameString("pte"), Utility.ParameterNameString("parAccCode")) +
-                                    "group by vd.AccId,vd.AccountCode,vd.AccountName";
+                                    "group by vd.AccId,vd.AccountCode,vd.AccountName,a.Direction";
 
             List<BalanceOfSubAccount> accounts = _ledger.Database.SqlQuery<BalanceOfSubAccount>(accountOptions, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
 
             //科目余额
-            string accountBalance = "select VdId,vd.AccId,vd.Debit+vd.Credit as Balance " +
+            string accountBalance = "select VdId,vd.AccId,vd.Debit+vd.Credit as Balance,a.Direction " +
                                     "from T_Voucher v ,T_Voucher_Detail vd,T_Account a where v.VId=vd.VId and vd.AccId=a.AccId " +
                                     string.Format("and (Debit<>0 or Credit<>0) and v.AbId = {0} ", Utility.ParameterNameString("abid"))+
                                     string.Format("and v.PaymentTerms>={0} and v.PaymentTerms <= {1} and a.ParentAccCode={2} ", Utility.ParameterNameString("pts"), Utility.ParameterNameString("pte"), Utility.ParameterNameString("parAccCode"));
@@ -485,11 +485,11 @@ namespace Sintoacct.Ledger.Services
             List<BalanceOfSubAccount> accBalance = _ledger.Database.SqlQuery<BalanceOfSubAccount>(accountBalance, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
 
             //期初余额
-            string InitialBalance = "select vd.AccId,vd.AccountName,sum(vd.Debit+vd.Credit) as Balance " +
+            string InitialBalance = "select vd.AccId,vd.AccountName,sum(vd.Debit+vd.Credit) as Balance,a.Direction " +
                                     "from T_Voucher v ,T_Voucher_Detail vd,T_Account a where v.VId=vd.VId and vd.AccId=a.AccId " +
                                     string.Format("and (Debit<>0 or Credit<>0) and v.AbId = {0} ", Utility.ParameterNameString("abid"))+
                                     string.Format("and v.PaymentTerms < {0} and a.ParentAccCode={1} ", Utility.ParameterNameString("pts"), Utility.ParameterNameString("parAccCode"))+
-                                    "GROUP BY vd.AccId,vd.AccountName ";
+                                    "GROUP BY vd.AccId,vd.AccountName,a.Direction ";
 
             List<BalanceOfSubAccount> initBalance = _ledger.Database.SqlQuery<BalanceOfSubAccount>(InitialBalance, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
 
@@ -520,7 +520,7 @@ namespace Sintoacct.Ledger.Services
             #region 期初余额
 
             MultiColumnViewModels firstInitBalance = new MultiColumnViewModels();
-            firstInitBalance.SubAccountBalance.AddRange(accounts);
+            firstInitBalance.SubAccountBalance.AddRange((accounts.ToArray().Clone() as BalanceOfSubAccount[]).ToList());
             if (initBalance.Count > 0)
             {
                 //绑定相关的期初余额
@@ -546,6 +546,13 @@ namespace Sintoacct.Ledger.Services
                 //当前会计期间的明细数据
                 var curDetails = multiColumn.Where(mc => mc.PaymentTerms == pt).ToList();
                 if (curDetails.Count == 0) continue;
+
+                //bug:accounts的余额被修改
+                //curDetails.ForEach(d =>
+                //{
+                //    d.SubAccountBalance.AddRange((accounts.ToArray().Clone() as BalanceOfSubAccount[]).ToList());
+                //    d.SubAccountBalance.ForEach(sab => sab.Balance = this.GetSubAccountBalance(accBalance, sab));
+                //});
                 mcList.AddRange(curDetails);
 
                 //本期合计
