@@ -31,13 +31,21 @@
     <div class="easyui-layout" data-options="fit:true">
         <div data-options="region:'north',split:false,border:false" style="padding:10px;overflow:hidden;background-color:#F2F2F2;">
             <form id="sForm" method="post">
-                <div>会计期间：<input class="easyui-combobox" id="StartPeriod" name="StartPeriod" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /> 至 <input class="easyui-combobox" id="EndPeriod" name="EndPeriod" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /></div>
-
-                <div><span style="padding-left:12px;">会计科目：</span><input class="easyui-combotree" id="AccCode"  data-options="width:200,height:30,onSelect:acccodeOnSelect" />
-                <input type="hidden" name="ParentAccCode" id="ParentAccCode" />
+                <div>
+                    会计期间：
+                    <input class="easyui-combobox" id="StartPeriod" name="StartPeriod" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /> 至
+                    <input class="easyui-combobox" id="EndPeriod" name="EndPeriod" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" />
                 </div>
 
-                <div><a href="javascript:void(0)" id="btnSearch" class="easyui-linkbutton" data-options="iconCls:'fa fa-search fa-lg'" onclick="javascript: $('#sForm').submit();" style="width:100px;">查询</a></div>
+                <div>
+                    <span style="padding-left:12px;">会计科目：</span>
+                    <input class="easyui-combotree" id="AccCode" data-options="width:200,height:30,onSelect:acccodeOnSelect" />
+                    <input type="hidden" name="ParentAccCode" id="ParentAccCode" />
+                </div>
+
+                <div>
+                    <a href="javascript:void(0)" id="btnSearch" class="easyui-linkbutton" data-options="iconCls:'fa fa-search fa-lg'" onclick="javascript: $('#sForm').submit();" style="width:100px;">查询</a>
+                </div>
             </form>
         </div>
         <div data-options="region:'center',border:true" style="padding:10px;">
@@ -45,14 +53,15 @@
                    data-options="fit:true,singleSelect:true,fitColumns:true">
                 <thead>
                     <tr>
-                        <th data-options="field:'VoucherDate',width:50,align:'center'">日期</th>
-                        <th data-options="field:'CertWordString',width:50,align:'center'">凭证字号</th>
-                        <th data-options="field:'Abstract',width:200,formatter:fmtAbstract">摘要</th>
-                        <th data-options="field:'Debit',width:80,align:'center'">借方</th>
-                        <th data-options="field:'Credit',width:60,align:'center'">贷方</th>
-                        <th data-options="field:'Direction',width:60,align:'center'">方向</th>
-                        <th data-options="field:'Balance',width:60,align:'center'">余额</th>
+                        <th data-options="field:'VoucherDate',width:50,align:'center'" rowspan="2">日期</th>
+                        <th data-options="field:'CertWordString',width:50,align:'center'" rowspan="2">凭证字号</th>
+                        <th data-options="field:'Abstract',width:200,formatter:fmtAbstract" rowspan="2">摘要</th>
+                        <th data-options="field:'Debit',width:80,align:'center'" rowspan="2">借方</th>
+                        <th data-options="field:'Credit',width:60,align:'center'" rowspan="2">贷方</th>
+                        <th data-options="field:'Direction',width:60,align:'center'" rowspan="2">方向</th>
+                        <th data-options="field:'Balance',width:60,align:'center'" rowspan="2">余额</th>
                     </tr>
+                    <tr></tr>
                 </thead>
             </table>
         </div>
@@ -93,9 +102,35 @@
 
     function formSuccess(data) {
         if (responseHandle(data)) {
+            var dgData = JSON.parse(data);
+            createExtColumn(dgData.rows[0].SubAccountBalance);
+
+            for (var i = 0; i < dgData.rows.length; i++) {
+                dgData.rows[i] = flatten(dgData.rows[i]);
+            }
+
             $("#vvList").datagrid("loadData", []);
-            $("#vvList").datagrid("loadData", JSON.parse(data));
+            $("#vvList").datagrid("loadData", dgData);
+
+            //console.log(flatten(dgData.rows[1]));
         }
+    }
+
+    function createExtColumn(extData) {
+        var existColumns = $("#vvList").datagrid("options").columns;
+
+        var creditCount = 0, debitCount = 0;
+        $.each(extData, function (i, n) {
+            existColumns[1].push({ field: 'SubAccountBalance.[' + i + '].Balance', title: n.AccountName, width: 50 });
+            if (n.Direction == '借') creditCount++; else debitCount++;
+        });
+
+        if (creditCount > 0) existColumns[0].push({ title: '借方', colspan: creditCount });
+        if (debitCount > 0) existColumns[0].push({ title: '贷方', colspan: debitCount });
+
+        $("#vvList").datagrid({
+            columns: existColumns
+        });
     }
 
     function onTreeClick(node)
@@ -122,6 +157,38 @@
         return value;
     }
 
+    //json flatten
+    function flatten(obj) {
+        var result = {};
+
+        function recurse(src, prop) {
+            var toString = Object.prototype.toString;
+            if (toString.call(src) == '[object Object]') {
+                var isEmpty = true;
+                for (var p in src) {
+                    isEmpty = false;
+                    recurse(src[p], prop ? prop + '.' + p : p)
+                }
+                if (isEmpty && prop) {
+                    result[prop] = {};
+                }
+            } else if (toString.call(src) == '[object Array]') {
+                var len = src.length;
+                if (len > 0) {
+                    src.forEach(function (item, index) {
+                        recurse(item, prop ? prop + '.[' + index + ']' : index);
+                    })
+                } else {
+                    result[prop] = [];
+                }
+            } else {
+                result[prop] = src;
+            }
+        }
+        recurse(obj, '');
+
+        return result;
+    }
     </script>
 </body>
 </html>

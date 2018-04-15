@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using Sintoacct.Ledger.Models;
 
 namespace Sintoacct.Ledger.Services
@@ -472,7 +474,8 @@ namespace Sintoacct.Ledger.Services
                                     "from T_Voucher v ,T_Voucher_Detail vd,T_Account a where v.VId=vd.VId and vd.AccId=a.AccId " +
                                     string.Format("and (Debit<>0 or Credit<>0) and v.AbId = {0} ", Utility.ParameterNameString("abid")) +
                                     string.Format("and v.PaymentTerms>={0} and v.PaymentTerms <= {1} and a.ParentAccCode={2} ", Utility.ParameterNameString("pts"), Utility.ParameterNameString("pte"), Utility.ParameterNameString("parAccCode")) +
-                                    "group by vd.AccId,vd.AccountCode,vd.AccountName,a.Direction";
+                                    "group by vd.AccId,vd.AccountCode,vd.AccountName,a.Direction "+
+                                    "order by a.Direction";
 
             List<BalanceOfSubAccount> accounts = _ledger.Database.SqlQuery<BalanceOfSubAccount>(accountOptions, parames.Select(p => ((ICloneable)p).Clone()).ToArray()).ToList();
 
@@ -520,7 +523,7 @@ namespace Sintoacct.Ledger.Services
             #region 期初余额
 
             MultiColumnViewModels firstInitBalance = new MultiColumnViewModels();
-            firstInitBalance.SubAccountBalance.AddRange((accounts.ToArray().Clone() as BalanceOfSubAccount[]).ToList());
+            firstInitBalance.SubAccountBalance = this.Clone( accounts);
             if (initBalance.Count > 0)
             {
                 //绑定相关的期初余额
@@ -548,11 +551,11 @@ namespace Sintoacct.Ledger.Services
                 if (curDetails.Count == 0) continue;
 
                 //bug:accounts的余额被修改
-                //curDetails.ForEach(d =>
-                //{
-                //    d.SubAccountBalance.AddRange((accounts.ToArray().Clone() as BalanceOfSubAccount[]).ToList());
-                //    d.SubAccountBalance.ForEach(sab => sab.Balance = this.GetSubAccountBalance(accBalance, sab));
-                //});
+                curDetails.ForEach(d =>
+                {
+                    d.SubAccountBalance = this.Clone(accounts);
+                    d.SubAccountBalance.ForEach(sab => sab.Balance = this.GetSubAccountBalance(accBalance, sab));
+                });
                 mcList.AddRange(curDetails);
 
                 //本期合计
@@ -615,6 +618,26 @@ namespace Sintoacct.Ledger.Services
             return FullPaymentTerms;
         }
 
+        /// <summary>
+        /// 克隆一个新的List<BalanceOfSubAccount>
+        /// </summary>
+        /// <param name="List"></param>
+        /// <returns></returns>
+        private List<BalanceOfSubAccount> Clone(List< BalanceOfSubAccount> List)
+        {
+            List<BalanceOfSubAccount> newList = new List<BalanceOfSubAccount>();
+            foreach(BalanceOfSubAccount bosa in List)
+            {
+                BalanceOfSubAccount newBosa = new BalanceOfSubAccount();
+                newBosa.AccId = bosa.AccId;
+                newBosa.AccountName = bosa.AccountName;
+                newBosa.Direction = bosa.Direction;
+                newBosa.VdId = bosa.VdId;
+                newList.Add(newBosa);
+            }
+
+            return newList;
+        }
         #endregion
     }
 
@@ -654,4 +677,6 @@ namespace Sintoacct.Ledger.Services
 
         public decimal InitialBalance { get; set; }
     }
+
+    
 }
