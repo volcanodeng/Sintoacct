@@ -111,8 +111,6 @@
 
             $("#vvList").datagrid("loadData", []);
             $("#vvList").datagrid("loadData", dgData);
-
-            //console.log(flatten(dgData.rows[1]));
         }
     }
 
@@ -121,7 +119,7 @@
 
         var creditCount = 0, debitCount = 0;
         $.each(extData, function (i, n) {
-            existColumns[1].push({ field: 'SubAccountBalance.[' + i + '].Balance', title: n.AccountName, width: 50 });
+            existColumns[1].push({ field: 'SubAccountBalance.[' + i + '].Balance', title: n.AccountName });
             if (n.Direction == '借') creditCount++; else debitCount++;
         });
 

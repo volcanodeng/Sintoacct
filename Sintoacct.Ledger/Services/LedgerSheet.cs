@@ -454,7 +454,7 @@ namespace Sintoacct.Ledger.Services
             Account pAccount = _ledger.Accounts.Where(a => a.AbId == abid && a.AccCode == condition.ParentAccCode).FirstOrDefault();
 
             //固定列的明细记录
-            string frozenFields = "select v.VoucherYear,v.VoucherMonth,(select CertWord from T_Certificate_Word where CwId=v.CertificateWord_CwId) Certword,v.CertWordSN,vd.Abstract,vd.Debit,vd.Credit,a.Direction,0.00 as balance,vd.VdId,v.PaymentTerms "
+            string frozenFields = "select v.VoucherYear,v.VoucherMonth,(select CertWord from T_Certificate_Word where CwId=v.CertificateWord_CwId) Certword,v.CertWordSN,vd.Abstract,vd.Debit,vd.Credit,a.Direction,0.00 as balance,vd.VdId,v.PaymentTerms,vd.AccId "
                                 + "from T_Voucher v ,T_Voucher_Detail vd,T_Account a where v.VId=vd.VId and vd.AccId=a.AccId "
                                 + string.Format("and (Debit<>0 or Credit<>0) and v.AbId = {0} ", Utility.ParameterNameString("abid"))
                                 + string.Format("and v.PaymentTerms>={0} and v.PaymentTerms <= {1} and a.ParentAccCode={2} ",Utility.ParameterNameString("pts"),Utility.ParameterNameString("pte"),Utility.ParameterNameString("parAccCode"))
@@ -550,11 +550,21 @@ namespace Sintoacct.Ledger.Services
                 var curDetails = multiColumn.Where(mc => mc.PaymentTerms == pt).ToList();
                 if (curDetails.Count == 0) continue;
 
-                //bug:accounts的余额被修改
+                //科目明细余额赋值
                 curDetails.ForEach(d =>
                 {
                     d.SubAccountBalance = this.Clone(accounts);
-                    d.SubAccountBalance.ForEach(sab => sab.Balance = this.GetSubAccountBalance(accBalance, sab));
+                    d.SubAccountBalance.ForEach(sab => {
+                        if (d.AccId == sab.AccId)
+                        {
+                            if (d.Direction == sab.Direction)
+                                sab.Balance = d.Balance;
+                            else
+                                sab.Balance = d.Balance * (-1);
+                        }
+                        else
+                        { sab.Balance = 0; }
+                    });
                 });
                 mcList.AddRange(curDetails);
 

@@ -180,6 +180,8 @@ namespace Sintoacct.Ledger.Models
 
         public string PaymentTerms { get; set; }
 
+        public long AccId { get; set; }
+
         public List<BalanceOfSubAccount> SubAccountBalance { get; set; }
     }
 
