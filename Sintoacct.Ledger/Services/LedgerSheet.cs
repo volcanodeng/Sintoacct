@@ -558,9 +558,9 @@ namespace Sintoacct.Ledger.Services
                         if (d.AccId == sab.AccId)
                         {
                             if (d.Direction == sab.Direction)
-                                sab.Balance = d.Balance;
+                                sab.Balance = (d.Direction == "借" ? d.Debit - d.Credit : d.Credit-d.Debit );
                             else
-                                sab.Balance = d.Balance * (-1);
+                                sab.Balance = (d.Direction == "借" ? d.Debit - d.Credit : d.Credit - d.Debit) * (-1);
                         }
                         else
                         { sab.Balance = 0; }

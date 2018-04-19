@@ -118,13 +118,14 @@
         var existColumns = $("#vvList").datagrid("options").columns;
 
         var creditCount = 0, debitCount = 0;
+        existColumns[1].splice(0, existColumns[1].length);
         $.each(extData, function (i, n) {
-            existColumns[1].push({ field: 'SubAccountBalance.[' + i + '].Balance', title: n.AccountName });
+            existColumns[1].push({ field: 'SubAccountBalance.' + i + '.Balance', title: n.AccountName });
             if (n.Direction == '借') creditCount++; else debitCount++;
         });
 
-        if (creditCount > 0) existColumns[0].push({ title: '借方', colspan: creditCount });
-        if (debitCount > 0) existColumns[0].push({ title: '贷方', colspan: debitCount });
+        if (creditCount > 0 && existColumns[0].length == 7) existColumns[0].push({ title: '借方', colspan: creditCount });
+        if (debitCount > 0 && existColumns[0].length <= 8) existColumns[0].push({ title: '贷方', colspan: debitCount });
 
         $("#vvList").datagrid({
             columns: existColumns
@@ -174,7 +175,7 @@
                 var len = src.length;
                 if (len > 0) {
                     src.forEach(function (item, index) {
-                        recurse(item, prop ? prop + '.[' + index + ']' : index);
+                        recurse(item, prop ? prop + '.' + index + '' : index);
                     })
                 } else {
                     result[prop] = [];
