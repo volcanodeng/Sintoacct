@@ -44,6 +44,21 @@ namespace Sintoacct.Ledger.Controllers
             return Json(EnumJson.Convert(typeof(Sintoacct.Progress.Models.CustomerLevel)),"text/html", JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult GetCustomerState()
+        {
+            EnumJson[] cState = EnumJson.Convert(typeof(Sintoacct.Progress.Models.CustomerState));
+            foreach(EnumJson s in cState)
+            {
+                if (s.Name == "Normal") s.Name = "正常";
+                if (s.Name == "Stopped") s.Name = "欠费";
+                if (s.Name == "Canceled") s.Name = "已注销";
+                if (s.Name == "Deleted") s.Name = "已删除";
+                if (s.Name == "LostContact") s.Name = "已失联";
+                if (s.Name == "Transferred") s.Name = "已转走";
+            }
+            return Json(cState, "text/html", JsonRequestBehavior.AllowGet);
+        }
+
         [ClaimsAuthorize("role", "business")]
         public ActionResult CostSetting()
         {

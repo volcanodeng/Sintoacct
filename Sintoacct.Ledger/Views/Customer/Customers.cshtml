@@ -81,7 +81,7 @@
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'fa fa-trash-o fa-lg',plain:true" onclick="del()">删除客户</a>
     </div>
 
-    <div id="dialogCus" class="easyui-dialog" title="客户信息" style="width:500px;height:520px;"
+    <div id="dialogCus" class="easyui-dialog" title="客户信息" style="width:500px;height:580px;"
          data-options="iconCls:'fa fa-truck fa-lg',resizable:false,modal:true,closed: true,buttons:'#btnCus'">
         <form method="post" id="cusForm" >
             <ul>
@@ -96,7 +96,7 @@
                     <input id="PromName" name="PromName" class="easyui-textbox"
                            data-options="prompt:'请填写推荐人名称',required:true,width:260,height:35,missingMessage:'请填写推荐人名称'" />
                 </li>
-                
+
                 <li>
                     <label for="Contacts">联系人:</label>
                     <input id="Contacts" name="Contacts" class="easyui-textbox"
@@ -125,7 +125,14 @@
                 <li>
                     <label for="Level">客户级别:</label>
                     <input id="Level" name="Level" class="easyui-combobox"
-                           data-options="prompt:'请设置客户级别',width:260,height:35,missingMessage:'请设置客户级别',editable:false,valueField:'Value',textField:'Name',url:'/Customer/GetCustomerLevel'"  />
+                           data-options="prompt:'请设置客户级别',width:260,height:35,missingMessage:'请设置客户级别',editable:false,valueField:'Value',textField:'Name',url:'/Customer/GetCustomerLevel'" />
+
+                </li>
+
+                <li>
+                    <label for="State">客户状态:</label>
+                    <input id="State" name="State" class="easyui-combobox"
+                           data-options="prompt:'请设置客户当前状态',width:260,height:35,missingMessage:'请设置客户级别',editable:false,valueField:'Value',textField:'Name',url:'/Customer/GetCustomerState',onLoadSuccess:stateLoadSuccess" />
 
                 </li>
 
@@ -216,7 +223,8 @@
                 BusinessAddress: selRow.BusinessAddress,
                 Contacts: selRow.Contacts,
                 Phone: selRow.Phone,
-                Level: selRow.Level
+                Level: selRow.Level,
+                State: selRow.State
             });
             $("#dialogCus").dialog("open");
         }
@@ -260,11 +268,15 @@
                 case 1:
                     return "正常";
                 case 0:
-                    return "欠费停止服务";
+                    return "欠费";
                 case -1:
                     return "已注销";
                 case -2:
                     return "已删除";
+                case -3:
+                    return "已失联";
+                case -4:
+                    return "已转走";
             }
         }
 
@@ -279,6 +291,10 @@
                 case -2:
                     return "text-decoration:line-through;";
             }
+        }
+
+        function stateLoadSuccess() {
+            $(this).combobox("select",1);
         }
 
     </script>

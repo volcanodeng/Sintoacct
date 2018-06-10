@@ -576,9 +576,23 @@ namespace Sintoacct.Ledger.Services
                 }
                 curTotalPeriod.VoucherYear= Convert.ToInt32(pt.Substring(0, 4));
                 curTotalPeriod.VoucherMonth = Convert.ToInt32(pt.Substring(4));
+
+                curTotalPeriod.SubAccountBalance = this.Clone(accounts);
+                curTotalPeriod.SubAccountBalance.ForEach(sab=> {
+                    if (curTotalPeriod.Direction == sab.Direction)
+                        sab.Balance = curDetails.Where(d => d.AccId == sab.AccId).Sum(d => d.Debit - d.Credit);
+                    else
+                        sab.Balance = curDetails.Where(d => d.AccId == sab.AccId).Sum(d => d.Credit - d.Debit);
+                });
                 mcList.Add(curTotalPeriod);
 
-                
+                //本年累计
+                MultiColumnViewModels yearlyTotal = new MultiColumnViewModels();
+                yearlyTotal.Abstract = "年度累计";
+                yearlyTotal.Debit = multiColumn.Where(c => Convert.ToInt32(c.PaymentTerms) <= Convert.ToInt32(pt)).Sum(c=>c.Debit);
+                yearlyTotal.Credit = multiColumn.Where(c => Convert.ToInt32(c.PaymentTerms) <= Convert.ToInt32(pt)).Sum(c => c.Credit);
+
+                mcList.Add(yearlyTotal);
             }
 
             return mcList;

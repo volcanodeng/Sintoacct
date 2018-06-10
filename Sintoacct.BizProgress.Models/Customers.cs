@@ -85,7 +85,15 @@ namespace Sintoacct.Progress.Models
         /// <summary>
         /// 已删除
         /// </summary>
-        Deleted = -2
+        Deleted = -2,
+        /// <summary>
+        /// 失去联系
+        /// </summary>
+        LostContact = -3,
+        /// <summary>
+        /// 已转走
+        /// </summary>
+        Transferred = -4
     }
 
     public enum CustomerLevel

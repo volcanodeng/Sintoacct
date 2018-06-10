@@ -33,8 +33,8 @@
             <form id="sForm" method="post">
                 <div>
                     会计期间：
-                    <input class="easyui-combobox" id="StartPeriod" name="StartPeriod" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" /> 至
-                    <input class="easyui-combobox" id="EndPeriod" name="EndPeriod" data-options="valueField:'val',textField:'text'" style="width:100px;height:30px;" />
+                    <input class="easyui-combobox" id="StartPeriod" name="StartPeriod" data-options="valueField:'val',textField:'text'" style="width:120px;height:30px;" /> 至
+                    <input class="easyui-combobox" id="EndPeriod" name="EndPeriod" data-options="valueField:'val',textField:'text'" style="width:120px;height:30px;" />
                 </div>
 
                 <div>
@@ -55,10 +55,10 @@
                     <tr>
                         <th data-options="field:'VoucherDate',width:50,align:'center'" rowspan="2">日期</th>
                         <th data-options="field:'CertWordString',width:50,align:'center'" rowspan="2">凭证字号</th>
-                        <th data-options="field:'Abstract',width:200,formatter:fmtAbstract" rowspan="2">摘要</th>
-                        <th data-options="field:'Debit',width:80,align:'center'" rowspan="2">借方</th>
-                        <th data-options="field:'Credit',width:60,align:'center'" rowspan="2">贷方</th>
-                        <th data-options="field:'Direction',width:60,align:'center'" rowspan="2">方向</th>
+                        <th data-options="field:'Abstract',width:100,formatter:fmtAbstract" rowspan="2">摘要</th>
+                        <th data-options="field:'Debit',width:50,align:'center'" rowspan="2">借方</th>
+                        <th data-options="field:'Credit',width:50,align:'center'" rowspan="2">贷方</th>
+                        <th data-options="field:'Direction',width:40,align:'center'" rowspan="2">方向</th>
                         <th data-options="field:'Balance',width:60,align:'center'" rowspan="2">余额</th>
                     </tr>
                     <tr></tr>
@@ -120,7 +120,7 @@
         var creditCount = 0, debitCount = 0;
         existColumns[1].splice(0, existColumns[1].length);
         $.each(extData, function (i, n) {
-            existColumns[1].push({ field: 'SubAccountBalance.' + i + '.Balance', title: n.AccountName });
+            existColumns[1].push({ field: 'SubAccountBalance.' + i + '.Balance', title: n.AccountName, width: 60 });
             if (n.Direction == '借') creditCount++; else debitCount++;
         });
 

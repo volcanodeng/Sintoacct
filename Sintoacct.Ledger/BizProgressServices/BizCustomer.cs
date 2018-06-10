@@ -55,6 +55,7 @@ namespace Sintoacct.Ledger.BizProgressServices
             {
                 //推荐人不能被修改
                 cust = this.GetCustomer(customer.CusId);
+                cust.State = (CustomerState)customer.State;
             }
             else
             {
