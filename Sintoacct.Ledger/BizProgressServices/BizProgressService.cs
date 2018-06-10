@@ -142,6 +142,35 @@ namespace Sintoacct.Ledger.BizProgressServices
             _context.SaveChanges();
         }
 
+        public void ChangeStateWorkOrder(WorkOrderViewModel workOrder)
+        {
+            if(workOrder.WoId <= 0)
+            {
+                throw new ArgumentOutOfRangeException("无效工作单编号");
+            }
+
+            WorkOrder wo = this.GetWorkOrder(workOrder.WoId);
+
+            if(wo == null)
+            {
+                throw new NullReferenceException("找不到工作单：" + wo.WoId);
+            }
+
+            if(wo.State== WorkOrderState.InProcess)
+            {
+                wo.State = WorkOrderState.ToHandover;
+                _context.SaveChanges();
+                return;
+            }
+
+            if(wo.State == WorkOrderState.ToHandover )
+            {
+                wo.State = WorkOrderState.Completed;
+                _context.SaveChanges();
+                return;
+            }
+        }
+
 
         public WorkProgress GetWorkProgress(long progId)
         {
@@ -190,6 +219,7 @@ namespace Sintoacct.Ledger.BizProgressServices
             //重算代垫费用
             WorkOrder wOrder = _context.WorkOrders.Include("WorkProgresses").Where(wo => wo.WoId == wProg.WoId).First();
             wOrder.AdvanceExpenditure = wOrder.WorkProgresses.Sum(p => p.AdvanceExpenditure);
+            wOrder.State = WorkOrderState.InProcess;
 
             if (!string.IsNullOrEmpty(workProg.Url))
             {   

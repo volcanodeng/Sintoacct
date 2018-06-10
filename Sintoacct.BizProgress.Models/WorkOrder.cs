@@ -138,6 +138,10 @@ namespace Sintoacct.Progress.Models
         /// </summary>
         InProcess = 2,
         /// <summary>
+        /// 办结未交接
+        /// </summary>
+        ToHandover = 4,
+        /// <summary>
         /// 办理完结
         /// </summary>
         Completed = 3,

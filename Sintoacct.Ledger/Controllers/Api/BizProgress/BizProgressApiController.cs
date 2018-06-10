@@ -72,8 +72,18 @@ namespace Sintoacct.Ledger.Controllers.Api
             return Ok(ResMessage.Success());
         }
 
+        [ClaimsAuthorize("role", "progress-admin")]
+        [HttpGet, HttpPost, Route("api/BizProgress/ChangeStateWorkOrder")]
+        public IHttpActionResult ChangeStateWorkOrder(WorkOrderViewModel workOrder)
+        {
+            
 
-       
+            _progress.ChangeStateWorkOrder(workOrder);
+
+            return Ok(ResMessage.Success());
+        }
+
+
 
         [ClaimsAuthorize("role", "progress-record")]
         [HttpGet, HttpPost, Route("api/BizProgress/SaveWorkProgress")]
