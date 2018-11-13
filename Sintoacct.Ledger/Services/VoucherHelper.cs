@@ -287,7 +287,7 @@ namespace Sintoacct.Ledger.Services
             decimal debit = 0, credit = 0;
             debit = voucher.VoucherDetails.Sum(vd => vd.Debit);
             credit = voucher.VoucherDetails.Sum(vd => vd.Credit);
-            if (debit != credit*-1) throw new InvalidOperationException(string.Format("借方（{0}）贷方（{1}）不平！", debit, credit));
+            if (debit != credit) throw new InvalidOperationException(string.Format("借方（{0}）贷方（{1}）不平！", debit, credit));
 
             voucher.State = VoucherState.Audited;
             voucher.ReviewOpinion = reviewOpinion;
@@ -482,7 +482,7 @@ namespace Sintoacct.Ledger.Services
                 }
             }
 
-            if (Debit != Credit*-1) return "录入借贷不平";
+            if (Debit != Credit) return "录入借贷不平";
 
             return string.Empty;
         }
